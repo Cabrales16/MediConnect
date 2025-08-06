@@ -1,25 +1,29 @@
+## Estandares de codificación
 1. Reglas para nombrar variables, clases y metodos
-    -Variables y metodos en python: Se deve utilisas snake_case(se deve escribir en minusca todo y con ralla al piso para separar) como por ejemplo: mi_perfil()
-    -Clases en python: Se deve usar PascalCase(Se deve enpesar con mayuscula) como por ejemplo: EstadoCitaSeguridad
-    -Variables y funciones en React:Se deve usr camelCase(la primera palabrsa va en minuscula la segunda empiesa en mayuscula) como por ejemplo miPerfil
+    - Variables y metodos en python: Se deve utilisas snake_case(se deve escribir en minusca todo y con ralla al piso para separar) como por ejemplo: mi_perfil()
+    - Clases en python: Se deve usar PascalCase(Se deve enpesar con mayuscula) como por ejemplo: EstadoCitaSeguridad
+    - Variables y funciones en React:Se deve usr camelCase(la primera palabrsa va en minuscula la segunda empiesa en mayuscula) como por ejemplo miPerfil
+      
+---
 
-2.Comentarios y documentacion interna:
-    -Comentarios de linea:usar # para comentar en python y para React // escribiendo lago que explique la linea de codigo
-    -Doctrings en python:Usar triple comilla(""") para documentar modulos, clases y funciones. los parametros (Args) y los devielve el retrun
+2. Comentarios y documentacion interna:
+    - Comentarios de linea:usar # para comentar en python y para React // escribiendo lago que explique la linea de codigo
+    - Doctrings en python:Usar triple comilla(""") para documentar modulos, clases y funciones. los parametros (Args) y los devielve el retrun
+    ```py
+    def obtener_usuarios_activos():
+    
+    # Obtiene una lista de todos los usuarios que están activos en el sistema.
 
-        def obtener_usuarios_activos():
-        """
-        Obtiene una lista de todos los usuarios que están activos en el sistema.
+    Returns:
+        list: Una lista de objetos de usuario.
+    ```   
+   - Lógica para obtener usuarios pass
+   - Comentarios en bloque (React): Susa /*....*/ Para comentarios mas extensos en archivos de React
+     
+---
 
-        Returns:
-            list: Una lista de objetos de usuario.
-        """
-        # Lógica para obtener usuarios
-        pass
-   -Comentarios en bloque (React): Susa /*....*/ Para comentarios mas extensos en archivos de React
-
-3.Identificacio y estilos de codigo:
-    -identificacion:Usar 4 espacios para la identificacion de python y 2 espacios para la identificacion de JavaScript/React. Evitar el uso de tabulacion  
+3. Identificacio y estilos de codigo:
+    -Identificacion:Usar 4 espacios para la identificacion de python y 2 espacios para la identificacion de JavaScript/React. Evitar el uso de tabulacion  
     -Longitud de linea:Limitar longitud de las lineas maximo de 79 caacteres en Python y 80 en React, Para mantener legibilidad
     -Importaciones en Rect:Agrupar las importaciones. primero las bibliotecas externas, luego los componentes finalmente los archivos de utilidades y estilos como por ejemplo.
 
@@ -34,7 +38,7 @@
         import './estilos.css';
 
         ejemplo de las cosas que no se deven hacer
-
+---
 1. mal manejo de sangria
     from db import Base
         from sqlalchemy import Column, Integer, String, Date, Time, ForeignKey
@@ -83,3 +87,4 @@
 
 
     
+
