@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="../static/style.css" />
+    <script defer src="../static/app.js"></script>
+  </head>
+  <body>
+    <h2>Iniciar Sesión</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <ul>
+      {% for category, message in messages %}
+      <li class="flash-message flash-{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+
+    <form method="POST">
+      <label>Correo electrónico:</label>
+      <input type="email" name="correo" required /><br />
+
+      <label>Contraseña:</label>
+      <input type="password" name="contrasena" id="password" required />
+      <button type="button" id="togglePassword">👁 Mostrar</button><br />
+
+      <button type="submit">Iniciar sesión</button>
+    </form>
+    <!-- Enlace para recuperación de contraseña -->
+    <p class="forgot-password">
+      <a href="{{ url_for('correos.recuperar_contrasena') }}"
+        >¿Olvidaste tu contraseña?</a
+      >
+    </p>
+
+    <p>
+      ¿No tienes cuenta?
+      <a href="{{ url_for('auth.register') }}">Registrarse</a>
+    </p>
+  </body>
+</html>

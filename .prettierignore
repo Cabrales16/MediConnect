@@ -1,0 +1,11 @@
+# Ignorar dependencias de Node y bundles
+node_modules
+dist/
+build/
+
+# Ignorar tu entorno virtual de Python
+.venv/
+backend/.venv/
+bd/venv/
+# Ignorar logs, archivos de sistema, etc.
+*.log

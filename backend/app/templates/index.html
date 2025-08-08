@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página Principal</title>
+    <link rel="stylesheet" href="../static/index.css" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <div class="navbar-brand">
+          <h1>
+            Bienvenido,Paciente {{ session['usuario']['nombre_completo']}}!
+          </h1>
+        </div>
+        <ul class="navbar-menu">
+          <li><a href="auth.pagina_principal">INICIO</a></li>
+          <li class="dropdown">
+            <a href="javascript:void(0)" class="dropbtn"
+              >{{ session['usuario']['nombre_completo'][0]|upper }}</a
+            >
+            <div class="dropdown-content">
+              <a href="{{url_for('auth.mi_perfil')}}">
+                <i class="fas fa-user"></i> Mi Perfil
+              </a>
+              <a href="{{url_for('auth.logout')}}">
+                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+              </a>
+            </div>
+          </li>
+        </ul>
+        <button class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+      <div class="mobile-menu hidden">
+        <a href="{{url_for('auth.mi_perfil')}}">
+          <i class="fas fa-user"></i> Mi Perfil
+        </a>
+        <a href="{{url_for('auth.logout')}}">
+          <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+        </a>
+      </div>
+    </header>
+
+    <main class="main-container">
+      <div class="welcome-text">
+        <h2>¡Bienvenido a nuestra página web!</h2>
+        <p>
+          Nos alegra tenerte aquí. Explora nuestras últimas novedades y disfruta
+          de la experiencia.
+        </p>
+      </div>
+
+      <section class="novedades">
+        <h3>Novedades</h3>
+        <ul>
+          <li>¡Nuevo sistema de recompensas disponible!</li>
+          <li>Próxima actualización de funciones en 2 días.</li>
+          <li>Nuevo diseño de perfil ya disponible.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 TuPáginaWeb. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+      // Toggle mobile menu visibility
+      const hamburger = document.querySelector(".hamburger");
+      const mobileMenu = document.querySelector(".mobile-menu");
+
+      hamburger.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+      });
+    </script>
+  </body>
+</html>

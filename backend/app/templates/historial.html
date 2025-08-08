@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>
+      Historial Médico de {{ paciente.nombre }} {{ paciente.apellido }}
+    </title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="p-4">
+    <div class="container">
+      <h2 class="mb-4">
+        Historial Médico de {{ paciente.nombre }} {{ paciente.apellido }}
+      </h2>
+
+      {% if historial %}
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Fecha</th>
+            <th>Diagnóstico</th>
+            <th>Tratamiento</th>
+            <th>Observaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for registro in historial %}
+          <tr>
+            <td>{{ registro.fecha }}</td>
+            <td>{{ registro.diagnostico }}</td>
+            <td>{{ registro.tratamiento }}</td>
+            <td>{{ registro.observaciones }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="alert alert-info">
+        Este paciente no tiene historial médico registrado.
+      </div>
+      {% endif %}
+
+      <a
+        href="{{ url_for('main.index_Medico') }}"
+        class="btn btn-secondary mt-3"
+        >Volver</a
+      >
+    </div>
+  </body>
+</html>
