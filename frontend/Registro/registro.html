@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>login</title>
+
+    <link rel="stylesheet" href="./styles.css" />
+
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="form-box login">
+        <form action="#">
+          <h1>Inicia sesión</h1>
+          <div class="input-box">
+            <input type="text" placeholder="Número de documento" required />
+            <i class="bx bxs-user"></i>
+          </div>
+          <div class="input-box">
+            <input type="email" placeholder="Correo electrónico" required />
+            <i class="bx bxs-envelope"></i>
+          </div>
+          <div class="input-box">
+            <input type="password" placeholder="Contraseña" required />
+            <i class="bx bxs-lock-alt"></i>
+          </div>
+          <div class="forget-link">
+            <a href="#">¿Olvidaste tu contraseña?</a>
+          </div>
+          <button type="submit" class="btn">Iniciar sesión</button>
+        </form>
+      </div>
+
+      <div class="form-box register">
+        <form action="#">
+          <h1>Registro</h1>
+          <div class="input-box">
+            <input type="text" placeholder="Número de documento" required />
+            <i class="bx bxs-user"></i>
+          </div>
+          <div class="input-box">
+            <select required>
+              <option value="" disabled selected>Tipo de documento</option>
+              <option value="cc">Cédula de ciudadanía</option>
+              <option value="ti">Tarjeta de identidad</option>
+              <option value="ce">Cédula de extranjería</option>
+            </select>
+            <i class="bx bxs-id-card"></i>
+          </div>
+          <div class="input-box">
+            <input type="text" placeholder="Nombres" required />
+            <i class="bx bxs-user"></i>
+          </div>
+          <div class="input-box">
+            <input type="text" placeholder="Apellidos" required />
+            <i class="bx bxs-user"></i>
+          </div>
+          <div class="input-box">
+            <input type="tel" placeholder="Teléfono" required />
+            <i class="bx bxs-phone"></i>
+          </div>
+          <div class="input-box">
+            <input type="text" placeholder="Dirección" required />
+            <i class="bx bxs-home"></i>
+          </div>
+          <div class="input-box">
+            <input type="email" placeholder="Correo" required />
+            <i class="bx bxs-envelope"></i>
+          </div>
+          <div class="input-box">
+            <input type="password" placeholder="Contraseña" required />
+            <i class="bx bxs-lock-alt"></i>
+          </div>
+          <!-- <div class="forget-link">
+                    <a href="#">Forget Password?</a>
+                </div> -->
+          <button type="submit" class="btn">Registrar</button>
+        </form>
+      </div>
+
+      <div class="toggle-box">
+        <div class="toggle-panel toggle-left">
+          <h1>Hola, Bienvenidos!</h1>
+          <p>¿No tienes una cuenta?</p>
+          <button class="btn register-btn">Registrar</button>
+        </div>
+
+        <div class="toggle-panel toggle-right">
+          <h1>¡Bienvenido de nuevo!</h1>
+          <p>¿Ya tienes una cuenta?</p>
+          <button class="btn login-btn">Inicia sesión ahora</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+
+    <script src="script.js"></script>
+  </body>
+</html>

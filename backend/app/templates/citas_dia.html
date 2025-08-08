@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Citas del {{ dia }}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body class="p-4">
+    <h2 class="mb-4">Citas del día {{ dia }}</h2>
+
+    {% if citas %}
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Paciente</th>
+          <th>Tipo de Cita</th>
+          <th>Estado</th>
+          <th>Ubicación</th>
+          <th>Historial</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cita in citas %}
+        <tr>
+          <td>{{ cita.fecha }}</td>
+          <td>{{ cita.hora }}</td>
+          <td>{{ cita.nombre }} {{ cita.apellido }}</td>
+          <td>{{ cita.tipo_cita }}</td>
+          <td>{{ cita.estado }}</td>
+          <td>{{ cita['hospital'] }}</td>
+          <td>
+            <a
+              href="{{ url_for('horariosM.historial_paciente', id_paciente=cita['id_paciente']) }}"
+              >Ver Historial</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No hay citas registradas para este día.</p>
+    {% endif %}
+
+    <a
+      href="{{ url_for('horariosM.horarios_medico', id_medico=id_medico) }}"
+      class="btn btn-secondary mt-3"
+      >Volver</a
+    >
+  </body>
+</html>

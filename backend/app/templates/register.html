@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Registro de Usuario</title>
+    <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+  </head>
+  <body>
+    <h1>Registro de Usuario</h1>
+
+    {% if mensaje %}
+    <p style="color: red">{{ mensaje }}</p>
+    {% endif %}
+
+    <form method="POST" id="form-registro">
+      <input name="nombre" placeholder="Nombre" required /><br />
+      <input name="apellido" placeholder="Apellido" required /><br />
+      <input
+        name="tipo_documento"
+        placeholder="Tipo Documento (CC, TI, PAS)"
+        required
+      /><br />
+      <input
+        name="num_documento"
+        placeholder="Número Documento"
+        required
+      /><br />
+      <input
+        type="email"
+        name="correo"
+        id="correo"
+        placeholder="Correo"
+        required
+      /><br />
+      <span id="correo-feedback" style="color: red"></span><br />
+      <input name="telefono" placeholder="Teléfono" required /><br />
+      <input
+        name="genero"
+        placeholder="Género (MASCULINO, FEMENINO)"
+        required
+      /><br />
+      <input name="direccion" placeholder="Dirección" required /><br />
+      <input
+        type="password"
+        name="contrasena"
+        id="password"
+        placeholder="Contraseña"
+        required
+      /><br />
+      <button type="button" id="togglePassword">Mostrar contraseña</button
+      ><br />
+      <label>Fecha de nacimiento:</label>
+      <input type="date" name="fecha_nacimiento" required /><br />
+
+      <button type="submit" id="btn-enviar">Registrar</button>
+    </form>
+
+    <p>
+      ¿Ya tienes cuenta?
+      <a href="{{ url_for('auth.login') }}">Inicia sesión aquí</a>
+    </p>
+  </body>
+</html>
