@@ -1,3 +1,5 @@
+![CI](https://github.com/Cabrales16/mygithubactions/actions/workflows/ci.yml/badge.svg)
+
 # MediConnect
 
 **MediConnect** es un sistema web para la gestión de servicios médicos, diseñado para facilitar la programación de citas, 
