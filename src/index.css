@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: #e5e7eb;
+  }
+
+  body {
+    background-color: #ffffff;
+    color: #0f172a;
+  }
+
+  .dark body {
+    background-color: #0f172a;
+    color: #f1f5f9;
+  }
+
+  .sidebar {
+    background-color: #f9fafb;
+    color: #1f2937;
+    border: 1px solid #e5e7eb;
+  }
+
+  .sidebar-primary {
+    background-color: #111827;
+    color: #f9fafb;
+  }
+
+  .sidebar-accent {
+    background-color: #f3f4f6;
+    color: #111827;
+  }
+
+  .dark .sidebar {
+    background-color: #111827;
+    color: #f3f4f6;
+    border: 1px solid #1f2937;
+  }
+
+  .dark .sidebar-primary {
+    background-color: #2563eb;
+    color: #ffffff;
+  }
+
+  .dark .sidebar-accent {
+    background-color: #1f2937;
+    color: #f3f4f6;
+  }
+
+  .card {
+    background-color: #ffffff;
+    color: #0f172a;
+  }
+
+  .dark .card {
+    background-color: #0f172a;
+    color: #f1f5f9;
+  }
+
+  .popover {
+    background-color: #ffffff;
+    color: #0f172a;
+  }
+
+  .dark .popover {
+    background-color: #0f172a;
+    color: #f1f5f9;
+  }
+
+  .primary {
+    background-color: #1e293b;
+    color: #f8fafc;
+  }
+
+  .dark .primary {
+    background-color: #f8fafc;
+    color: #1e293b;
+  }
+
+  .secondary {
+    background-color: #f1f5f9;
+    color: #1e293b;
+  }
+
+  .dark .secondary {
+    background-color: #1e293b;
+    color: #f8fafc;
+  }
+
+  .muted {
+    background-color: #f1f5f9;
+    color: #6b7280;
+  }
+
+  .dark .muted {
+    background-color: #1e293b;
+    color: #9ca3af;
+  }
+
+  .accent {
+    background-color: #f1f5f9;
+    color: #1e293b;
+  }
+
+  .dark .accent {
+    background-color: #1e293b;
+    color: #f8fafc;
+  }
+
+  .destructive {
+    background-color: #ef4444;
+    color: #ffffff;
+  }
+
+  .dark .destructive {
+    background-color: #991b1b;
+    color: #ffffff;
+  }
+
+  input,
+  textarea,
+  select {
+    border: 1px solid #e5e7eb;
+  }
+
+  .dark input,
+  .dark textarea,
+  .dark select {
+    border: 1px solid #374151;
+  }
+}
