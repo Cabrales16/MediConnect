@@ -1,10 +1,10 @@
 import React from "react";
 import agendarIcon from "./NavbarIcons/agendarIcon.png";
 
-export default function QuickAppointmentButton() {
+export default function CitaRapidaButton() {
   return (
     <a
-      href="/quick-appointment"
+      href="/cita-rapida"
       className="flex items-center gap-2 px-3 py-2 rounded-md bg-green-500 text-white font-medium shadow-sm hover:bg-green-600 transition"
       aria-label="Cita rápida"
     >

@@ -1,9 +1,15 @@
 import React from "react";
+import Breadcrumb from "../UI/Breadcrumb";
 export default function Familiares() {
+  const breadcrumbItems = [
+    { label: "Inicio", href: "/inicio" },
+    { label: "Familiares" }
+  ];
+
   return (
     <>
-      <div className="text-base font-semibold pl-8 pt-3">Familiares</div>
-      <div className="text-2xl font-semibold pl-8 pt-3">¿Qué hay de nuevo?</div>
+      <Breadcrumb items={breadcrumbItems} />
+      <div className="text-2xl font-semibold pl-8 pt-3">Familiares</div>
     </>
   );
 }

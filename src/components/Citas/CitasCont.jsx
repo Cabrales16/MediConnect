@@ -1,9 +1,18 @@
 import React from "react";
+import Breadcrumb from "../UI/Breadcrumb";
+import Calendar from "./Calendario/Calendar";
+
 export default function Citas() {
+  const breadcrumbItems = [
+    { label: "Inicio", href: "/inicio" },
+    { label: "Citas" }
+  ];
+
   return (
     <>
-      <div className="text-base font-semibold pl-8 pt-3">Citas</div>
-      <div className="text-2xl font-semibold pl-8 pt-3">¿Qué hay de nuevo?</div>
+      <Breadcrumb items={breadcrumbItems} />
+      <div className="text-2xl font-semibold pl-8 pt-3">Agendar cita</div>
+      <Calendar />
     </>
   );
 }
