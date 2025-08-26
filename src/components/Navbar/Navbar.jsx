@@ -8,7 +8,7 @@ import ProfileButton from "./ProfileButton";
 
 export default function Navbar() {
   return (
-    <header className="w-full border-b bg-white">
+    <header className="w-full border-b border-gray-300 bg-white">
       <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-16 flex items-center justify-between">
           <div className="flex items-center">
