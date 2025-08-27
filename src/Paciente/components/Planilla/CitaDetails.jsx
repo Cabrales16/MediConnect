@@ -18,7 +18,7 @@ export default function CitaDetails({ cita, mode = "por", onClose }) {
             <h3 className="text-lg font-semibold">{cita.tipo}</h3>
             <p className="text-sm text-gray-500">{cita.fechaReadable} • {cita.hora}</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">Cerrar ✕</button>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">✕</button>
         </div>
 
         <div className="flex gap-6 flex-1">
