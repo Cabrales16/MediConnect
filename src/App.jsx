@@ -1,50 +1,51 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Navbar from "./components/Navbar/Navbar";
-import Sidebar from "./components/Menu/SideBar";
-import InicioCont from "./components/Inicio/InicioCont";
-import CitasCont from "./components/Citas/CitasCont";
-import PlanillaCont from "./components/Planilla/PlanillaCont";
-import FamiliaresCont from "./components/Familiares/FamiliaresCont";
-import IndMedicasCont from "./components/IndMedicas/IndMedicasCont";
+
+import PacienteLayout from "./Paciente/PacienteLayout.jsx";
+import MedicoLayout from "./Medico/MedicoLayout";
+import AdminLayout from "./Admin/AdminLayout";
+import Login from "./InicioSesion/InicioSesión";
 
 export default function App() {
-  // Esto es para eliminar el scroll de la página
   useEffect(() => {
-    document.body.style.overflow = "hidden"; // Elimina scroll
+    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = ""; // Limpieza si App se desmonta
+      document.body.style.overflow = "";
     };
   }, []);
 
+  // Simulación: aquí deberías obtener el rol real desde contexto, localStorage o backend
+  const userRole = "paciente"; // "medico", "admin" o null si no hay sesión
+
   return (
     <Router>
-      <div className="flex flex-col min-h-screen bg-white">
-        {/* Navbar */}
-        <header className="w-full">
-          <Navbar />
-        </header>
+      <Routes>
+        {/* Página de Login */} 
+        <Route path="/login" element={<Login />} />
 
-        {/* Contenedor principal: Sidebar + Contenido */}
-        <div className="flex flex-1">
-          {/* Barra lateral */}
-          <aside className="bg-white">
-            <Sidebar />
-          </aside>
+        {/* Layouts por rol */}
+        {userRole === "paciente" && (
+          <Route path="/paciente/*" element={<PacienteLayout />} />
+        )}
+        {userRole === "medico" && (
+          <Route path="/medico/*" element={<MedicoLayout />} />
+        )}
+        {userRole === "admin" && (
+          <Route path="/admin/*" element={<AdminLayout />} />
+        )}
 
-          {/* Contenido principal */}
-          <main className="flex-1 p-6">
-            <Routes>
-              <Route path="/" element={<Navigate to="/inicio" replace />} />
-              <Route path="/inicio" element={<InicioCont />} />
-              <Route path="/citas" element={<CitasCont />} />
-              <Route path="/planilla" element={<PlanillaCont />} />
-              <Route path="/familiares" element={<FamiliaresCont />} />
-              <Route path="/indicaciones" element={<IndMedicasCont />} />
-            </Routes>
-          </main>
-        </div>
-      </div>
+        {/* Fallback: redirige según el rol o al login */}
+        <Route
+          path="*"
+          element={
+            userRole ? (
+              <Navigate to={`/${userRole}`} replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+      </Routes>
     </Router>
   );
 }
