@@ -109,7 +109,7 @@ export default function PlanillaCont() {
         {/* Main layout: table (left) and details panel (right) */}
         <div className="flex gap-8">
           <div className="flex-1">
-            <div className="bg-white rounded-2xl shadow-md p-4">
+            <div className="bg-white rounded-2xl border border-gray-400 shadow-sm p-4">
               <PlanillaTable
                 mode={tab}
                 porTomar={samplePorTomar}
@@ -128,7 +128,7 @@ export default function PlanillaCont() {
                 onClose={() => setSelectedCita(null)}
               />
             ) : (
-              <div className="h-full rounded-2xl border border-dashed border-gray-200 flex items-center justify-center text-gray-400">
+              <div className="h-full rounded-2xl border border-dashed border-gray-400 flex items-center justify-center text-gray-400">
                 Selecciona "Ver detalles" en una cita para ver más información
               </div>
             )}

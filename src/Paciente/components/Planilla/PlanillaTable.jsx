@@ -13,21 +13,21 @@ export default function PlanillaTable({ mode = "por", porTomar = [], tomadas = [
               <th className="px-6 py-3 text-black">Fecha</th>
               <th className="px-6 py-3 text-black">Hora</th>
               <th className="px-6 py-3 text-black">Estado</th>
-              <th className="px-6 py-3 text-black">Acción</th>
+              <th className="px-6 py-3 text-black pl-9">Acción</th>
             </tr>
           </thead>
 
           <tbody>
             {rows.map((r) => (
-              <tr key={r.id} className="border-t">
+              <tr key={r.id} className="border-t border-gray-300 hover:bg-green-50">
                 <td className="px-6 py-2 text-black  w-1/4">{r.tipo}</td>
                 <td className="px-6 py-2 text-green-700 w-1/4">{r.fechaReadable || r.fecha}</td>
                 <td className="px-6 py-2 text-green-700">{r.hora}</td>
                 
-                <td className="px-6 py-2 text-green-700">
-                  <span className="px-2 py-2 bg-green-50 text-green-700 rounded-lg text-sm">{r.estado || "Programada"}</span>
+                <td className="px-6 py-2 text-green-700 w-1/5">
+                  <span className="px-2 py-2 bg-green-50 text-green-700 rounded-lg text-sm">{r.estado || "Tomada"}</span>
                 </td>
-                <td className="px-6 py-4 text-green-700 align-top">
+                <td className="px-6 p-4 text-green-700">
                   <button
                     className="text-green-600 hover:underline"
                     onClick={() => onViewDetails(r)}

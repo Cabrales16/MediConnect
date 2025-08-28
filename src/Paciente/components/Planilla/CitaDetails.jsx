@@ -11,7 +11,7 @@ export default function CitaDetails({ cita, mode = "por", onClose }) {
   const mapsSrc = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
 
   return (
-    <div className="bg-white rounded-2xl shadow-md overflow-hidden h-full">
+    <div className="bg-white rounded-2xl border border-gray-400 shadow-md overflow-hidden h-full">
       <div className="p-6 flex flex-col h-full">
         <div className="flex items-start justify-between mb-4">
           <div>
@@ -39,19 +39,6 @@ export default function CitaDetails({ cita, mode = "por", onClose }) {
               <p className="text-black">{cita.estado || "Programada"}</p>
             </div>
 
-            {mode === "tomadas" && (
-              <>
-                <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-gray-700">Notas adicionales</h4>
-                  <p className="text-green-700">{cita.notas || "Sin notas"}</p>
-                </div>
-
-                <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-gray-700">Indicaciones médicas</h4>
-                  <p className="text-green-700">{cita.indicaciones || "Sin indicaciones"}</p>
-                </div>
-              </>
-            )}
           </div>
 
           {/* RIGHT: mapa (para 'por') o notas (para 'tomadas' extra) */}
@@ -66,12 +53,12 @@ export default function CitaDetails({ cita, mode = "por", onClose }) {
                 />
               </div>
             ) : (
-              <div className="h-full border rounded-lg p-4 overflow-auto">
+              <div className="h-full overflow-auto">
                 <h4 className="text-sm font-semibold mb-2">Notas del médico</h4>
                 <p className="text-gray-700 mb-4">{cita.notas}</p>
 
                 <h4 className="text-sm font-semibold mb-2">Indicaciones médicas</h4>
-                <p className="text-green-700">{cita.indicaciones}</p>
+                <p className="text-gray-700">{cita.indicaciones}</p>
               </div>
             )}
           </div>
