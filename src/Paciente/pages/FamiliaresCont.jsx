@@ -61,7 +61,7 @@ export default function FamiliaresCont() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-md border border-gray-400 p-3">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-400 p-3">
           <div className="overflow-auto">
             <table className="min-w-full">
               <thead>

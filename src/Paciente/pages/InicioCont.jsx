@@ -88,7 +88,7 @@ export default function Inicio() {
           {novedades.map((item, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col"
+              className="bg-white rounded-2xl shadow-sm border border-gray-400 overflow-hidden flex flex-col"
             >
               <img
                 src={item.img}
