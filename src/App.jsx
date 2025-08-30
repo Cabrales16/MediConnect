@@ -14,8 +14,8 @@ export default function App() {
   return (
     <>
 
-    {/*<PacienteLayout /> */}
-    <Home />
+    <PacienteLayout />
+    {/* <Home /> */}
     
     </>
   );

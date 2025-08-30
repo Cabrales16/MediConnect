@@ -7,6 +7,11 @@ import CitasCont from "./pages/CitasCont";
 import PlanillaCont from "./pages/PlanillaCont";
 import FamiliaresCont from "./pages/FamiliaresCont";
 import IndMedicasCont from "./pages/IndMedicasCont";
+import FaqCont from "./pages/FaqCont";
+import ConfigCont from "./pages/ConfigCont";
+import PerfilCont from "./pages/PerfilCont";
+import EditarPerfilCont from "./pages/EditarPerfilCont";
+import NovedadDetalle from "./components/Inicio/NovedadDetalle";
 
 export default function PacienteLayout() {
   // Esto es para eliminar el scroll de la página
@@ -35,8 +40,13 @@ export default function PacienteLayout() {
           {/* Contenido principal */}
           <main className="flex-1 p-6">
             <Routes>
+              <Route path="/faq" element={<FaqCont />} />
+              <Route path="/configuracion" element={<ConfigCont />} />
+              <Route path="/perfil" element={<PerfilCont />} />
+              <Route path="/perfil/editar" element={<EditarPerfilCont />} />
               <Route path="/" element={<Navigate to="/inicio" replace />} />
               <Route path="/inicio" element={<InicioCont />} />
+              <Route path="/novedad/:id" element={<NovedadDetalle />} />
               <Route path="/citas" element={<CitasCont />} />
               <Route path="/planilla" element={<PlanillaCont />} />
               <Route path="/familiares" element={<FamiliaresCont />} />

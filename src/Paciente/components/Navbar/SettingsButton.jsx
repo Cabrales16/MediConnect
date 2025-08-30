@@ -1,14 +1,14 @@
 import React from "react";
-import configIcon from "./NavbarIcons/configIcon.png";
+import { Link } from "react-router-dom";
+import { Settings } from "lucide-react";
 
 export default function SettingsButton() {
   return (
-    <a
-      href="/settings"
-      className="p-2 rounded-md bg-gray-50 hover:bg-gray-100 transition"
-      aria-label="Configuración"
+    <Link
+      to="/configuracion"
+      className="p-2 rounded-md bg-gray-50 hover:bg-gray-100 transition relative"
     >
-      <img src={configIcon} alt="Configuración" className="w-6 h-6" />
-    </a>
+      <Settings className="w-6 h-6 text-gray-600" />
+    </Link>
   );
 }

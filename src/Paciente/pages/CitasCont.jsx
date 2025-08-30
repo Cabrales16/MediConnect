@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import Calendar from "../components/Citas/Calendario";
 import TipoCita from "../components/Citas/TipoCita";
@@ -13,7 +14,9 @@ export default function Citas() {
     { label: "Citas" }
   ];
 
-  // Estados
+  const location = useLocation();
+  const quickData = location.state; // 👈 datos desde cita rápida
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [tipoCita, setTipoCita] = useState("");
   const [ubicacion, setUbicacion] = useState("");
@@ -26,7 +29,16 @@ export default function Citas() {
     am_pm_fin: ""
   });
 
-  // Validación para habilitar el botón
+  // Si viene desde Cita rápida, prellenar
+  useEffect(() => {
+    if (quickData) {
+      setSelectedDate(quickData.selectedDate);
+      setTipoCita(quickData.tipoCita);
+      setUbicacion(quickData.ubicacion);
+      setHora(quickData.hora);
+    }
+  }, [quickData]);
+
   const isDisabled =
     !selectedDate ||
     !tipoCita ||
@@ -41,10 +53,8 @@ export default function Citas() {
       <Breadcrumb items={breadcrumbItems} />
       <div className="text-2xl font-semibold pl-8 pt-8">Agendar cita</div>
 
-      {/* Calendario */}
       <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 
-      {/* Fila principal con TipoCita, Ubicacion y HoraRango */}
       <div className="flex gap-6 pt-8 pl-8 pr-8">
         <TipoCita
           tipoCita={tipoCita}
@@ -63,28 +73,20 @@ export default function Citas() {
         />
       </div>
 
-      {/* Sección condicional para HoraDetalle y el botón Buscar */}
       {hora.tipo && (
-      <div className="flex items-start gap-6 pl-8 pr-8 pt-10">
-        {/* Columna izquierda: subtítulo + HoraDetalle */}
-        <div className="flex-1">
-          <div className="font-semibold">
-            {hora.tipo === "especifica"
-              ? "Seleccionar hora"
-              : "Seleccionar rango"}
+        <div className="flex items-start gap-6 pl-8 pr-8 pt-10">
+          <div className="flex-1">
+            <div className="font-semibold">
+              {hora.tipo === "especifica" ? "Seleccionar hora" : "Seleccionar rango"}
+            </div>
+            <HoraDetalle hora={hora} setHora={setHora} />
           </div>
-          <HoraDetalle hora={hora} setHora={setHora} />
+
+          <div className="flex justify-end">
+            <BuscarButton disabled={isDisabled} />
+          </div>
         </div>
-            
-        {/* Columna derecha: botón */}
-        <div className="flex justify-end">
-          <BuscarButton
-            disabled={isDisabled}
-            
-          />
-        </div>
-      </div>
-)}
+      )}
     </>
   );
 }
