@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Sidebar from "./components/Menu/SideBar";
@@ -14,13 +14,7 @@ import EditarPerfilCont from "./pages/EditarPerfilCont";
 import NovedadDetalle from "./components/Inicio/NovedadDetalle";
 
 export default function PacienteLayout() {
-  // Esto es para eliminar el scroll de la página
-  useEffect(() => {
-    document.body.style.overflow = "hidden"; // Elimina scroll
-    return () => {
-      document.body.style.overflow = ""; // Limpieza si App se desmonta
-    };
-  }, []);
+
 
   return (
     <Router>

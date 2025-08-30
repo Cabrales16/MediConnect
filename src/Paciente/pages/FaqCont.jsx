@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import ReportErrorModal from "../components/UI/ReportErrorModal";
 
 export default function FaqCont() {
+  // Esto es para eliminar el scroll de la página
+    useEffect(() => {
+      document.body.style.overflow = "hidden"; // Elimina scroll
+      return () => {
+        document.body.style.overflow = ""; // Limpieza si App se desmonta
+      };
+    }, []);
   const breadcrumbItems = [
     { label: "Inicio", href: "/inicio" },
     { label: "Centro de ayuda" },

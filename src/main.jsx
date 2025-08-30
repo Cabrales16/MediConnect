@@ -1,4 +1,4 @@
-import ReactDOM from 'react-dom/client' 
+import ReactDOM from 'react-dom/client'
 import App from './App.jsx' 
 import './index.css'   // <- Asegúrate de tener esta línea 
 import './index.css'   // (deja solo una si ya existía) 

@@ -1,26 +1,14 @@
-// src/components/UI/ReportErrorModal.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 export default function ReportErrorModal({ isOpen, onClose }) {
   const [errorType, setErrorType] = useState("");
   const [description, setDescription] = useState("");
-
-  // Bloquear scroll en body cuando el modal esté abierto
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-    return () => (document.body.style.overflow = "auto");
-  }, [isOpen]);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Reporte enviado:", { errorType, description });
-    // Lógica para enviar a backend o localStorage
     onClose();
   };
 
@@ -29,14 +17,13 @@ export default function ReportErrorModal({ isOpen, onClose }) {
       {/* Fondo oscuro */}
       <div
         className="absolute inset-0 bg-black/40"
-        onClick={onClose} // Cerrar al hacer clic fuera del modal
+        onClick={onClose}
       ></div>
 
       {/* Contenido del modal */}
       <div className="relative bg-white rounded-xl shadow-lg w-full max-w-md p-6 z-10">
         <h2 className="text-xl font-semibold mb-4">Reportar un error</h2>
         <form onSubmit={handleSubmit}>
-          {/* Tipo de error */}
           <label className="block mb-2 text-sm font-medium text-gray-700">
             Tipo de error
           </label>
@@ -53,7 +40,6 @@ export default function ReportErrorModal({ isOpen, onClose }) {
             <option value="otro">Otro</option>
           </select>
 
-          {/* Descripción */}
           <label className="block mb-2 text-sm font-medium text-gray-700">
             Descripción breve
           </label>
@@ -66,7 +52,6 @@ export default function ReportErrorModal({ isOpen, onClose }) {
             required
           />
 
-          {/* Botones */}
           <div className="flex justify-end space-x-3">
             <button
               type="button"

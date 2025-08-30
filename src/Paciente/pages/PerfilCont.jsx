@@ -1,10 +1,17 @@
 // src/containers/PerfilCont.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import editarIcon from "../components/Perfil/PerfilIcons/editarIcon.png";
 
 export default function PerfilCont() {
+    // Esto es para eliminar el scroll de la página
+    useEffect(() => {
+      document.body.style.overflow = "hidden"; // Elimina scroll
+      return () => {
+        document.body.style.overflow = ""; // Limpieza si App se desmonta
+      };
+    }, []);
   const navigate = useNavigate();
 
   const breadcrumbItems = [

@@ -1,22 +1,17 @@
 import React, { useEffect } from "react";
-import PacienteLayout from "./Paciente/PacienteLayout"
-import Home from "./LandingPage/LandingPage"
+import PacienteLayout from "./Paciente/PacienteLayout";
+import Home from "./LandingPage/LandingPage";
 
 export default function App() {
-  // Esto es para eliminar el scroll de la página
+  // Bloquear scroll de TODA la app
   useEffect(() => {
-    document.body.style.overflow = "hidden"; // Elimina scroll
-    return () => {
-      document.body.style.overflow = ""; // Limpieza si App se desmonta
-    };
+    document.body.style.overflow = "hidden"; 
   }, []);
 
   return (
     <>
-
-    <PacienteLayout />
-    {/* <Home /> */}
-    
+      <PacienteLayout />
+      {/* <Home /> */}
     </>
   );
 }
