@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import PacienteLayout from "./Paciente/PacienteLayout"
-import Home from "./LandingPage/LandingPage"
+import Inicio from "./InicioSesion/InicioSesion"
 
 export default function App() {
   // Esto es para eliminar el scroll de la página
@@ -14,8 +13,8 @@ export default function App() {
   return (
     <>
 
-    {/*<PacienteLayout /> */}
-    <Home />
+    <Inicio />
+  
     
     </>
   );
