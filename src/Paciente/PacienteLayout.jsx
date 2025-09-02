@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Sidebar from "./components/Menu/SideBar";
 import InicioCont from "./pages/InicioCont";
@@ -14,41 +14,42 @@ import EditarPerfilCont from "./pages/EditarPerfilCont";
 import NovedadDetalle from "./components/Inicio/NovedadDetalle";
 
 export default function PacienteLayout() {
-
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <Router>
-      <div className="flex flex-col min-h-screen bg-white">
-        {/* Navbar */}
-        <header className="w-full">
-          <Navbar />
-        </header>
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Navbar: le pasamos toggle para abrir/cerrar en móvil */}
+      <header className="w-full">
+        <Navbar onToggleSidebar={() => setSidebarOpen((s) => !s)} />
+      </header>
 
-        {/* Contenedor principal: Sidebar + Contenido */}
-        <div className="flex flex-1">
-          {/* Barra lateral */}
-          <aside className="bg-white">
-            <Sidebar />
-          </aside>
+      <div className="flex flex-1">
+        {/* Sidebar: en móvil será overlay basado en sidebarOpen */}
+        <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-          {/* Contenido principal */}
-          <main className="flex-1 p-6">
-            <Routes>
-              <Route path="/faq" element={<FaqCont />} />
-              <Route path="/configuracion" element={<ConfigCont />} />
-              <Route path="/perfil" element={<PerfilCont />} />
-              <Route path="/perfil/editar" element={<EditarPerfilCont />} />
-              <Route path="/" element={<Navigate to="/inicio" replace />} />
-              <Route path="/inicio" element={<InicioCont />} />
-              <Route path="/novedad/:id" element={<NovedadDetalle />} />
-              <Route path="/citas" element={<CitasCont />} />
-              <Route path="/planilla" element={<PlanillaCont />} />
-              <Route path="/familiares" element={<FamiliaresCont />} />
-              <Route path="/indicaciones" element={<IndMedicasCont />} />
-            </Routes>
-          </main>
-        </div>
+        {/* Main area */}
+        <main
+          className="flex-1 p-4 md:p-6 overflow-auto"
+          // cuando el sidebar overlay está abierto en móvil, podría evitar interacción con main
+          aria-hidden={sidebarOpen ? "true" : "false"}
+        >
+          <Routes>
+            <Route path="/" element={<Navigate to="/inicio" replace />} />
+            <Route path="/inicio" element={<InicioCont />} />
+            <Route path="/novedad/:id" element={<NovedadDetalle />} />
+            <Route path="/citas" element={<CitasCont />} />
+            <Route path="/planilla" element={<PlanillaCont />} />
+            <Route path="/familiares" element={<FamiliaresCont />} />
+            <Route path="/indicaciones" element={<IndMedicasCont />} />
+            <Route path="/faq" element={<FaqCont />} />
+            <Route path="/configuracion" element={<ConfigCont />} />
+            <Route path="/perfil" element={<PerfilCont />} />
+            <Route path="/perfil/editar" element={<EditarPerfilCont />} />
+
+            <Route path="*" element={<Navigate to="/inicio" replace />} />
+          </Routes>
+        </main>
       </div>
-    </Router>
+    </div>
   );
 }

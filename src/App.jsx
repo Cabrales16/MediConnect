@@ -1,17 +1,24 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import PacienteLayout from "./Paciente/PacienteLayout";
 import Home from "./LandingPage/LandingPage";
+import Login from "./InicioSesion/InicioSesion";
 
 export default function App() {
-  // Bloquear scroll de TODA la app
-  useEffect(() => {
-    document.body.style.overflow = "hidden"; 
-  }, []);
-
   return (
-    <>
-      <PacienteLayout />
-      {/* <Home /> */}
-    </>
+    <BrowserRouter>
+      <Routes>
+        {/* Landing pública */}
+        <Route path="/home" element={<Home />} />
+        <Route index element={<Navigate to="/home" replace />} />
+
+        {/* Login */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Rutas protegidas / app del paciente */}
+        {/* PacienteLayout ya NO debe incluir BrowserRouter */}
+        <Route path="/*" element={<PacienteLayout />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

@@ -48,16 +48,21 @@ export default function FamiliaresCont() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h2 className="text-2xl font-semibold">Familiares</h2>
-            <p className="text-sm text-gray-500">Añade y gestiona la información de tus familiares.</p>
+            <p className="text-sm text-gray-500">
+              Añade y gestiona la información de tus familiares.
+            </p>
           </div>
 
           <div>
             <button
               onClick={() => setShowAdd(true)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-green-500 text-white font-medium shadow-sm hover:bg-green-600 transition"
+              className="flex items-center justify-center gap-2 px-3 py-2 sm:px-4 sm:py-3 rounded-lg bg-green-500 text-white font-medium shadow-sm hover:bg-green-600 transition"
             >
-              <img src={agregarIcon} alt="" className="w-6 flex items-center"/> Añadir
+              <img src={agregarIcon} alt="" className="w-6 h-6" />
+              <span className="hidden sm:inline">Añadir</span>
             </button>
+
+
           </div>
         </div>
 
@@ -78,19 +83,19 @@ export default function FamiliaresCont() {
                     <td className="px-6 py-3 text-black">{f.nombre}</td>
                     <td className="px-6 py-3 text-green-700">{f.correo}</td>
                     <td className="px-6 py-3 text-green-700">{f.tipo}</td>
-                    <td className="px-6 py-3 text-green-700">
-                      <div className="flex gap-2">
+                    <td className="px-6 py-3">
+                      <div className="flex gap-3">
                         <button
-                          className="px-3 py-2 rounded-md bg-green-50 text-green-700 hover:bg-green-100"
+                          className="w-12 h-12 rounded-lg bg-green-50 text-green-700 hover:bg-green-100 flex items-center justify-center"
                           onClick={() => setEditing(f)}
                         >
-                          <img src={editarVerdeIcon} alt="EditarVerde" className="w-6"/>
+                          <img src={editarVerdeIcon} alt="EditarVerde" className="w-6 h-6" />
                         </button>
                         <button
-                          className="px-3 py-2 rounded-md bg-red-50 text-red-600 hover:bg-red-100"
+                          className="w-12 h-12 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 flex items-center justify-center"
                           onClick={() => setDeleting(f)}
                         >
-                          <img src={eliminarRojoIcon} alt="EditarRojo" className="w-5"/>
+                          <img src={eliminarRojoIcon} alt="EliminarRojo" className="w-6 h-6" />
                         </button>
                       </div>
                     </td>
@@ -98,7 +103,10 @@ export default function FamiliaresCont() {
                 ))}
                 {familiares.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                    <td
+                      colSpan={4}
+                      className="px-6 py-8 text-center text-gray-500"
+                    >
                       No hay familiares añadidos.
                     </td>
                   </tr>
@@ -109,9 +117,17 @@ export default function FamiliaresCont() {
         </div>
       </div>
 
-      {/* Paneles/modal (render in-place) */}
-      {showAdd && <AddFamilia onCancel={() => setShowAdd(false)} onAdd={handleAdd} />}
-      {editing && <EditFamilia initial={editing} onCancel={() => setEditing(null)} onSave={handleUpdate} />}
+      {/* Paneles/modal */}
+      {showAdd && (
+        <AddFamilia onCancel={() => setShowAdd(false)} onAdd={handleAdd} />
+      )}
+      {editing && (
+        <EditFamilia
+          initial={editing}
+          onCancel={() => setEditing(null)}
+          onSave={handleUpdate}
+        />
+      )}
       {deleting && (
         <ConfirmModal
           title="Eliminar familiar"

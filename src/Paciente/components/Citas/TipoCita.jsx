@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function TipoCita({ tipoCita, setTipoCita, disabled }) {
   const opciones = [
     "Cita de control",
@@ -21,7 +19,7 @@ export default function TipoCita({ tipoCita, setTipoCita, disabled }) {
           disabled ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        <option value="" disabled hidden>
+        <option value="" disabled>
           -- Selecciona una opción --
         </option>
         {opciones.map((op) => (

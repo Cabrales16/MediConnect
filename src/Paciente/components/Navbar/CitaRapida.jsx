@@ -20,7 +20,7 @@ export default function CitaRapidaButton() {
           inicio: "08:00",
           am_pm: "AM",
         },
-        ubicacion: "Sede Principal"
+        ubicacion: "Sede Principal",
       },
     });
   };
@@ -31,8 +31,11 @@ export default function CitaRapidaButton() {
         onClick={() => setIsOpen(true)}
         className="flex items-center gap-2 px-3 py-2 rounded-md bg-green-500 text-white font-medium shadow-sm hover:bg-green-600 transition"
       >
-        <img src={agendarIcon} alt="" className="w-6 h-6" />
-        <span className="whitespace-nowrap">Cita rápida</span>
+        {/* Icono siempre visible */}
+        <img src={agendarIcon} alt="Cita rápida" className="w-6 h-6" />
+
+        {/* Texto solo visible en md+ */}
+        <span className="hidden md:inline whitespace-nowrap">Cita rápida</span>
       </button>
 
       <CitaRapidaModal

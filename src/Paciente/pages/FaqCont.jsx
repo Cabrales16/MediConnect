@@ -1,15 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import ReportErrorModal from "../components/UI/ReportErrorModal";
 
 export default function FaqCont() {
-  // Esto es para eliminar el scroll de la página
-    useEffect(() => {
-      document.body.style.overflow = "hidden"; // Elimina scroll
-      return () => {
-        document.body.style.overflow = ""; // Limpieza si App se desmonta
-      };
-    }, []);
   const breadcrumbItems = [
     { label: "Inicio", href: "/inicio" },
     { label: "Centro de ayuda" },
@@ -18,7 +11,7 @@ export default function FaqCont() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <>
+    <div>
       <Breadcrumb items={breadcrumbItems} />
 
       <div className="p-8">
@@ -70,20 +63,15 @@ export default function FaqCont() {
             para que podamos solucionarlo.
           </p>
           <button
-            onClick={() => setIsModalOpen(true)} // 👈 abre el modal
-            className="px-5 py-2 rounded-md bg-green-500 text-white font-medium hover:bg-green-600 transition"
-            type="button"
-          >
-            Reportar un error
-          </button>
-        </div>
+          onClick={() => setIsModalOpen(true)}
+          className="px-5 py-2 rounded-md bg-green-500 text-white font-medium hover:bg-green-600 transition"
+        >
+          Reportar un error
+        </button>
       </div>
 
-      {/* Modal conectado */}
-      <ReportErrorModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
-    </>
+      <ReportErrorModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      </div>
+    </div>
   );
 }

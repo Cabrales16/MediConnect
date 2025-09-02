@@ -1,4 +1,3 @@
-// src/containers/EditarPerfilCont.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/UI/Breadcrumb";

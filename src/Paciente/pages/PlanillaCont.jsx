@@ -11,9 +11,7 @@ export default function PlanillaCont() {
     { label: "Planilla" },
   ];
 
-  // ---------------------------
   // ESTADOS DE CITAS
-  // ---------------------------
   const [porTomar, setPorTomar] = useState([
     {
       id: 1,
@@ -72,9 +70,7 @@ export default function PlanillaCont() {
     },
   ]);
 
-  // ---------------------------
   // CONTROLES DE UI
-  // ---------------------------
   const [tab, setTab] = useState("por"); // "por" | "tomadas"
   const [selectedCita, setSelectedCita] = useState(null);
   const [modal, setModal] = useState(null); // "modificar" | "cancelar"
@@ -114,8 +110,9 @@ export default function PlanillaCont() {
         </div>
 
         {/* Main */}
-        <div className="flex gap-8">
-          <div className="flex-1">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Tabla */}
+          <div className="w-full md:w-1/2">
             <div className="bg-white rounded-2xl border border-gray-400 shadow-sm p-4">
               <PlanillaTable
                 mode={tab}
@@ -126,7 +123,8 @@ export default function PlanillaCont() {
             </div>
           </div>
 
-          <div className="w-1/2">
+          {/* Detalles */}
+          <div className="w-full md:w-1/2 mt-6 md:mt-0">
             {selectedCita ? (
               <CitaDetails
                 cita={selectedCita}
@@ -140,7 +138,7 @@ export default function PlanillaCont() {
                 }
               />
             ) : (
-              <div className="h-full rounded-2xl border border-dashed border-gray-400 flex items-center justify-center text-gray-400">
+              <div className="h-full rounded-2xl border border-dashed border-gray-400 flex items-center justify-center text-gray-400 p-6">
                 Selecciona "Ver detalles" en una cita para ver más información
               </div>
             )}
@@ -156,17 +154,10 @@ export default function PlanillaCont() {
           onCancel={() => setModal(null)}
           onConfirm={() => {
             const citaCancelada = { ...selectedCita, estado: "Cancelado" };
-            // console.log("❌ Cita cancelada:", citaCancelada);
-
-            // 1. Sacar la cita de la lista porTomar
             setPorTomar((prev) =>
               prev.filter((c) => c.id !== citaCancelada.id)
             );
-
-            // 2. Mantenerla seleccionada (para mostrar detalles actualizados)
             setSelectedCita(citaCancelada);
-
-            // 3. Cerrar modal
             setModal(null);
           }}
         />
@@ -178,13 +169,9 @@ export default function PlanillaCont() {
           cita={selectedCita}
           onCancel={() => setModal(null)}
           onSave={(updated) => {
-            // console.log("✏️ Cita modificada:", updated);
-
-            // Actualizar en lista porTomar
             setPorTomar((prev) =>
               prev.map((c) => (c.id === updated.id ? updated : c))
             );
-
             setSelectedCita(updated);
             setModal(null);
           }}

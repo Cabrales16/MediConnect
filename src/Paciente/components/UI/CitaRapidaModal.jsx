@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import useLockBodyScroll from "../../../hooks/useLockBodyScroll";
 
 export default function CitaRapidaModal({ isOpen, onClose, onConfirm }) {
   const [tipoCita, setTipoCita] = useState("");
+
+  useLockBodyScroll(isOpen);
 
   if (!isOpen) return null;
 
@@ -16,10 +19,10 @@ export default function CitaRapidaModal({ isOpen, onClose, onConfirm }) {
           className="w-full border rounded-lg p-2 mb-6"
         >
           <option value="">-- Selecciona un tipo --</option>
-          <option value="general">Consulta general</option>
-          <option value="pediatria">Pediatría</option>
-          <option value="odontologia">Odontología</option>
-          <option value="cardiologia">Cardiología</option>
+          <option value="Consulta general">Consulta general</option>
+          <option value="Pediatría">Pediatría</option>
+          <option value="Odontología">Odontología</option>
+          <option value="Cardiología">Cardiología</option>
         </select>
 
         <div className="flex justify-end gap-3">
