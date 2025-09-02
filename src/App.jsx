@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import Inicio from "./InicioSesion/InicioSesion"
+import Registro from "./Registro/Registro"
+
 
 export default function App() {
   // Esto es para eliminar el scroll de la página
@@ -13,7 +14,7 @@ export default function App() {
   return (
     <>
 
-    <Inicio />
+    <Registro />
   
     
     </>
