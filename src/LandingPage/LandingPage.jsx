@@ -8,26 +8,6 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen bg-green-500 overflow-hidden">
-      {/* SVGs decorativos adaptativos */}
-      <svg
-        className="absolute -top-10 -left-6 w-40 h-24 md:w-[500px] md:h-[300px] text-white opacity-95"
-        viewBox="0 0 320 180"
-        fill="currentColor"
-        aria-hidden
-      >
-        <path d="M0,100 Q60,40 120,60 Q200,80 280,20 Q300,10 320,0 L0,0 Z" />
-      </svg>
-
-      <svg
-        className="absolute -bottom-10 -right-6 w-40 h-24 md:w-[500px] md:h-[300px] text-white opacity-95"
-        viewBox="0 0 320 180"
-        fill="currentColor"
-        aria-hidden
-      >
-        <g transform="scale(-1,-1) translate(-320,-180)">
-          <path d="M0,100 Q60,40 120,60 Q200,80 280,20 Q300,10 320,0 L0,0 Z" />
-        </g>
-      </svg>
 
       {/* Header */}
       <header className="relative z-10 bg-white/90 backdrop-blur-sm">
@@ -50,7 +30,7 @@ export default function Home() {
           {/* Right buttons (desktop) */}
           <div className="hidden md:flex items-center gap-3">
             <Link
-              to="/registro"
+              to="/register"
               className="bg-white text-green-500 font-semibold px-4 py-2 rounded-md hover:bg-gray-100 border border-green-500 text-sm md:text-base"
             >
               ¡Registrarse!
@@ -90,7 +70,7 @@ export default function Home() {
 
               <div className="pt-3 flex gap-2">
                 <Link
-                  to="/registro"
+                  to="/register"
                   onClick={() => setMobileOpen(false)}
                   className="flex-1 bg-white text-green-600 border border-green-500 rounded-md px-3 py-2 text-center"
                 >
@@ -121,22 +101,6 @@ export default function Home() {
               Facilita tu salud con MediConnect. Reserva tu cita médica en línea de forma rápida y segura, sin filas ni esperas.
               Accede a especialistas confiables cuando lo necesites y lleva el control de tus consultas desde cualquier dispositivo.
             </p>
-
-            <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
-              <Link
-                to="/registro"
-                className="px-5 py-3 bg-white text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition w-full sm:w-auto text-center"
-              >
-                Registrarse
-              </Link>
-
-              <Link
-                to="/login"
-                className="px-5 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition w-full sm:w-auto text-center"
-              >
-                Iniciar sesión
-              </Link>
-            </div>
           </div>
 
           {/* Imagen */}

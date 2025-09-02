@@ -16,9 +16,26 @@ export default function Login() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-green-200 overflow-hidden">
-      {/* ... (tu UI existente, SVGs, layout) ... */}
+      <svg
+        className="absolute -top-10 left-0 w-[500px] h-[300px] text-green-500"
+        viewBox="0 0 320 180"
+        fill="currentColor"
+      >
+        <path d="M0,100 Q60,40 120,60 Q200,80 280,20 Q300,10 320,0 L0,0 Z" />
+      </svg>
 
-      <div className="relative flex flex-col md:flex-row max-w-4xl w-full shadow-md rounded-3xl overflow-hidden z-10">
+      <svg
+        className="absolute -bottom-10 right-0 w-[500px] h-[300px] text-green-500"
+        viewBox="0 0 320 180"
+        fill="currentColor"
+      >
+        <g transform="scale(-1,-1) translate(-320,-180)">
+          <path d="M0,100 Q60,40 120,60 Q200,80 280,20 Q300,10 320,0 L0,0 Z" />
+        </g>
+      </svg>
+
+    
+      <div className="relative flex flex-col md:flex-row max-w-4xl w-full shadow-md rounded-3xl overflow-hidden z-10 my-15">
         {/* Lado izquierdo */}
         <div className="md:w-1/2 bg-white flex flex-col items-center justify-start p-6 text-center shadow-lg">
           <img src={logo} alt="Logo" className="w-16 h-16 object-contain mb-4" />
@@ -30,7 +47,7 @@ export default function Login() {
 
         {/* Lado derecho (formulario) */}
         <div className="md:w-1/2 bg-green-500 flex items-center justify-center p-4 pl-16">
-          <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm md:-translate-x-6">
+          <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm md:-translate-x-6 my-6 py-15">
             <h2 className="text-xl font-bold text-gray-800 text-center mb-2">Inicia sesión</h2>
             <p className="text-center text-gray-600 mb-4 text-sm">Accede a tu cuenta para continuar</p>
 
