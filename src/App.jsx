@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Registro from "./Registro/Registro"
+import RecuperarContraseña from "./RecuperarContraseña/RecuperarContraseña"
 
 
 export default function App() {
@@ -14,7 +14,7 @@ export default function App() {
   return (
     <>
 
-    <Registro />
+    <RecuperarContraseña />
   
     
     </>
