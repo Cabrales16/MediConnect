@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import RecuperarContraseña from "./RecuperarContraseña/RecuperarContraseña"
+import RestablecerContraseña from "./RestablecerContraseña/RestablecerContraseña"
 
 
 export default function App() {
@@ -14,7 +14,7 @@ export default function App() {
   return (
     <>
 
-    <RecuperarContraseña />
+    <RestablecerContraseña />
   
     
     </>
