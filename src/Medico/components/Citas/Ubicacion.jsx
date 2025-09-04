@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Ubicacion({ ubicacion, setUbicacion, disabled }) {
   const ubicaciones = [
     "Hospital de Suba",
@@ -19,7 +17,7 @@ export default function Ubicacion({ ubicacion, setUbicacion, disabled }) {
           disabled ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        <option value="" disabled hidden>
+        <option value="" disabled>
           -- Selecciona una opción --
         </option>
         {ubicaciones.map((u) => (

@@ -154,9 +154,9 @@ export default function Home() {
           <p className="mb-8 text-sm md:text-lg">¿Tienes dudas o deseas más información? Nuestro equipo está listo para ayudarte.</p>
 
           <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Nombre completo" className="p-3 rounded-lg text-black w-full"/>
-            <input type="email" placeholder="Correo electrónico" className="p-3 rounded-lg text-black w-full"/>
-            <textarea placeholder="Escribe tu mensaje" className="col-span-1 md:col-span-2 p-3 rounded-lg text-black h-32"></textarea>
+            <input type="text" placeholder="Nombre completo" className="p-3 rounded-lg text-black w-full bg-white"/>
+            <input type="email" placeholder="Correo electrónico" className="p-3 rounded-lg text-black w-full bg-white"/>
+            <textarea placeholder="Escribe tu mensaje" className="col-span-1 md:col-span-2 p-3 rounded-lg text-black h-32 bg-white"></textarea>
             <button className="col-span-1 md:col-span-2 bg-white text-green-600 font-semibold py-3 rounded-lg hover:bg-gray-100 transition">Enviar Mensaje</button>
           </form>
         </div>

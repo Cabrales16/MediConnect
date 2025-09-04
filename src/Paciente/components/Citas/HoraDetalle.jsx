@@ -80,8 +80,9 @@ export default function HoraDetalle({ hora, setHora }) {
       )}
 
       {hora.tipo === "rango" && (
-        <div className="flex items-center gap-4">
-          <div className="flex gap-2 items-center">
+        <div className="flex flex-col md:flex-row items-center gap-4">
+          {/* Inicio */}
+          <div className="flex gap-2 items-center w-full md:w-auto">
             <input
               type="text"
               placeholder="Inicio (Ej: 09:00)"
@@ -102,10 +103,12 @@ export default function HoraDetalle({ hora, setHora }) {
               <option value="PM">PM</option>
             </select>
           </div>
-
-          <img className="w-4" src={rangoHoraIcon} alt="Rango" />
-
-          <div className="flex gap-2 items-center">
+      
+          {/* Icono rango */}
+          <img className="w-4 self-center" src={rangoHoraIcon} alt="Rango" />
+      
+          {/* Fin */}
+          <div className="flex gap-2 items-center w-full md:w-auto">
             <input
               type="text"
               placeholder="Fin (Ej: 02:00)"
@@ -128,6 +131,7 @@ export default function HoraDetalle({ hora, setHora }) {
           </div>
         </div>
       )}
+
     </div>
   );
 }

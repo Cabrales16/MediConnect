@@ -12,6 +12,7 @@ import ConfigCont from "./pages/ConfigCont";
 import PerfilCont from "./pages/PerfilCont";
 import EditarPerfilCont from "./pages/EditarPerfilCont";
 import NovedadDetalle from "./components/Inicio/NovedadDetalle";
+import ListaDoctores from "./components/Citas/MedicosDisponibles/ListaDoctores"
 
 export default function PacienteLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -38,6 +39,7 @@ export default function PacienteLayout() {
             <Route path="/inicio" element={<InicioCont />} />
             <Route path="/novedad/:id" element={<NovedadDetalle />} />
             <Route path="/citas" element={<CitasCont />} />
+            <Route path="/citas/medicos" element={<ListaDoctores />} />
             <Route path="/planilla" element={<PlanillaCont />} />
             <Route path="/familiares" element={<FamiliaresCont />} />
             <Route path="/indicaciones" element={<IndMedicasCont />} />

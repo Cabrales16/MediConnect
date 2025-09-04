@@ -1,28 +1,33 @@
 import React from "react";
+import cancelarIcon from "../Planilla/PlanillaIcons/cancelarIcon.png"
+import editarIcon from "../Planilla/PlanillaIcons/editarIcon.png"
 
-/**
- * Muestra información detallada de la cita en la mitad derecha de la pantalla.
- * Si mode === 'por' -> muestra info + iframe mapa (lado derecho)
- * Si mode === 'tomadas' -> muestra info + notas adicionales + indicaciones
- */
-export default function CitaDetails({ cita, mode = "por", onClose }) {
-  // generar URL de Google Maps simple (usuario reemplaza con embed real si quiere)
+export default function CitaDetails({ cita, mode = "por", onClose, onModificar, onCancelar }) {
   const mapsQuery = encodeURIComponent(cita.direccion || "Bogotá");
   const mapsSrc = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
 
   return (
-    <div className="bg-white rounded-2xl shadow-md overflow-hidden h-full">
+    <div className="bg-white rounded-2xl border border-gray-400 shadow-md overflow-hidden h-full">
       <div className="p-6 flex flex-col h-full">
+        {/* HEADER */}
         <div className="flex items-start justify-between mb-4">
           <div>
             <h3 className="text-lg font-semibold">{cita.tipo}</h3>
-            <p className="text-sm text-gray-500">{cita.fechaReadable} • {cita.hora}</p>
+            <p className="text-sm text-gray-500">
+              {cita.fechaReadable} • {cita.hora}
+            </p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">Cerrar ✕</button>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            ✕
+          </button>
         </div>
 
+        {/* CONTENT */}
         <div className="flex gap-6 flex-1">
-          {/* LEFT: Información detallada (primera mitad) */}
+          {/* LEFT: Info */}
           <div className="w-1/2 pr-4">
             <div className="mb-4">
               <h4 className="text-sm font-semibold text-gray-700">Médico</h4>
@@ -38,23 +43,9 @@ export default function CitaDetails({ cita, mode = "por", onClose }) {
               <h4 className="text-sm font-semibold text-gray-700">Estado</h4>
               <p className="text-black">{cita.estado || "Programada"}</p>
             </div>
-
-            {mode === "tomadas" && (
-              <>
-                <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-gray-700">Notas adicionales</h4>
-                  <p className="text-green-700">{cita.notas || "Sin notas"}</p>
-                </div>
-
-                <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-gray-700">Indicaciones médicas</h4>
-                  <p className="text-green-700">{cita.indicaciones || "Sin indicaciones"}</p>
-                </div>
-              </>
-            )}
           </div>
 
-          {/* RIGHT: mapa (para 'por') o notas (para 'tomadas' extra) */}
+          {/* RIGHT */}
           <div className="w-1/2 pl-4">
             {mode === "por" ? (
               <div className="h-full border rounded-lg overflow-hidden">
@@ -66,16 +57,36 @@ export default function CitaDetails({ cita, mode = "por", onClose }) {
                 />
               </div>
             ) : (
-              <div className="h-full border rounded-lg p-4 overflow-auto">
+              <div className="h-full overflow-auto">
                 <h4 className="text-sm font-semibold mb-2">Notas del médico</h4>
                 <p className="text-gray-700 mb-4">{cita.notas}</p>
 
-                <h4 className="text-sm font-semibold mb-2">Indicaciones médicas</h4>
-                <p className="text-green-700">{cita.indicaciones}</p>
+                <h4 className="text-sm font-semibold mb-2">
+                  Indicaciones médicas
+                </h4>
+                <p className="text-gray-700">{cita.indicaciones}</p>
               </div>
             )}
           </div>
         </div>
+
+        {/* FOOTER: Solo visible en "por tomar" */}
+        {mode === "por" && (
+          <div className="mt-6 flex gap-3 justify-end">
+            <button
+              onClick={() => onModificar?.(cita)}
+              className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 shadow"
+            >
+              <img src={editarIcon} alt="editar" className="w-6" />
+            </button>
+            <button
+              onClick={() => onCancelar?.(cita)}
+              className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 shadow"
+            >
+              <img src={cancelarIcon} alt="cancelar" className="w-6" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

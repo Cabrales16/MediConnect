@@ -19,16 +19,18 @@ export default function ProfileButton() {
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg p-2 border border-gray-200">
+        <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-lg p-2 border border-gray-200">
           <Link
             to="/perfil"
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
           >
             Ver perfil
           </Link>
-          <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
+          <a href="/home">
+            <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
             Cerrar sesión
           </button>
+          </a>
         </div>
       )}
     </div>

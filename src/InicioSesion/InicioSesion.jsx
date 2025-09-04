@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { User, Mail, Lock } from "lucide-react";
 import logo from "./IniciopSesionImages/Logo.png";
 import calendario from "./IniciopSesionImages/calendario.jpeg";
+import Volver from "./IniciopSesionImages/flechaIconIzq.png"
 
 export default function Login() {
   const navigate = useNavigate();
@@ -35,7 +36,10 @@ export default function Login() {
       </svg>
 
     
-      <div className="relative flex flex-col md:flex-row max-w-4xl w-full shadow-md rounded-3xl overflow-hidden z-10 my-15">
+      <div className="relative flex flex-col md:flex-row max-w-4xl w-full shadow-md rounded-2xl overflow-hidden z-10 my-15">
+          <a href="/home" className="w-2 h-2 absolute flex ml-4 mt-5 items-center">
+            <img src={Volver} alt="regresar" /> <p className="pl-3">Volver</p>
+          </a>
         {/* Lado izquierdo */}
         <div className="md:w-1/2 bg-white flex flex-col items-center justify-start p-6 text-center shadow-lg">
           <img src={logo} alt="Logo" className="w-16 h-16 object-contain mb-4" />
@@ -68,7 +72,7 @@ export default function Login() {
               </div>
 
               <div className="text-right">
-                <a href="#" className="text-xs text-blue-500 hover:underline">¿Olvidaste tu contraseña?</a>
+                <a href="/login/recuperar" className="text-xs text-blue-500 hover:underline">¿Olvidaste tu contraseña?</a>
               </div>
 
               <button type="submit" className="w-full bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition font-medium text-sm">
@@ -78,7 +82,7 @@ export default function Login() {
 
             <p className="text-center text-xs text-gray-600 mt-4">
               ¿No tienes cuenta?{" "}
-              <a href="#" className="text-blue-500 font-medium hover:underline">Regístrate</a>
+              <a href="/register" className="text-blue-500 font-medium hover:underline">Regístrate</a>
             </p>
           </div>
         </div>
