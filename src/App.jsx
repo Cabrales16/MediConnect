@@ -7,6 +7,7 @@ import Login from "./InicioSesion/InicioSesion";
 import Register from "./Registro/Registro"
 import RecuperarContrasena from "./RecuperarContraseña/RecuperarContraseña"
 import RestablecerContrasena from "./RestablecerContraseña/RestablecerContraseña"
+import ModificarDatosModal from "./Medico/components/UI/ModificarDatosModal";
 
 export default function App() {
   return (
