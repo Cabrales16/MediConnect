@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import dayjs from "dayjs";
-import "dayjs/locale/es"; // Idioma español
+import "dayjs/locale/es";
 import flechaIcon from "./CitasIcon/flechaIcon.png";
 import flechaIconIzq from "./CitasIcon/flechaIconIzq.png";
 
-dayjs.locale("es"); // Configuración global
+dayjs.locale("es");
 
 export default function Calendario({ selectedDate, setSelectedDate }) {
   const [currentMonth, setCurrentMonth] = useState(dayjs());
@@ -13,46 +13,34 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
   const prevMonth = () => setCurrentMonth((m) => m.subtract(1, "month"));
 
   const renderMonth = (month) => {
-    // Usamos Date nativa para evitar offsets por el cambio de horario
     const year = month.year();
-    const monthIndex = month.month(); // 0..11
-
+    const monthIndex = month.month();
     const firstOfMonth = new Date(year, monthIndex, 1);
-    const startDayOfWeek = firstOfMonth.getDay(); // 0 = Domingo ... 6 = Sábado
-
-    // Inicio de la grilla: domingo anterior (o el mismo domingo si empieza en domingo)
+    const startDayOfWeek = firstOfMonth.getDay();
     const gridStart = new Date(year, monthIndex, 1 - startDayOfWeek);
 
-    // Generamos 6 semanas (6 * 7 = 42) — así la altura nunca cambia
     const days = [];
     for (let i = 0; i < 42; i++) {
       const d = new Date(gridStart);
       d.setDate(gridStart.getDate() + i);
-      // Convertimos a dayjs para formateo / comparación con selectedDate
       days.push(dayjs(d));
     }
 
     return (
-      <div className="w-90 pt-5">
-        <h3 className="text-center font-semibold mb-3 text-xl capitalize pb-1">
+      <div className="w-80 pt-5">
+        <h3 className="text-center font-semibold mb-3 text-xl capitalize">
           {month.format("MMMM YYYY")}
         </h3>
-
-        {/* Forzar altura constante para que siempre quepan 6 filas (ya estamos generando 42 días) */}
-        <div
-          className="grid grid-cols-7 gap-x-2 gap-y-1 text-center"
-          style={{ minHeight: "320px" }} // Mantén o ajusta este valor si cambias tamaños
-        >
+        <div className="grid grid-cols-7 gap-x-2 gap-y-1 text-center min-h-[320px]">
           {["D", "L", "M", "M", "J", "V", "S"].map((d) => (
             <div key={d} className="font-bold pb-2">
               {d}
             </div>
           ))}
-
           {days.map((d) => {
             const isCurrentMonth = d.month() === month.month();
-            const isSelected = selectedDate && selectedDate.isSame && selectedDate.isSame(d, "day");
-
+            const isSelected =
+              selectedDate && selectedDate.isSame && selectedDate.isSame(d, "day");
             return (
               <button
                 key={d.format("YYYY-MM-DD")}
@@ -77,20 +65,19 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
 
   return (
     <div className="flex justify-center pt-10">
-      {/* Contenedor del calendario */}
-      <div className="flex gap-4 items-start bg-white rounded-xl">
-        {/* Botones de navegación */}
-        <button onClick={prevMonth}>
-          <img className="w-2 pt-10" src={flechaIconIzq} alt="Anterior" />
+      <div className="flex items-start bg-white rounded-xl">
+        <button onClick={prevMonth} className="px-2 pt-6">
+          <img className="w-3" src={flechaIconIzq} alt="Anterior" />
         </button>
 
-        <div className="flex gap-16 t-2">
+        {/* 📱 móvil: un mes | 💻 desktop: dos meses */}
+        <div className="flex gap-8 flex-col md:flex-row">
           {renderMonth(currentMonth)}
-          {renderMonth(currentMonth.add(1, "month"))}
+          <div className="hidden md:block">{renderMonth(currentMonth.add(1, "month"))}</div>
         </div>
 
-        <button onClick={nextMonth}>
-          <img className="w-2 pt-10" src={flechaIcon} alt="Siguiente" />
+        <button onClick={nextMonth} className="px-2 pt-6">
+          <img className="w-3" src={flechaIcon} alt="Siguiente" />
         </button>
       </div>
     </div>

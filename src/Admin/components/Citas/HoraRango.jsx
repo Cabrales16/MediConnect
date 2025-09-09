@@ -1,7 +1,5 @@
 export default function HoraRango({ hora, setHora, disabled }) {
-  const handleChange = (value) => {
-    setHora({ ...hora, tipo: value });
-  };
+  const handleChange = (value) => setHora({ ...hora, tipo: value });
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -14,7 +12,7 @@ export default function HoraRango({ hora, setHora, disabled }) {
           disabled ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        <option value="" disabled hidden>
+        <option value="" disabled>
           -- Selecciona una opción --
         </option>
         <option value="especifica">Hora específica</option>

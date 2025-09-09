@@ -4,12 +4,11 @@ import PlanillaTable from "../components/Planilla/PlanillaTable";
 import CitaDetails from "../components/Planilla/CitaDetails";
 import ConfirmModal from "../components/UI/ConfirmModal";
 import ModificarCitaModal from "../components/UI/ModificarCitaModal";
-import ModalIndicaciones from "../components/UI/ModalIndicaciones";
 
 export default function PlanillaCont() {
   const breadcrumbItems = [
     { label: "Inicio", href: "/inicio" },
-    { label: "Planilla" },
+    { label: "Gest. de Usuarios" },
   ];
 
   // ESTADOS DE CITAS
@@ -20,7 +19,6 @@ export default function PlanillaCont() {
       fecha: "2025-08-20",
       fechaReadable: "20 de agosto de 2025",
       hora: "08:00 A.M.",
-      paciente: "María González",
       medico: "Dr. Gerson Sánchez",
       direccion: "Calle 123, Bogotá",
       estado: "Programada",
@@ -31,7 +29,6 @@ export default function PlanillaCont() {
       fecha: "2025-08-23",
       fechaReadable: "23 de agosto de 2025",
       hora: "10:00 A.M.",
-      paciente: "Juan Pérez",
       medico: "Dra. Juliana García",
       direccion: "Av. Siempre Viva 45",
       estado: "Programada",
@@ -42,7 +39,6 @@ export default function PlanillaCont() {
       fecha: "2025-08-30",
       fechaReadable: "30 de agosto de 2025",
       hora: "02:00 P.M.",
-      paciente: "Ana Rodríguez",
       medico: "Dr. Carlos Pérez",
       direccion: "Cll 50 #20-10",
       estado: "Programada",
@@ -56,13 +52,11 @@ export default function PlanillaCont() {
       fecha: "2025-07-15",
       fechaReadable: "15 de julio de 2025",
       hora: "09:00 A.M.",
-      paciente: "Carlos Martín",
       medico: "Dra. Luna",
       notas:
         "El paciente se queja de dolores de cabeza frecuentes y fatiga. Revisar historial médico.",
       indicaciones:
         "Tome Ibuprofeno 200 mg cada 6 horas con comida durante 3 días.",
-      estado: "Completada",
     },
     {
       id: 12,
@@ -70,11 +64,9 @@ export default function PlanillaCont() {
       fecha: "2025-07-22",
       fechaReadable: "22 de julio de 2025",
       hora: "11:00 A.M.",
-      paciente: "Laura Sánchez",
       medico: "Dr. Ramírez",
       notas: "Evolución favorable, retirar puntos en 7 días.",
       indicaciones: "Aplicar pomada 2 veces al día durante 5 días.",
-      estado: "Completada",
     },
   ]);
 
@@ -82,17 +74,13 @@ export default function PlanillaCont() {
   const [tab, setTab] = useState("por"); // "por" | "tomadas"
   const [selectedCita, setSelectedCita] = useState(null);
   const [modal, setModal] = useState(null); // "modificar" | "cancelar"
-  const [modalCita, setModalCita] = useState(null); // Modal de indicaciones
-
-  const handleAsignar = (indicaciones) => {
-    console.log("Indicaciones asignadas a", modalCita.paciente, indicaciones);
-    setModalCita(null);
-  };
 
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
+              
       <div className="p-8">
+        <h2 className="text-2xl font-semibold mb-6">Gestión de Usuarios</h2>
         {/* Tabs */}
         <div className="flex items-center gap-6 mb-6">
           <button
@@ -133,7 +121,6 @@ export default function PlanillaCont() {
                 porTomar={porTomar}
                 tomadas={tomadas}
                 onViewDetails={(cita) => setSelectedCita(cita)}
-                onAsignar={(cita) => setModalCita(cita)}
               />
             </div>
           </div>
@@ -190,15 +177,6 @@ export default function PlanillaCont() {
             setSelectedCita(updated);
             setModal(null);
           }}
-        />
-      )}
-
-      {/* Modal Asignar Indicaciones */}
-      {modalCita && (
-        <ModalIndicaciones
-          cita={modalCita}
-          onClose={() => setModalCita(null)}
-          onAsignar={handleAsignar}
         />
       )}
     </>

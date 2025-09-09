@@ -8,15 +8,12 @@ export default function HoraDetalle({ hora, setHora }) {
     let mm = parseInt(mmStr || "0", 10);
 
     if (isNaN(hh) || isNaN(mm)) return null;
-
-    // Validar rango hora (1–12) y minutos (0–59)
     if (hh < 1 || hh > 12 || mm < 0 || mm > 59) return null;
 
-    // Convertir a 24h
     if (ampm === "PM" && hh !== 12) hh += 12;
     if (ampm === "AM" && hh === 12) hh = 0;
 
-    return hh * 60 + mm; // total minutos para comparar fácilmente
+    return hh * 60 + mm;
   };
 
   const handleTimeInput = (field, value) => {
@@ -26,13 +23,11 @@ export default function HoraDetalle({ hora, setHora }) {
 
     let newHora = { ...hora, [field]: digits };
 
-    // Validar rango solo si es hora.fin
     if (field === "fin") {
       const inicioMins = normalizeTo24h(newHora.inicio, newHora.am_pm_inicio);
       const finMins = normalizeTo24h(digits, newHora.am_pm_fin);
 
       if (inicioMins !== null && finMins !== null && finMins <= inicioMins) {
-        // ❌ Si hora fin no es mayor, la limpiamos
         newHora.fin = "";
       }
     }
@@ -43,7 +38,6 @@ export default function HoraDetalle({ hora, setHora }) {
   const handleAmPmChange = (field, value) => {
     let newHora = { ...hora, [field]: value };
 
-    // Validar rango si se cambia el AM/PM de fin
     if (field === "am_pm_fin") {
       const inicioMins = normalizeTo24h(newHora.inicio, newHora.am_pm_inicio);
       const finMins = normalizeTo24h(newHora.fin, value);
@@ -61,7 +55,6 @@ export default function HoraDetalle({ hora, setHora }) {
 
   return (
     <div className="pt-2 flex flex-wrap gap-4">
-      {/* Caso: Hora específica */}
       {hora.tipo === "especifica" && (
         <>
           <input
@@ -86,11 +79,10 @@ export default function HoraDetalle({ hora, setHora }) {
         </>
       )}
 
-      {/* Caso: Rango */}
       {hora.tipo === "rango" && (
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col md:flex-row items-center gap-4">
           {/* Inicio */}
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center w-full md:w-auto">
             <input
               type="text"
               placeholder="Inicio (Ej: 09:00)"
@@ -111,14 +103,12 @@ export default function HoraDetalle({ hora, setHora }) {
               <option value="PM">PM</option>
             </select>
           </div>
-
-          {/* Ícono en medio */}
-          <div className="text-2xl font-bold text-gray-500">
-            <img className="w-4" src={rangoHoraIcon} alt="rangoHoraIcon" />
-          </div>
-
+      
+          {/* Icono rango */}
+          <img className="w-4 self-center" src={rangoHoraIcon} alt="Rango" />
+      
           {/* Fin */}
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center w-full md:w-auto">
             <input
               type="text"
               placeholder="Fin (Ej: 02:00)"
@@ -141,6 +131,7 @@ export default function HoraDetalle({ hora, setHora }) {
           </div>
         </div>
       )}
+
     </div>
   );
 }

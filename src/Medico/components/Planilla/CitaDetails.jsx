@@ -1,8 +1,6 @@
 import React from "react";
-import cancelarIcon from "../Planilla/PlanillaIcons/cancelarIcon.png"
-import editarIcon from "../Planilla/PlanillaIcons/editarIcon.png"
 
-export default function CitaDetails({ cita, mode = "por", onClose, onModificar, onCancelar }) {
+export default function CitaDetails({ cita, mode = "por", onClose }) {
   const mapsQuery = encodeURIComponent(cita.direccion || "Bogotá");
   const mapsSrc = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
 
@@ -30,7 +28,7 @@ export default function CitaDetails({ cita, mode = "por", onClose, onModificar, 
           {/* LEFT: Info */}
           <div className="w-1/2 pr-4">
             <div className="mb-4">
-              <h4 className="text-sm font-semibold text-gray-700">Médico</h4>
+              <h4 className="text-sm font-semibold text-gray-700">Paciente</h4>
               <p className="text-black">{cita.medico || "Sin asignar"}</p>
             </div>
 
@@ -60,33 +58,10 @@ export default function CitaDetails({ cita, mode = "por", onClose, onModificar, 
               <div className="h-full overflow-auto">
                 <h4 className="text-sm font-semibold mb-2">Notas del médico</h4>
                 <p className="text-gray-700 mb-4">{cita.notas}</p>
-
-                <h4 className="text-sm font-semibold mb-2">
-                  Indicaciones médicas
-                </h4>
-                <p className="text-gray-700">{cita.indicaciones}</p>
               </div>
             )}
           </div>
         </div>
-
-        {/* FOOTER: Solo visible en "por tomar" */}
-        {mode === "por" && (
-          <div className="mt-6 flex gap-3 justify-end">
-            <button
-              onClick={() => onModificar?.(cita)}
-              className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 shadow"
-            >
-              <img src={editarIcon} alt="editar" className="w-6" />
-            </button>
-            <button
-              onClick={() => onCancelar?.(cita)}
-              className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 shadow"
-            >
-              <img src={cancelarIcon} alt="cancelar" className="w-6" />
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

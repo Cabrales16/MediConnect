@@ -1,6 +1,6 @@
 import React from "react";
 import Logo from "./Logo";
-import ModificarDatos from "./ModificarDatos";
+import ModificarDatosModal from "./ModificarDatos";
 import FaqButton from "./FaqButton";
 import NotificationsButton from "./NotificationsButton";
 import SettingsButton from "./SettingsButton";
@@ -39,7 +39,7 @@ export default function Navbar({ onToggleSidebar }) {
 
           {/* Desktop */}
           <div className="hidden md:flex items-center gap-3">
-            <ModificarDatos />
+            <ModificarDatosModal />
             <div className="w-px h-6 bg-gray-100 mx-2" />
             <FaqButton />
             <NotificationsButton />
@@ -49,7 +49,7 @@ export default function Navbar({ onToggleSidebar }) {
 
           {/* Móvil: todos los iconos (solo íconos, sin texto) */}
           <div className="md:hidden flex items-center gap-3">
-            <ModificarDatos />
+            <ModificarDatosModal />
             <FaqButton />
             <NotificationsButton />
             <SettingsButton />
