@@ -8,7 +8,8 @@ en una arquitectura modular con separación clara entre el **backend**, la **bas
 
 ---
 
-MediConnect/
+## 📂 Estructura del proyecto
+📂 MediConnect/
 
 │
 
