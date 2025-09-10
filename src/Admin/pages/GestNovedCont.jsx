@@ -29,7 +29,7 @@ export default function InicioCont() {
                   {item.descripcion}
                 </p>
                 <Link
-                  to={`/novedad/${item.id}`}
+                  to={`/inicio/${item.id}`}
                   className="mt-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl shadow-sm transition-all text-center"
                 >
                   Ver más

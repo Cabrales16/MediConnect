@@ -25,7 +25,6 @@ export default function NovedadDetalle() {
 
   const breadcrumbItems = [
     { label: "Inicio", href: "/inicio" },
-    { label: "Novedades", href: "/inicio" },
     { label: novedad.titulo },
   ];
 

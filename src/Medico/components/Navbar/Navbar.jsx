@@ -40,7 +40,6 @@ export default function Navbar({ onToggleSidebar }) {
           {/* Desktop */}
           <div className="hidden md:flex items-center gap-3">
             <ModificarDatosModal />
-            <div className="w-px h-6 bg-gray-100 mx-2" />
             <FaqButton />
             <NotificationsButton />
             <SettingsButton />

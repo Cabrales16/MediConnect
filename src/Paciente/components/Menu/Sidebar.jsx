@@ -7,6 +7,7 @@ import agendamientoIcon from "./MenuIcons/agendamientoIcon.png";
 import planillaIcon from "./MenuIcons/planillaIcon.png";
 import familiaresIcon from "./MenuIcons/familiaresIcon.png";
 import indicacionesIcon from "./MenuIcons/indicacionesIcon.png";
+import logo from "./MenuIcons/logo.png"
 
 export default function Sidebar({ open = false, onClose = () => {} }) {
   const [expanded, setExpanded] = useState(false);
@@ -47,7 +48,7 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
               {/* Puedes colocar logo/close */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <img src={inicioIcon} alt="logo" className="w-8 h-8"/>
+                  <img src={logo} alt="logo" className="w-8 h-8"/>
                   <span className="font-semibold">MediConnect</span>
                 </div>
                 <button onClick={onClose} className="p-1 rounded hover:bg-gray-100">✕</button>

@@ -37,7 +37,7 @@ export default function PacienteLayout() {
           <Routes>
             <Route path="/" element={<Navigate to="/inicio" replace />} />
             <Route path="/inicio" element={<InicioCont />} />
-            <Route path="/novedad/:id" element={<NovedadDetalle />} />
+            <Route path="/inicio/:id" element={<NovedadDetalle />} />
             <Route path="/citas" element={<CitasCont />} />
             <Route path="/citas/medicos" element={<ListaDoctores />} />
             <Route path="/planilla" element={<PlanillaCont />} />

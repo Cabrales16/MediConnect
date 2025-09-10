@@ -9,7 +9,7 @@ export default function UsuaTable({ mode = "pacientes", pacientes = [], medicos 
         <thead>
           <tr className="text-left border-b border-gray-300">
             <th className="px-6 py-3 font-semibold text-gray-700">Nombre</th>
-            <th className="px-6 py-3 font-semibold text-gray-700">Apellido</th>
+            <th className="px-6 py-3 font-semibold text-gray-700">Apellidos</th>
             <th className="px-6 py-3 font-semibold text-gray-700">Tipo de doc.</th>
             <th className="px-6 py-3 font-semibold text-gray-700">N° de doc.</th>
             <th className="px-6 py-3 font-semibold text-gray-700">Acción</th>

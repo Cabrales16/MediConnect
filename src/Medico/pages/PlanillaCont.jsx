@@ -106,7 +106,7 @@ export default function PlanillaCont() {
                 : "text-gray-600 hover:text-green-600"
             }`}
           >
-            Por tomar
+            Por atender
           </button>
           <button
             onClick={() => {
@@ -119,7 +119,7 @@ export default function PlanillaCont() {
                 : "text-gray-600 hover:text-green-600"
             }`}
           >
-            Tomadas
+            Atendidas
           </button>
         </div>
 

@@ -9,7 +9,7 @@ import FaqCont from "./pages/FaqCont";
 import ConfigCont from "./pages/ConfigCont";
 import PerfilCont from "./pages/PerfilCont";
 import EditarPerfilCont from "./pages/EditarPerfilCont";
-import NovedadDetalle from "./components/Inicio/NovedadDetalle";
+import NovedadDetalle from "./components/GestNovedades/NovedadDetalle";
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -34,7 +34,7 @@ export default function AdminLayout() {
           <Routes>
             <Route path="/" element={<Navigate to="/inicio" replace />} />
             <Route path="/inicio" element={<InicioCont />} />
-            <Route path="/novedad/:id" element={<NovedadDetalle />} />
+            <Route path="/inicio/:id" element={<NovedadDetalle />} />
             <Route path="/usuarios" element={<GestUsua />} />
             <Route path="/opciones" element={<GestOpcioCont />} />
             <Route path="/faq" element={<FaqCont />} />

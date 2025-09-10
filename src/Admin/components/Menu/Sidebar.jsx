@@ -6,6 +6,7 @@ import MenuItem from "./MenuItem";
 import gestNovedadesIcon from "./MenuIcons/gestNovedadesIcon.png"
 import gestUsuariosIcon from "./MenuIcons/gestUsuariosIcon.png"
 import gestOpcionesIcon from "./MenuIcons/gestOpcionesIcon.png"
+import logo from "./MenuIcons/logo.png"
 
 export default function Sidebar({ open = false, onClose = () => {} }) {
   const [expanded, setExpanded] = useState(false);
@@ -44,7 +45,7 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
               {/* Puedes colocar logo/close */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <img src={gestNovedadesIcon} alt="logo" className="w-8 h-8"/>
+                  <img src={logo} alt="logo" className="w-8 h-8"/>
                   <span className="font-semibold">MediConnect</span>
                 </div>
                 <button onClick={onClose} className="p-1 rounded hover:bg-gray-100">✕</button>
@@ -69,7 +70,7 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
 
       {/* ===== Desktop sidebar (md+) ===== */}
       <aside
-        className={`hidden md:flex md:flex-col md:h-screen bg-white border-r border-gray-300 shadow-sm ${expanded ? "w-48" : "w-16"}`}
+        className={`hidden md:flex md:flex-col md:h-screen bg-white border-r border-gray-300 shadow-sm ${expanded ? "w-54" : "w-16"}`}
         onMouseEnter={() => setExpanded(true)}
         onMouseLeave={() => setExpanded(false)}
       >

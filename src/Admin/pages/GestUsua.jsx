@@ -14,7 +14,7 @@ export default function GestUsua() {
     {
       id: 1,
       nombre: "Carlos",
-      apellido: "Pérez",
+      apellido: "Pérez Gomez",
       tipoDoc: "CC",
       numDoc: "123456789",
       correo: "carlos@example.com",

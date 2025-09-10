@@ -33,7 +33,7 @@ export default function MedicoLayout() {
           <Routes>
             <Route path="/" element={<Navigate to="/inicio" replace />} />
             <Route path="/inicio" element={<InicioCont />} />
-            <Route path="/novedad/:id" element={<NovedadDetalle />} />
+            <Route path="/inicio/:id" element={<NovedadDetalle />} />
             <Route path="/planilla" element={<PlanillaCont />} />
             <Route path="/faq" element={<FaqCont />} />
             <Route path="/configuracion" element={<ConfigCont />} />

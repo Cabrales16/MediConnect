@@ -37,7 +37,7 @@ export default function UsuaDetails({ user, onClose }) {
       {/* Info usuario */}
       <div className="space-y-2 text-sm text-gray-700">
         <p><strong>Nombre:</strong> {user.nombre}</p>
-        <p><strong>Apellido:</strong> {user.apellido}</p>
+        <p><strong>Apellidos:</strong> {user.apellido}</p>
         <p><strong>Documento:</strong> {user.tipoDoc} {user.numDoc}</p>
         <p><strong>Correo:</strong> {user.correo}</p>
         <p><strong>Teléfono:</strong> {user.telefono}</p>
