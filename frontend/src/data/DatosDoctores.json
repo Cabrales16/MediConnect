@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "name": "Dra. Sofía Segura",
+    "specialty": "Cardióloga",
+    "experience": "12 años de experiencia",
+    "rating": 4.8,
+    "image": "https://randomuser.me/api/portraits/women/65.jpg",
+    "description": "Especialista en enfermedades cardíacas y prevención de problemas cardiovasculares."
+  },
+  {
+    "id": 2,
+    "name": "Dr. Gerson Sanchez",
+    "specialty": "Anestesiólogo",
+    "experience": "10 años de experiencia",
+    "rating": 4.7,
+    "image": "https://randomuser.me/api/portraits/men/32.jpg",
+    "description": "Experto en anestesia general y regional con enfoque en procedimientos quirúrgicos seguros."
+  },
+  {
+    "id": 3,
+    "name": "Dr. Andrés Cabrales",
+    "specialty": "Pediatra",
+    "experience": "9 años de experiencia",
+    "rating": 4.9,
+    "image": "https://randomuser.me/api/portraits/men/47.jpg",
+    "description": "Atención especializada en salud infantil, vacunas y desarrollo infantil temprano."
+  },
+  {
+    "id": 4,
+    "name": "Dra. Juliana García",
+    "specialty": "Psiquiatra",
+    "experience": "8 años de experiencia",
+    "rating": 4.6,
+    "image": "https://randomuser.me/api/portraits/women/44.jpg",
+    "description": "Tratamiento de trastornos mentales, depresión, ansiedad y terapia de pareja."
+  },
+  {
+    "id": 5,
+    "name": "Dra. Natalia Barbosa",
+    "specialty": "Neurocirujana",
+    "experience": "11 años de experiencia",
+    "rating": 4.9,
+    "image": "https://randomuser.me/api/portraits/women/51.jpg",
+    "description": "Especialista en cirugía de columna, cerebro y nervios periféricos."
+  }
+]
