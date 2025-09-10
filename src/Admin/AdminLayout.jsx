@@ -3,8 +3,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Sidebar from "./components/Menu/SideBar";
 import InicioCont from "./pages/GestNovedCont";
-import PlanillaCont from "./pages/GestUsua";
-import IndMedicasCont from "./pages/GestOpcio";
+import GestUsua from "./pages/GestUsua";
+import GestOpcioCont from "./pages/GestOpcio";
 import FaqCont from "./pages/FaqCont";
 import ConfigCont from "./pages/ConfigCont";
 import PerfilCont from "./pages/PerfilCont";
@@ -35,8 +35,8 @@ export default function AdminLayout() {
             <Route path="/" element={<Navigate to="/inicio" replace />} />
             <Route path="/inicio" element={<InicioCont />} />
             <Route path="/novedad/:id" element={<NovedadDetalle />} />
-            <Route path="/usuarios" element={<PlanillaCont />} />
-            <Route path="/opciones" element={<IndMedicasCont />} />
+            <Route path="/usuarios" element={<GestUsua />} />
+            <Route path="/opciones" element={<GestOpcioCont />} />
             <Route path="/faq" element={<FaqCont />} />
             <Route path="/configuracion" element={<ConfigCont />} />
             <Route path="/perfil" element={<PerfilCont />} />

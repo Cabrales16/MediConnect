@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import MenuItem from "./MenuItem";
 
-import inicioIcon from "./MenuIcons/inicioIcon.png";
-import planillaIcon from "./MenuIcons/planillaIcon.png";
-import indicacionesIcon from "./MenuIcons/indicacionesIcon.png";
+//Iconos
+import gestNovedadesIcon from "./MenuIcons/gestNovedadesIcon.png"
+import gestUsuariosIcon from "./MenuIcons/gestUsuariosIcon.png"
+import gestOpcionesIcon from "./MenuIcons/gestOpcionesIcon.png"
 
 export default function Sidebar({ open = false, onClose = () => {} }) {
   const [expanded, setExpanded] = useState(false);
@@ -17,9 +18,9 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
   }, [location.pathname]);
 
   const menuItems = [
-    { name: "Gest. de Novedades", path: "/inicio", icon: inicioIcon },
-    { name: "Gest. de Usuarios", path: "/usuarios", icon: planillaIcon },
-    { name: "Gest. de Opciones", path: "/opciones", icon: indicacionesIcon },
+    { name: "Gest. de Novedades", path: "/inicio", icon: gestNovedadesIcon },
+    { name: "Gest. de Usuarios", path: "/usuarios", icon: gestUsuariosIcon },
+    { name: "Gest. de Opciones", path: "/opciones", icon: gestOpcionesIcon },
   ];
 
   return (
@@ -43,7 +44,7 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
               {/* Puedes colocar logo/close */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <img src={inicioIcon} alt="logo" className="w-8 h-8"/>
+                  <img src={gestNovedadesIcon} alt="logo" className="w-8 h-8"/>
                   <span className="font-semibold">MediConnect</span>
                 </div>
                 <button onClick={onClose} className="p-1 rounded hover:bg-gray-100">✕</button>

@@ -1,184 +1,117 @@
 import React, { useState } from "react";
 import Breadcrumb from "../components/UI/Breadcrumb";
-import PlanillaTable from "../components/Planilla/PlanillaTable";
-import CitaDetails from "../components/Planilla/CitaDetails";
-import ConfirmModal from "../components/UI/ConfirmModal";
-import ModificarCitaModal from "../components/UI/ModificarCitaModal";
+import UsuaTable from "../components//GestUsuarios/UsuaTable";
+import UsuaDetails from "../components/GestUsuarios/UsuaDetails";
 
-export default function PlanillaCont() {
+export default function GestUsua() {
   const breadcrumbItems = [
     { label: "Inicio", href: "/inicio" },
     { label: "Gest. de Usuarios" },
   ];
 
-  // ESTADOS DE CITAS
-  const [porTomar, setPorTomar] = useState([
+  // Datos de usuarios
+  const [pacientes] = useState([
     {
       id: 1,
-      tipo: "Consulta general",
-      fecha: "2025-08-20",
-      fechaReadable: "20 de agosto de 2025",
-      hora: "08:00 A.M.",
-      medico: "Dr. Gerson Sánchez",
+      nombre: "Carlos",
+      apellido: "Pérez",
+      tipoDoc: "CC",
+      numDoc: "123456789",
+      correo: "carlos@example.com",
+      telefono: "3001234567",
+      genero: "Masculino",
       direccion: "Calle 123, Bogotá",
-      estado: "Programada",
+      nacimiento: "1990-05-20",
+      rol: "Paciente",
     },
+  ]);
+
+  const [medicos] = useState([
     {
-      id: 2,
-      tipo: "Consulta de seguimiento",
-      fecha: "2025-08-23",
-      fechaReadable: "23 de agosto de 2025",
-      hora: "10:00 A.M.",
-      medico: "Dra. Juliana García",
+      id: 101,
+      nombre: "Ana",
+      apellido: "García",
+      tipoDoc: "CC",
+      numDoc: "987654321",
+      correo: "ana.garcia@hospital.com",
+      telefono: "3119876543",
+      genero: "Femenino",
       direccion: "Av. Siempre Viva 45",
-      estado: "Programada",
-    },
-    {
-      id: 3,
-      tipo: "Consulta de seguimiento",
-      fecha: "2025-08-30",
-      fechaReadable: "30 de agosto de 2025",
-      hora: "02:00 P.M.",
-      medico: "Dr. Carlos Pérez",
-      direccion: "Cll 50 #20-10",
-      estado: "Programada",
+      nacimiento: "1985-10-12",
+      especialidad: "Cardiología",
+      calificacion: "4.8",
+      rol: "Médico",
     },
   ]);
 
-  const [tomadas] = useState([
-    {
-      id: 11,
-      tipo: "Consulta general",
-      fecha: "2025-07-15",
-      fechaReadable: "15 de julio de 2025",
-      hora: "09:00 A.M.",
-      medico: "Dra. Luna",
-      notas:
-        "El paciente se queja de dolores de cabeza frecuentes y fatiga. Revisar historial médico.",
-      indicaciones:
-        "Tome Ibuprofeno 200 mg cada 6 horas con comida durante 3 días.",
-    },
-    {
-      id: 12,
-      tipo: "Control postoperatorio",
-      fecha: "2025-07-22",
-      fechaReadable: "22 de julio de 2025",
-      hora: "11:00 A.M.",
-      medico: "Dr. Ramírez",
-      notas: "Evolución favorable, retirar puntos en 7 días.",
-      indicaciones: "Aplicar pomada 2 veces al día durante 5 días.",
-    },
-  ]);
-
-  // CONTROLES DE UI
-  const [tab, setTab] = useState("por"); // "por" | "tomadas"
-  const [selectedCita, setSelectedCita] = useState(null);
-  const [modal, setModal] = useState(null); // "modificar" | "cancelar"
+  const [tab, setTab] = useState("pacientes"); // "pacientes" | "medicos"
+  const [selectedUser, setSelectedUser] = useState(null);
 
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
-              
+
       <div className="p-8">
         <h2 className="text-2xl font-semibold mb-6">Gestión de Usuarios</h2>
+
         {/* Tabs */}
         <div className="flex items-center gap-6 mb-6">
           <button
             onClick={() => {
-              setTab("por");
-              setSelectedCita(null);
+              setTab("pacientes");
+              setSelectedUser(null);
             }}
             className={`px-4 py-2 rounded-md font-medium ${
-              tab === "por"
+              tab === "pacientes"
                 ? "border-b-2 border-green-500 text-green-600"
                 : "text-gray-600 hover:text-green-600"
             }`}
           >
-            Por tomar
+            Pacientes
           </button>
           <button
             onClick={() => {
-              setTab("tomadas");
-              setSelectedCita(null);
+              setTab("medicos");
+              setSelectedUser(null);
             }}
             className={`px-4 py-2 rounded-md font-medium ${
-              tab === "tomadas"
+              tab === "medicos"
                 ? "border-b-2 border-green-500 text-green-600"
                 : "text-gray-600 hover:text-green-600"
             }`}
           >
-            Tomadas
+            Médicos
           </button>
         </div>
 
-        {/* Main */}
         <div className="flex flex-col md:flex-row gap-8">
           {/* Tabla */}
           <div className="w-full md:w-1/2">
             <div className="bg-white rounded-2xl border border-gray-400 shadow-sm p-4">
-              <PlanillaTable
+              <UsuaTable
                 mode={tab}
-                porTomar={porTomar}
-                tomadas={tomadas}
-                onViewDetails={(cita) => setSelectedCita(cita)}
+                pacientes={pacientes}
+                medicos={medicos}
+                onViewDetails={(u) => setSelectedUser(u)}
               />
             </div>
           </div>
 
           {/* Detalles */}
           <div className="w-full md:w-1/2 mt-6 md:mt-0">
-            {selectedCita ? (
-              <CitaDetails
-                cita={selectedCita}
-                mode={tab}
-                onClose={() => setSelectedCita(null)}
-                onModificar={() =>
-                  selectedCita.estado !== "Cancelado" && setModal("modificar")
-                }
-                onCancelar={() =>
-                  selectedCita.estado !== "Cancelado" && setModal("cancelar")
-                }
+            {selectedUser ? (
+              <UsuaDetails
+                user={selectedUser}
+                onClose={() => setSelectedUser(null)}
               />
             ) : (
               <div className="h-full rounded-2xl border border-dashed border-gray-400 flex items-center justify-center text-gray-400 p-6">
-                Selecciona "Ver detalles" en una cita para ver más información
+                Selecciona "Ver más" en un usuario para ver más información
               </div>
             )}
           </div>
         </div>
       </div>
-
-      {/* Modal Cancelar */}
-      {modal === "cancelar" && selectedCita && (
-        <ConfirmModal
-          title="Cancelar cita"
-          description={`¿Seguro que deseas cancelar la cita "${selectedCita.tipo}" del ${selectedCita.fechaReadable}?`}
-          onCancel={() => setModal(null)}
-          onConfirm={() => {
-            const citaCancelada = { ...selectedCita, estado: "Cancelado" };
-            setPorTomar((prev) =>
-              prev.filter((c) => c.id !== citaCancelada.id)
-            );
-            setSelectedCita(citaCancelada);
-            setModal(null);
-          }}
-        />
-      )}
-
-      {/* Modal Modificar */}
-      {modal === "modificar" && selectedCita && (
-        <ModificarCitaModal
-          cita={selectedCita}
-          onCancel={() => setModal(null)}
-          onSave={(updated) => {
-            setPorTomar((prev) =>
-              prev.map((c) => (c.id === updated.id ? updated : c))
-            );
-            setSelectedCita(updated);
-            setModal(null);
-          }}
-        />
-      )}
     </>
   );
 }
