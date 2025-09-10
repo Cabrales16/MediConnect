@@ -9,63 +9,119 @@ en una arquitectura modular con separación clara entre el **backend**, la **bas
 ---
 
 MediConnect/
+
 │
+
 ├── backend/
+
 │   ├── app/                      # Lógica de la aplicación (FastAPI)
+
 │   ├── node_modules/             # Dependencias JS (si aplica)
+
 │   ├── .env                     # Variables de entorno para backend
+
 │   ├── app.py                   # Archivo principal de backend
+
 │   ├── requirements.txt         # Dependencias del backend
+
 │   └── run.py                   # Script para ejecutar la app
+
 │
+
 ├── bd/
+
 │   ├── alembic/                 # Configuración de migraciones
+
 │   ├── db/                     # Conexión y lógica de base de datos
+
 │   ├── models/                  # Modelos de datos (SQLAlchemy)
+
 │   ├── venv/                    # Entorno virtual para base de datos
+
 │   ├── alembic.ini              # Configuración de Alembic
+
 │   └── requirements.txt         # Dependencias de la base de datos
+
 │
 ├── docs/                        # Documentación
+
 │
 ├── frontend/
+
 │   └── avance proyecto/
+
 │       ├── AgendamientoDeCitas/
+
 │       │   ├── components/
+
 │       │   ├── pages/
+
 │       │   └── AgendamientoLayout.jsx
+
 │       ├── avance/
+
 │       │   ├── components/
+
 │       │   ├── pages/
+
 │       │   └── AvanceLayout.jsx
+
 │       ├── Home/
+
 │       │   ├── components/
+
 │       │   ├── pages/
+
 │       │   └── HomeLayout.jsx
+
 │       ├── Login/
+
 │       │   ├── components/
+
 │       │   ├── pages/
+
 │       │   ├── RecuperarContraseña/
+
 │       │   ├── RestablecerContraseña/
+
 │       │   └── LoginLayout.jsx
+
 │       ├── Registro/
+
 │       │   ├── components/
+
 │       │   ├── pages/
+
 │       │   └── RegistroLayout.jsx
+
 │       ├── Medico/
+
 │       │   ├── components/
+
 │       │   ├── pages/
+
 │       │   └── MedicoLayout.jsx
+
 │       ├── Paciente/
+
 │       │   ├── components/
+
 │       │   ├── pages/
+
 │       │   └── PacienteLayout.jsx
+
 │       └── Admin/
+
 │           ├── components/
+
 │           ├── pages/
+
 │           └── AdminLayout.jsx
+
 │
+
 ├── Guia_EstandaresCodigo.md     # Estándares de codificación
+
 └── README.md
 
 ## ⚙️ Requisitos
