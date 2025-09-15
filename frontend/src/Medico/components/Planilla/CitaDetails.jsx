@@ -12,7 +12,7 @@ export default function CitaDetails({ cita, mode = "por", onClose, onModificar, 
         {/* HEADER */}
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="text-lg font-semibold">{cita.tipo}</h3>
+            <h3 className="text-lg font-semibold">{cita.especialidad_medico || "Cita médica"}</h3>
             <p className="text-sm text-gray-500">
               {cita.fechaReadable} • {cita.hora}
             </p>

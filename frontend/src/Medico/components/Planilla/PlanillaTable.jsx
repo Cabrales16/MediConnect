@@ -20,7 +20,7 @@ export default function PlanillaTable({ mode = "por", porTomar = [], tomadas = [
           <tbody>
             {rows.map((r) => (
               <tr key={r.id} className="border-t border-gray-300 hover:bg-green-50">
-                <td className="px-6 py-2 text-black  w-1/4">{r.tipo}</td>
+                <td className="px-6 py-2 text-black  w-1/4">{r.especialidad_medico || "General"}</td>
                 <td className="px-6 py-2 text-green-700 w-1/4">{r.fechaReadable || r.fecha}</td>
                 <td className="px-6 py-2 text-green-700">{r.hora}</td>
                 

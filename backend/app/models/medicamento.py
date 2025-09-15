@@ -1,8 +1,9 @@
-from app.db.base import Base
+from app.db.database import Base
 from sqlalchemy import Column, Integer, String, Date, Time, ForeignKey
 from sqlalchemy.orm import relationship
+from .AuditMixin import AuditMixin
 
-class Medicamento(Base):
+class Medicamento(Base, AuditMixin):
     __tablename__ = 'Medicamento'
 
     id_medicamento = Column(Integer, primary_key=True, autoincrement=True)

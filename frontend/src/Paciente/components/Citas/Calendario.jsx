@@ -15,36 +15,40 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
   const renderMonth = (month) => {
     const year = month.year();
     const monthIndex = month.month();
-    const firstOfMonth = new Date(year, monthIndex, 1);
-    const startDayOfWeek = firstOfMonth.getDay();
-    const gridStart = new Date(year, monthIndex, 1 - startDayOfWeek);
+    const firstOfMonth = dayjs(new Date(year, monthIndex, 1));
+    const startDayOfWeek = firstOfMonth.day(); // 0 (domingo) - 6 (sábado)
+    const gridStart = firstOfMonth.subtract(startDayOfWeek, "day");
 
     const days = [];
     for (let i = 0; i < 42; i++) {
-      const d = new Date(gridStart);
-      d.setDate(gridStart.getDate() + i);
-      days.push(dayjs(d));
+      days.push(gridStart.add(i, "day"));
     }
 
     return (
       <div className="w-80 pt-5">
+        {/* Encabezado del mes */}
         <h3 className="text-center font-semibold mb-3 text-xl capitalize">
           {month.format("MMMM YYYY")}
         </h3>
+
+        {/* Días de la semana */}
         <div className="grid grid-cols-7 gap-x-2 gap-y-1 text-center min-h-[320px]">
           {["D", "L", "M", "M", "J", "V", "S"].map((d) => (
             <div key={d} className="font-bold pb-2">
               {d}
             </div>
           ))}
+
+          {/* Días */}
           {days.map((d) => {
             const isCurrentMonth = d.month() === month.month();
             const isSelected =
-              selectedDate && selectedDate.isSame && selectedDate.isSame(d, "day");
+              selectedDate && dayjs(selectedDate).isSame(d, "day");
+
             return (
               <button
                 key={d.format("YYYY-MM-DD")}
-                className={`py-2 px-3 rounded-lg text-lg ${
+                className={`py-2 px-3 rounded-lg text-lg transition-colors ${
                   isSelected
                     ? "bg-green-500 text-white"
                     : isCurrentMonth
@@ -65,7 +69,8 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
 
   return (
     <div className="flex justify-center pt-10">
-      <div className="flex items-start bg-white rounded-xl">
+      <div className="flex items-start bg-white rounded-xl shadow-md">
+        {/* Botón mes anterior */}
         <button onClick={prevMonth} className="px-2 pt-6">
           <img className="w-3" src={flechaIconIzq} alt="Anterior" />
         </button>
@@ -73,9 +78,12 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
         {/* 📱 móvil: un mes | 💻 desktop: dos meses */}
         <div className="flex gap-8 flex-col md:flex-row">
           {renderMonth(currentMonth)}
-          <div className="hidden md:block">{renderMonth(currentMonth.add(1, "month"))}</div>
+          <div className="hidden md:block">
+            {renderMonth(currentMonth.add(1, "month"))}
+          </div>
         </div>
 
+        {/* Botón mes siguiente */}
         <button onClick={nextMonth} className="px-2 pt-6">
           <img className="w-3" src={flechaIcon} alt="Siguiente" />
         </button>

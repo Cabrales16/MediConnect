@@ -7,7 +7,6 @@ import ConfirmModal from "../components/UI/ConfirmModal";
 import ModificarCitaModal from "../components/UI/ModificarCitaModal";
 import { getHistorialPaciente, cancelarCita } from "../../services/historialService";
 
-
 export default function PlanillaCont() {
   const breadcrumbItems = [
     { label: "Inicio", href: "/inicio" },
@@ -28,8 +27,8 @@ export default function PlanillaCont() {
         const idPaciente = localStorage.getItem("id_usuario");
         const citas = await getHistorialPaciente(idPaciente);
 
-        setPorTomar(citas.filter((c) => c.estado_cita === "Programada"));
-        setTomadas(citas.filter((c) => c.estado_cita !== "Programada"));
+        setPorTomar(citas.filter((c) => c.estado_cita === "PROGRAMADA"));
+        setTomadas(citas.filter((c) => c.estado_cita !== "PROGRAMADA"));
       } catch (error) {
         console.error("Error cargando historial:", error);
       }
@@ -94,11 +93,11 @@ export default function PlanillaCont() {
                 mode={tab}
                 onClose={() => setSelectedCita(null)}
                 onModificar={() =>
-                  selectedCita.estado_cita !== "Cancelado" &&
+                  selectedCita.estado_cita !== "CANCELADA" &&
                   setModal("modificar")
                 }
                 onCancelar={() =>
-                  selectedCita.estado_cita !== "Cancelado" &&
+                  selectedCita.estado_cita !== "CANCELADA" &&
                   setModal("cancelar")
                 }
               />
@@ -122,7 +121,7 @@ export default function PlanillaCont() {
               await cancelarCita(selectedCita.id_cita); // ✅ Llamada al backend
               const citaCancelada = {
                 ...selectedCita,
-                estado_cita: "Cancelado",
+                estado_cita: "CANCELADA",
               };
               setPorTomar((prev) =>
                 prev.filter((c) => c.id_cita !== citaCancelada.id_cita)

@@ -2,7 +2,7 @@ import buscarIconBlanco from "./CitasIcon/buscarIconBlanco.png";
 
 export default function BuscarButton({ disabled, onClick }) {
   return (
-    <a href="/citas/medicos">
+    <a href="/paciente/citas/medicos">
       <button
       className={`flex items-center gap-2 p-3 mt-8 rounded-lg text-white px-4 ${
         disabled

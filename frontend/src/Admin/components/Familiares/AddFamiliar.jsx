@@ -23,9 +23,9 @@ export default function AddFamilia({ onCancel, onAdd }) {
 
         <label className="block mb-2 text-sm">Tipo de información</label>
         <select className="w-full p-3 border rounded-lg mb-4" value={tipo} onChange={(e)=>setTipo(e.target.value)}>
-          <option>Citas médicas</option>
-          <option>Medicamentos</option>
-          <option>Medicamentos y citas médicas</option>
+          <option value={1}>Citas médicas</option>
+          <option value={2}>Medicamentos</option>
+          <option value={3}>Medicamentos y citas médicas</option>
         </select>
 
         <div className="flex justify-end gap-3">

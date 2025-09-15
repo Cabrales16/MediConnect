@@ -3,7 +3,7 @@ import React, { useState } from "react";
 export default function EditFamilia({ initial, onCancel, onSave }) {
   const [nombre, setNombre] = useState(initial.nombre);
   const [correo, setCorreo] = useState(initial.correo);
-  const [tipo, setTipo] = useState(initial.tipo);
+  const [id_info, setTipo] = useState(initial.id_info);
 
   const submit = (e) => {
     e.preventDefault();
