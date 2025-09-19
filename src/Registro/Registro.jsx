@@ -1,21 +1,58 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "./RegistroImages/Logo.png";
 import { useNavigate } from "react-router-dom";
 import { User, Mail, Lock, Phone, Home, CreditCard } from "lucide-react";
 import calendario from "./RegistroImages/calendario.jpeg";
-import Volver from "./RegistroImages/flechaIconIzq.png"
+import Volver from "./RegistroImages/flechaIconIzq.png";
+
+
+function ModalConfirmacion({ isOpen, email, onClose, onResend }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-20">
+      <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] max-w-md text-center animate-fadeIn">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">
+          ¡Registro exitoso!
+        </h2>
+        <p className="text-gray-600 mb-4">
+          Hemos enviado un link de confirmación a:
+          <br />
+          <span className="font-semibold">{email}</span>
+        </p>
+        <div className="flex justify-center gap-3">
+          <button
+            onClick={onClose}
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-lg"
+          >
+            Cerrar
+          </button>
+          <button
+            onClick={onResend}
+            className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg"
+          >
+            Reenviar correo
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Register() {
   const navigate = useNavigate();
+  const [correo, setCorreo] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate("/regsiter");
+    if (correo) {
+      setIsOpen(true); 
+    }
   };
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-green-200 overflow-hidden">
-      {/* Fondos decorativos */}
       <svg
         className="absolute -top-10 left-0 w-[500px] h-[300px] text-green-500"
         viewBox="0 0 320 180"
@@ -23,7 +60,6 @@ export default function Register() {
       >
         <path d="M0,100 Q60,40 120,60 Q200,80 280,20 Q300,10 320,0 L0,0 Z" />
       </svg>
-
       <svg
         className="absolute -bottom-10 right-0 w-[500px] h-[300px] text-green-500"
         viewBox="0 0 320 180"
@@ -36,16 +72,21 @@ export default function Register() {
 
       {/* Caja principal */}
       <div className="relative flex flex-col md:flex-row max-w-6xl w-full shadow-md rounded-2xl overflow-hidden z-10 bg-white">
-        {/* Caja izquierda */}
-          <a href="/home" className="w-2 h-2 absolute flex ml-4 mt-5 items-center">
-            <img src={Volver} alt="regresar" /> <p className="pl-3">Volver</p>
-          </a>
-        <div className="w-full md:w-5/12 bg-white flex flex-col items-center justify-start p-8 text-center shadow-lg">
+        {/* Botón volver */}
+        <a
+          href="/home"
+          className="w-2 h-2 absolute flex ml-4 mt-5 items-center"
+        >
+          <img src={Volver} alt="regresar" /> <p className="pl-3">Volver</p>
+        </a>
 
+        {/* Caja izquierda */}
+        <div className="w-full md:w-5/12 bg-white flex flex-col items-center justify-start p-8 text-center shadow-lg">
           <img src={logo} alt="Logo" className="w-16 h-16 object-contain mb-4" />
           <h2 className="text-xl font-bold text-gray-800">Hola, Bienvenidos!</h2>
           <p className="text-gray-600 mt-2 text-sm px-4">
-            ¡Bienvenido de nuevo! Nos alegra tenerte aquí, crea tu cuenta para continuar.
+            ¡Bienvenido de nuevo! Nos alegra tenerte aquí, crea tu cuenta para
+            continuar.
           </p>
           <img
             src={calendario}
@@ -82,7 +123,6 @@ export default function Register() {
                   </select>
                   <CreditCard className="text-gray-400 w-5 h-5 ml-2" />
                 </div>
-
                 <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 flex-1 focus-within:ring-2 focus-within:ring-green-400">
                   <input
                     type="text"
@@ -139,6 +179,8 @@ export default function Register() {
                   <input
                     type="email"
                     placeholder="Correo"
+                    value={correo}
+                    onChange={(e) => setCorreo(e.target.value)}
                     className="flex-1 outline-none text-sm"
                   />
                   <Mail className="text-gray-400 w-5 h-5 ml-2" />
@@ -176,13 +218,24 @@ export default function Register() {
 
             <p className="text-center text-xs text-gray-600 mt-4">
               ¿Ya tienes cuenta?{" "}
-              <a href="/login" className="text-blue-600 font-medium hover:underline">
+              <a
+                href="/login"
+                className="text-blue-600 font-medium hover:underline"
+              >
                 Inicia Sesión
               </a>
             </p>
           </div>
         </div>
       </div>
+
+      {/* Modal de confirmación */}
+      <ModalConfirmacion
+        isOpen={isOpen}
+        email={correo}
+        onClose={() => setIsOpen(false)}
+        onResend={() => alert(`Correo reenviado a: ${correo}`)}
+      />
     </div>
   );
 }
