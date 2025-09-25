@@ -1,46 +1,98 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import AddFamilia from "../components/Familiares/AddFamiliar";
 import EditFamilia from "../components/Familiares/EditFamiliar";
-import ConfirmModal from "../components/UI/ConfirmModal";
+import ConfirmModal from "../components/UI/ConfirmModalFamiliar"
 import editarVerdeIcon from "../components/Familiares/FamiliaresIcons/editarVerdeIcon.png";
 import eliminarRojoIcon from "../components/Familiares/FamiliaresIcons/eliminarRojoIcon.png";
 import agregarIcon from "../components/Familiares/FamiliaresIcons/agregarIcon.png";
+import { toast } from "react-toastify";
 
-/* datos de ejemplo */
-const initial = [
-  { id: 1, nombre: "Sofía Segura", correo: "sofíaseg@gmail.com", tipo: "Citas médicas" },
-  { id: 2, nombre: "Andres Cabrales", correo: "andrescabrales@outlook.com", tipo: "Medicamentos y citas médicas" },
-  { id: 3, nombre: "Gerson Sánchez", correo: "soraframes@gmail.com", tipo: "Medicamentos" },
-  { id: 4, nombre: "Juliana García", correo: "juliiigarcia@outlook.com", tipo: "Citas médicas" },
-];
+// Importamos los servicios
+import {
+  getFamiliaresPaciente,
+  crearFamiliar,
+  eliminarFamiliar,
+  actualizarFamiliar,
+} from "../../services/familiaresService";
 
 export default function FamiliaresCont() {
   const breadcrumbItems = [
-    { label: "Inicio", href: "/inicio" },
+    { label: "Inicio", href: "/paciente/inicio" },
     { label: "Familiares" },
   ];
 
-  const [familiares, setFamiliares] = useState(initial);
+  const [familiares, setFamiliares] = useState([]);
   const [showAdd, setShowAdd] = useState(false);
   const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
 
-  const handleAdd = (newF) => {
-    setFamiliares((s) => [...s, { ...newF, id: Date.now() }]);
-    setShowAdd(false);
+  // Cargar familiares desde la API
+  useEffect(() => {
+    const fetchFamiliares = async () => {
+      try {
+        const id_paciente = localStorage.getItem("id_usuario"); 
+        if (!id_paciente) return;
+        const data = await getFamiliaresPaciente(id_paciente);
+        setFamiliares(data);
+      } catch (error) {
+        console.error("Error cargando familiares:", error);
+
+      }
+    };
+    fetchFamiliares();
+  }, []);
+
+  // Crear familiar
+  const handleAdd = async (newF) => {
+    try {
+      const id_paciente = localStorage.getItem("id_usuario");
+      const creado = await crearFamiliar(id_paciente, newF);
+      setFamiliares((s) => [...s, creado]);
+      toast.success("¡Familiar añadido correctamente!");
+      setShowAdd(false);
+    } catch (error) {
+      console.error("Error creando familiar:", error);
+      toast.error("Error al crear el familiar."); //LOS TOAST SE MANEJAN EN LAS FUNCIONES 
+    }
   };
 
-  const handleUpdate = (updated) => {
-    setFamiliares((s) => s.map((f) => (f.id === updated.id ? updated : f)));
-    setEditing(null);
+  // Editar familiar
+  const handleUpdate = async (updated) => {
+    try {
+      const actualizado = await actualizarFamiliar(updated.id_familiar, updated);
+      setFamiliares((s) =>
+        s.map((f) =>
+          f.id_familiar === actualizado.id_familiar ? actualizado : f
+        )
+      );
+      toast.info("¡Familiar actualizado!");
+      setEditing(null);
+    } catch (error) {
+      console.error("Error actualizando familiar:", error);
+      toast.error("Error al actualizar el familiar.");
+    }
   };
 
-  const handleDelete = (id) => {
-    setFamiliares((s) => s.filter((f) => f.id !== id));
-    setDeleting(null);
+  // Eliminar familiar
+  const handleDelete = async (id_familiar) => {
+    try {
+      await eliminarFamiliar(id_familiar);
+      setFamiliares((s) => s.filter((f) => f.id_familiar !== id_familiar));
+      setDeleting(null);
+    } catch (error) {
+      console.error("Error eliminando familiar:", error);
+      toast.error("Error al eliminar el familiar.");
+    }
   };
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+  
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
@@ -61,8 +113,6 @@ export default function FamiliaresCont() {
               <img src={agregarIcon} alt="" className="w-6 h-6" />
               <span className="hidden sm:inline">Añadir</span>
             </button>
-
-
           </div>
         </div>
 
@@ -79,7 +129,7 @@ export default function FamiliaresCont() {
               </thead>
               <tbody>
                 {familiares.map((f) => (
-                  <tr key={f.id} className="border-t border-gray-300">
+                  <tr key={f.id_familiar || f.id} className="border-t border-gray-300">
                     <td className="px-6 py-3 text-black">{f.nombre}</td>
                     <td className="px-6 py-3 text-green-700">{f.correo}</td>
                     <td className="px-6 py-3 text-green-700">{f.tipo}</td>
@@ -103,10 +153,7 @@ export default function FamiliaresCont() {
                 ))}
                 {familiares.length === 0 && (
                   <tr>
-                    <td
-                      colSpan={4}
-                      className="px-6 py-8 text-center text-gray-500"
-                    >
+                    <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
                       No hay familiares añadidos.
                     </td>
                   </tr>
@@ -133,7 +180,7 @@ export default function FamiliaresCont() {
           title="Eliminar familiar"
           description={`¿Deseas eliminar a ${deleting.nombre}? Esta acción no se puede deshacer.`}
           onCancel={() => setDeleting(null)}
-          onConfirm={() => handleDelete(deleting.id)}
+          onConfirm={() => handleDelete(deleting.id_familiar)}
         />
       )}
     </>

@@ -13,7 +13,7 @@ export const getHistorialPaciente = async (id_paciente) => {
 export const cancelarCita = async (id_cita) => {
   const token = localStorage.getItem("token");
   const res = await api.put(
-    `/historial/paciente/${id_cita}/cancelar`,
+    `/Citas/paciente/${id_cita}/cancelar`,
     {},
     {
       headers: { Authorization: `Bearer ${token}` },

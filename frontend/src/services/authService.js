@@ -25,3 +25,9 @@ export const restablecerContrasena = async (token, nuevaContrasena) => {
   });
   return response.data;
 };
+
+// Confirmar cuenta
+export const confirmarCuenta = async (token) => {
+  const response = await api.get(`/auth/confirmar/${token}`);
+  return response.data; // ej: { mensaje: "Cuenta confirmada" }
+};

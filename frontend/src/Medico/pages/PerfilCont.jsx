@@ -39,7 +39,7 @@ export default function PerfilCont() {
   }, []);
 
   const breadcrumbItems = [
-    { label: "Inicio", href: "/inicio" },
+    { label: "Inicio", href: "/medico/inicio" },
     { label: "Perfil" },
   ];
 

@@ -1,6 +1,6 @@
 export default function TipoCita({ tipoCita, setTipoCita, disabled }) {
   const opciones = [
-    "Cita de control",
+    "Cardiologia",
     "Cita general",
     "Cita odontológica",
     "Cita pediatría",

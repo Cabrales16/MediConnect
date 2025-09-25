@@ -1,5 +1,5 @@
-from app.db.base import Base
-from sqlalchemy import Column, Integer, String, Date, ForeignKey, Enum as SqlEnum, Float
+from app.db.database import Base
+from sqlalchemy import Column, Integer, String, Date, Boolean, DateTime, ForeignKey, Enum as SqlEnum, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from enum import Enum as PyEnum
@@ -31,7 +31,6 @@ class EspecialidadMedica(PyEnum):
     NEUROLOGIA = "Neurología" 
     # ... otros omitidos por brevedad
 
-# Modelo Usuario
 class Usuario(Base):
     __tablename__ = "Usuario"
 
@@ -50,6 +49,11 @@ class Usuario(Base):
     fecha_registro = Column(Date, default=func.current_date(), nullable=False)
     estado = Column(SqlEnum(EstadoUsuario), nullable=True)
     fecha_nacimiento = Column(Date, nullable=False)
+    intentos_fallidos = Column(Integer, default=0)
+    bloqueado_hasta = Column(DateTime, nullable=True)
+    confirmado = Column(Boolean, default=False)
+    token_confirmacion = Column(String, nullable=True, unique=True)
+    token_expira = Column(DateTime, nullable=True)
 
     
 
@@ -57,7 +61,6 @@ class Usuario(Base):
     rol = relationship("Rol", back_populates="usuarios")
     familiares = relationship("Familiar", back_populates="paciente")
     citas_paciente = relationship("Cita", back_populates="paciente", foreign_keys="[Cita.id_paciente]")
-    citas_medico = relationship("Cita", back_populates="medico", foreign_keys="[Cita.id_medico]")
     indicacion_paciente = relationship("Indicaciones", back_populates="paciente", foreign_keys="[Indicaciones.id_paciente]")
     indicacion_medica = relationship("Indicaciones", back_populates="medico", foreign_keys="[Indicaciones.id_medico]")
     medicamento_paciente = relationship("Medicacion", back_populates="paciente", foreign_keys="[Medicacion.id_paciente]")

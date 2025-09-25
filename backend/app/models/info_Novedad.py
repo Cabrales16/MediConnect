@@ -1,9 +1,10 @@
-from app.db.base import Base
+from app.db.database import Base
 from sqlalchemy import Column, Integer, String, ForeignKey, Text
 from sqlalchemy.orm import relationship
+from .AuditMixin import AuditMixin
 
 
-class Info_Novedad(Base):
+class Info_Novedad(Base, AuditMixin):
     __tablename__ = "Info_Novedad"
     id_info = Column(Integer, primary_key=True, autoincrement=True)
     id_admin = Column(Integer, ForeignKey("Usuario.id_usuario"))

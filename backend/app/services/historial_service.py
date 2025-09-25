@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
+from sqlalchemy import func
 from app.models.planilla import VistaPlanilla  
 from app.models.cita import Cita
+
 
 def obtener_paciente(db: Session, id_paciente: int):
     paciente = (
@@ -23,6 +25,7 @@ def obtener_historial(db: Session, id_paciente: int):
     historial = (
         db.query(
             VistaPlanilla.fecha,
+            VistaPlanilla.hora,
             VistaPlanilla.id_cita.label("id_cita"),
             VistaPlanilla.nombre_paciente.label("nombre_paciente"),
             VistaPlanilla.apellido_paciente.label("apellido_paciente"),
@@ -43,6 +46,7 @@ def obtener_historial(db: Session, id_paciente: int):
         {
             "id_cita": h.id_cita,
             "fecha": h.fecha,
+            "hora": h.hora,
             "nombre_paciente": h.nombre_paciente,
             "apellido_paciente": h.apellido_paciente,
             "nombre_medico": h.nombre_medico,
@@ -55,20 +59,21 @@ def obtener_historial(db: Session, id_paciente: int):
     ]
 
 
-
 def cancelar_cita(db: Session, id_cita: int):
-    # Buscar la cita
-    cita = db.query(Cita).filter(Cita.id_cita == id_cita).first()
+    # Buscar la cita que no esté ya eliminada
+    cita = db.query(Cita).filter(Cita.id_cita == id_cita, Cita.eliminado_en == None).first()
     if not cita:
-        raise HTTPException(status_code=404, detail="Cita no encontrada")
+        raise HTTPException(status_code=404, detail="Cita no encontrada o ya cancelada")
 
-    # Cambiar estado
+    # Marcar cancelación (soft delete)
     cita.estado = "CANCELADA"
+    cita.eliminado_en = func.now()   # Guarda la fecha y hora exacta de la cancelación
     db.commit()
     db.refresh(cita)
 
     return {
         "id_cita": cita.id_cita,
         "estado": cita.estado,
+        "eliminado_en": cita.eliminado_en,
         "mensaje": "Cita cancelada exitosamente"
     }

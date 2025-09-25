@@ -1,8 +1,9 @@
-from app.db.base import Base
+from app.db.database import Base
 from sqlalchemy import Column, Integer, Text, ForeignKey, TIMESTAMP, func
 from sqlalchemy.orm import relationship
+from .AuditMixin import AuditMixin
 
-class ErrorTecnico(Base):
+class ErrorTecnico(Base, AuditMixin):
     __tablename__ = "Error_Tecnico"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

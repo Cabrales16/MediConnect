@@ -22,7 +22,7 @@ export default function ModalExito({ open, onClose }) {
         </p>
 
         <button
-          onClick={() => navigate("/citas")} // redirige a citas
+          onClick={() => navigate("/paciente/citas")} // redirige a citas
           className="mt-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition"
         >
           De acuerdo

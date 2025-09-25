@@ -1,7 +1,8 @@
-from app.db.base import Base
+from app.db.database import Base
 from sqlalchemy import Column, Integer, String, Date, Time, ForeignKey, Enum as SqlEnum
 from sqlalchemy.orm import relationship
 from enum import Enum as PyEnum
+from .AuditMixin import AuditMixin
 
 
 class EstadoIndicacion(PyEnum):
@@ -10,7 +11,7 @@ class EstadoIndicacion(PyEnum):
     COMPLETADA = "Completada"
 
 
-class Indicaciones(Base):
+class Indicaciones(Base, AuditMixin):
     __tablename__ = "Indicaciones"
     id_indicacion = Column(Integer, primary_key=True, autoincrement=True)
     id_paciente = Column(Integer, ForeignKey("Usuario.id_usuario"), nullable=False)

@@ -32,7 +32,8 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
           {month.format("MMMM YYYY")}
         </h3>
         <div className="grid grid-cols-7 gap-x-2 gap-y-1 text-center min-h-[320px]">
-          {["D", "L", "M", "M", "J", "V", "S"].map((d) => (
+          {/* ✅ Nombres únicos y claros para los días */}
+          {["D", "L", "Ma", "Mi", "J", "V", "S"].map((d) => (
             <div key={d} className="font-bold pb-2">
               {d}
             </div>
@@ -40,7 +41,8 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
           {days.map((d) => {
             const isCurrentMonth = d.month() === month.month();
             const isSelected =
-              selectedDate && selectedDate.isSame && selectedDate.isSame(d, "day");
+              selectedDate && selectedDate.isSame(d, "day");
+
             return (
               <button
                 key={d.format("YYYY-MM-DD")}
@@ -51,7 +53,7 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
                     ? "hover:bg-green-100"
                     : "text-gray-400"
                 }`}
-                onClick={() => setSelectedDate(d)}
+                onClick={() => setSelectedDate(d)} // guardamos un objeto dayjs
                 disabled={!isCurrentMonth}
               >
                 {d.date()}
@@ -73,7 +75,9 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
         {/* 📱 móvil: un mes | 💻 desktop: dos meses */}
         <div className="flex gap-8 flex-col md:flex-row">
           {renderMonth(currentMonth)}
-          <div className="hidden md:block">{renderMonth(currentMonth.add(1, "month"))}</div>
+          <div className="hidden md:block">
+            {renderMonth(currentMonth.add(1, "month"))}
+          </div>
         </div>
 
         <button onClick={nextMonth} className="px-2 pt-6">

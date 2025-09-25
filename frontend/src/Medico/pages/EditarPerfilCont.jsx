@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import { getPerfil, updatePerfil } from "../../services/perfilService";
+import { toast } from "react-toastify";
 
 export default function EditarPerfilCont() {
   const navigate = useNavigate();
   const id_usuario = localStorage.getItem("id_usuario");
 
   const breadcrumbItems = [
-    { label: "Inicio", href: "/inicio" },
-    { label: "Perfil", href: "/perfil" },
+    { label: "Inicio", href: "/medico/inicio" },
+    { label: "Perfil", href: "/medico/perfil" },
     { label: "Editar" },
   ];
 
@@ -33,6 +34,7 @@ export default function EditarPerfilCont() {
         });
       } catch (error) {
         console.error("❌ Error cargando perfil:", error);
+        toast.error("Error cargando perfil");
       }
     };
     fetchPerfil();
@@ -46,16 +48,16 @@ export default function EditarPerfilCont() {
         direccion: formData.direccion,
         correo: formData.correo,
       });
-      alert("✅ Perfil actualizado correctamente");
-      navigate("/perfil");
+      toast.success("Perfil actualizado correctamente");
+      navigate("/medico/perfil");
     } catch (error) {
       console.error("❌ Error al actualizar perfil:", error);
-      alert("Error al actualizar perfil");
+      toast.error("Error al actualizar perfil");
     }
   };
 
   const handleCancel = () => {
-    navigate("/perfil");
+    navigate("/medico/perfil");
   };
 
   const handleChange = (e) => {
@@ -63,11 +65,20 @@ export default function EditarPerfilCont() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  useEffect(() => {
+    // Block scroll
+    document.body.style.overflow = "hidden";
+    return () => {
+      // Unblock scroll on cleanup
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
 
-      <div className="p-8">
+      <div className="p-8 overflow-y-auto h-[calc(100vh-9rem)]">
         <h2 className="text-2xl font-semibold mb-2">Editar perfil</h2>
         <p className="text-sm text-gray-600 mb-6">
           Modifica tu información de contacto.
