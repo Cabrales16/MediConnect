@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Sidebar from "./components/Menu/SideBar";
 import InicioCont from "./pages/InicioCont";
@@ -13,13 +13,31 @@ import PerfilCont from "./pages/PerfilCont";
 import EditarPerfilCont from "./pages/EditarPerfilCont";
 import NovedadDetalle from "./components/Inicio/NovedadDetalle";
 import ListaDoctores from "./components/Citas/MedicosDisponibles/ListaDoctores"
-import ProfileButtonPaciente from "./components/Navbar/ProfileButton";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// Componente para manejar rutas no encontradas
+function NotFound() {
+  return (
+    <div className="text-center py-12">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Página no encontrada</h2>
+      <p className="text-gray-600 mb-6">La página que buscas no existe.</p>
+      <a 
+        href="/paciente/inicio" 
+        className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+      >
+        Ir al inicio
+      </a>
+    </div>
+  );
+}
 
 export default function PacienteLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
+
       {/* Navbar: le pasamos toggle para abrir/cerrar en móvil */}
       <header className="w-full">
         <Navbar onToggleSidebar={() => setSidebarOpen((s) => !s)} />
@@ -36,11 +54,14 @@ export default function PacienteLayout() {
           aria-hidden={sidebarOpen ? "true" : "false"}
         >
           <Routes>
-            <Route index element={<InicioCont />} /> {/* equivale a /paciente */}
+            {/* Ruta exacta para /paciente */}
+            <Route index element={<InicioCont />} />
+            
+            {/* Rutas específicas */}
             <Route path="inicio" element={<InicioCont />} />
-            <Route path="novedad/:id" element={<NovedadDetalle />} />
+            <Route path="inicio/:id" element={<NovedadDetalle />} />
             <Route path="citas" element={<CitasCont />} />
-            <Route path="citas/medicos" element={<ListaDoctores />} />
+            <Route path="citas/medicos-cita" element={<ListaDoctores />} />
             <Route path="planilla" element={<PlanillaCont />} />
             <Route path="familiares" element={<FamiliaresCont />} />
             <Route path="indicaciones" element={<IndMedicasCont />} />
@@ -48,11 +69,13 @@ export default function PacienteLayout() {
             <Route path="configuracion" element={<ConfigCont />} />
             <Route path="perfil" element={<PerfilCont />} />
             <Route path="perfil/editar" element={<EditarPerfilCont />} />
-            <Route path="*" element={<Navigate to="inicio" replace />} />
             
-          </Routes>
+            {/* Página 404 sin Navigate para evitar bucles */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>        
         </main>
       </div>
+      <ToastContainer position="bottom-left" autoClose={3000} />
     </div>
   );
 }

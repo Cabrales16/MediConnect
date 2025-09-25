@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import date
+from datetime import date, time as Time
 
 class PacienteResponse(BaseModel):
     nombre: str
@@ -12,6 +12,7 @@ class PacienteResponse(BaseModel):
 class HistorialResponse(BaseModel):
     id_cita: int
     fecha: date
+    hora: Time
     nombre_paciente: str
     apellido_paciente: str
     nombre_medico: str

@@ -1,46 +1,107 @@
-// src/pages/PlanillaCont.jsx
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import PlanillaTable from "../components/Planilla/PlanillaTable";
 import CitaDetails from "../components/Planilla/CitaDetails";
-import ConfirmModal from "../components/UI/ConfirmModal";
-import ModificarCitaModal from "../components/UI/ModificarCitaModal";
-import { getHistorialPaciente } from "../services/historialService";
+
+const samplePorTomar = [
+  {
+    id_cita: 1,
+    nombre_paciente: "Andrés",
+    apellido_paciente: "Cabrales",
+    nombre_medico: "Gerson",
+    apellido_medico: "Sánchez",
+    especialidad_medico: "Consulta general",
+    fecha: "2025-08-20",
+    fechaReadable: "20 de agosto de 2025",
+    hora: "08:00 A.M.",
+    direccion: "Calle 123, Bogotá",
+    estado_cita: "PROGRAMADA",
+  },
+  {
+    id_cita: 2,
+    nombre_paciente: "María",
+    apellido_paciente: "Gómez",
+    nombre_medico: "Juliana",
+    apellido_medico: "García",
+    especialidad_medico: "Consulta de seguimiento",
+    fecha: "2025-08-23",
+    fechaReadable: "23 de agosto de 2025",
+    hora: "10:00 A.M.",
+    direccion: "Av. Siempre Viva 45",
+    estado_cita: "PROGRAMADA",
+  },
+  {
+    id_cita: 3,
+    nombre_paciente: "Carlos",
+    apellido_paciente: "Torres",
+    nombre_medico: "Carlos",
+    apellido_medico: "Pérez",
+    especialidad_medico: "Consulta de seguimiento",
+    fecha: "2025-08-30",
+    fechaReadable: "30 de agosto de 2025",
+    hora: "02:00 P.M.",
+    direccion: "Cll 50 #20-10",
+    estado_cita: "PROGRAMADA",
+  },
+];
+
+const sampleTomadas = [
+  {
+    id_cita: 11,
+    nombre_paciente: "Lucía",
+    apellido_paciente: "Martínez",
+    nombre_medico: "Luna",
+    apellido_medico: "",
+    especialidad_medico: "Consulta general",
+    fecha: "2025-07-15",
+    fechaReadable: "15 de julio de 2025",
+    hora: "09:00 A.M.",
+    estado_cita: "TOMADA",
+    notas:
+      "El paciente se queja de dolores de cabeza frecuentes y fatiga. Revisar historial médico.",
+    indicaciones:
+      "Tome Ibuprofeno 200 mg cada 6 horas con comida durante 3 días.",
+  },
+  {
+    id_cita: 12,
+    nombre_paciente: "Juan",
+    apellido_paciente: "Ríos",
+    nombre_medico: "Ramírez",
+    apellido_medico: "",
+    especialidad_medico: "Control postoperatorio",
+    fecha: "2025-07-22",
+    fechaReadable: "22 de julio de 2025",
+    hora: "11:00 A.M.",
+    estado_cita: "TOMADA",
+    notas: "Evolución favorable, retirar puntos en 7 días.",
+    indicaciones: "Aplicar pomada 2 veces al día durante 5 días.",
+  },
+];
 
 export default function PlanillaCont() {
   const breadcrumbItems = [
-    { label: "Inicio", href: "/inicio" },
+    { label: "Inicio", href: "/medico/inicio" },
     { label: "Planilla" },
   ];
 
-  // ESTADOS
-  const [porTomar, setPorTomar] = useState([]);
-  const [tomadas, setTomadas] = useState([]);
-  const [tab, setTab] = useState("por");
+  const [tab, setTab] = useState("por"); // 'por' | 'tomadas'
   const [selectedCita, setSelectedCita] = useState(null);
-  const [modal, setModal] = useState(null);
 
-  // ✅ Cargar citas del backend
   useEffect(() => {
-    const fetchHistorial = async () => {
-      try {
-        const idPaciente = localStorage.getItem("id_usuario");
-        const citas = await getHistorialPaciente(idPaciente);
-
-        setPorTomar(citas.filter((c) => c.estado === "Programada"));
-        setTomadas(citas.filter((c) => c.estado !== "Programada"));
-      } catch (error) {
-        console.error("Error cargando historial:", error);
-      }
+    // Block scroll
+    document.body.style.overflow = "hidden";
+    return () => {
+      // Unblock scroll on cleanup
+      document.body.style.overflow = "";
     };
-
-    fetchHistorial();
   }, []);
 
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
-      <div className="p-8">
+      <div className="p-8 overflow-y-auto h-[calc(100vh-9rem)]">
+        <h2 className="text-2xl font-semibold mb-4">Citas por tomar</h2>
+
         {/* Tabs */}
         <div className="flex items-center gap-6 mb-6">
           <button
@@ -71,74 +132,35 @@ export default function PlanillaCont() {
           </button>
         </div>
 
-        {/* Main */}
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Tabla */}
-          <div className="w-full md:w-1/2">
-            <div className="bg-white rounded-2xl border border-gray-400 shadow-sm p-4">
+        {/* Main layout: table (left) and details panel (right) */}
+        <div className="flex gap-8">
+          <div className="flex-1">
+            <div className="bg-white rounded-2xl shadow-md p-4">
               <PlanillaTable
                 mode={tab}
-                porTomar={porTomar}
-                tomadas={tomadas}
+                porTomar={samplePorTomar}
+                tomadas={sampleTomadas}
                 onViewDetails={(cita) => setSelectedCita(cita)}
               />
             </div>
           </div>
 
-          {/* Detalles */}
-          <div className="w-full md:w-1/2 mt-6 md:mt-0">
+          {/* Panel derecho: si se seleccionó una cita */}
+          <div className="w-1/2">
             {selectedCita ? (
               <CitaDetails
                 cita={selectedCita}
                 mode={tab}
                 onClose={() => setSelectedCita(null)}
-                onModificar={() =>
-                  selectedCita.estado !== "Cancelado" && setModal("modificar")
-                }
-                onCancelar={() =>
-                  selectedCita.estado !== "Cancelado" && setModal("cancelar")
-                }
               />
             ) : (
-              <div className="h-full rounded-2xl border border-dashed border-gray-400 flex items-center justify-center text-gray-400 p-6">
+              <div className="h-full rounded-2xl border border-dashed border-gray-200 flex items-center justify-center text-gray-400">
                 Selecciona "Ver detalles" en una cita para ver más información
               </div>
             )}
           </div>
         </div>
       </div>
-
-      {/* Modal Cancelar */}
-      {modal === "cancelar" && selectedCita && (
-        <ConfirmModal
-          title="Cancelar cita"
-          description={`¿Seguro que deseas cancelar la cita "${selectedCita.tipo}" del ${selectedCita.fechaReadable}?`}
-          onCancel={() => setModal(null)}
-          onConfirm={() => {
-            const citaCancelada = { ...selectedCita, estado: "Cancelado" };
-            setPorTomar((prev) =>
-              prev.filter((c) => c.id !== citaCancelada.id)
-            );
-            setSelectedCita(citaCancelada);
-            setModal(null);
-          }}
-        />
-      )}
-
-      {/* Modal Modificar */}
-      {modal === "modificar" && selectedCita && (
-        <ModificarCitaModal
-          cita={selectedCita}
-          onCancel={() => setModal(null)}
-          onSave={(updated) => {
-            setPorTomar((prev) =>
-              prev.map((c) => (c.id === updated.id ? updated : c))
-            );
-            setSelectedCita(updated);
-            setModal(null);
-          }}
-        />
-      )}
     </>
   );
 }

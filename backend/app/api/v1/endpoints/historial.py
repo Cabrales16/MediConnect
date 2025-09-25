@@ -18,9 +18,3 @@ def get_paciente(id_paciente: int, db: Session = Depends(get_db)):
 def get_historial(id_paciente: int, db: Session = Depends(get_db)):
     return historial_service.obtener_historial(db, id_paciente)
 
-@router.put("/paciente/{id_cita}/cancelar")
-def cancelar_cita_endpoint(id_cita: int, db: Session = Depends(get_db)):
-    """
-    Cancela una cita cambiando su estado a 'cancelado'
-    """
-    return cancelar_cita(db, id_cita)

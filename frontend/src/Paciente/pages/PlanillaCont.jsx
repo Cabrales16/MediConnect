@@ -3,14 +3,13 @@ import React, { useState, useEffect } from "react";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import PlanillaTable from "../components/Planilla/PlanillaTable";
 import CitaDetails from "../components/Planilla/CitaDetails";
-import ConfirmModal from "../components/UI/ConfirmModal";
+import ConfirmModal from "../components/UI/ConfirmModalCita";
 import ModificarCitaModal from "../components/UI/ModificarCitaModal";
 import { getHistorialPaciente, cancelarCita } from "../../services/historialService";
 
-
 export default function PlanillaCont() {
   const breadcrumbItems = [
-    { label: "Inicio", href: "/inicio" },
+    { label: "Inicio", href: "/paciente/inicio" },
     { label: "Planilla" },
   ];
 
@@ -28,8 +27,8 @@ export default function PlanillaCont() {
         const idPaciente = localStorage.getItem("id_usuario");
         const citas = await getHistorialPaciente(idPaciente);
 
-        setPorTomar(citas.filter((c) => c.estado_cita === "Programada"));
-        setTomadas(citas.filter((c) => c.estado_cita !== "Programada"));
+        setPorTomar(citas.filter((c) => c.estado_cita === "PROGRAMADA"));
+        setTomadas(citas.filter((c) => c.estado_cita !== "PROGRAMADA"));
       } catch (error) {
         console.error("Error cargando historial:", error);
       }
@@ -38,10 +37,18 @@ export default function PlanillaCont() {
     fetchHistorial();
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
-      <div className="p-8">
+      <div className="pb-30 overflow-y-auto sm:overflow-y-visible h-[100vh]">
+        <div className="p-8">
         {/* Tabs */}
         <div className="flex items-center gap-6 mb-6">
           <button
@@ -94,11 +101,11 @@ export default function PlanillaCont() {
                 mode={tab}
                 onClose={() => setSelectedCita(null)}
                 onModificar={() =>
-                  selectedCita.estado_cita !== "Cancelado" &&
+                  selectedCita.estado_cita !== "CANCELADA" &&
                   setModal("modificar")
                 }
                 onCancelar={() =>
-                  selectedCita.estado_cita !== "Cancelado" &&
+                  selectedCita.estado_cita !== "CANCELADA" &&
                   setModal("cancelar")
                 }
               />
@@ -115,14 +122,14 @@ export default function PlanillaCont() {
       {modal === "cancelar" && selectedCita && (
         <ConfirmModal
           title="Cancelar cita"
-          description={`¿Seguro que deseas cancelar la cita "${selectedCita.tipo}" del ${selectedCita.fecha}?`}
+          description={`¿Seguro que deseas cancelar la cita "${selectedCita.especialidad_medico}" del ${selectedCita.fecha}?`}
           onCancel={() => setModal(null)}
           onConfirm={async () => {
             try {
               await cancelarCita(selectedCita.id_cita); // ✅ Llamada al backend
               const citaCancelada = {
                 ...selectedCita,
-                estado_cita: "Cancelado",
+                estado_cita: "CANCELADA",
               };
               setPorTomar((prev) =>
                 prev.filter((c) => c.id_cita !== citaCancelada.id_cita)
@@ -154,6 +161,7 @@ export default function PlanillaCont() {
           }}
         />
       )}
+      </div>
     </>
   );
 }

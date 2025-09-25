@@ -1,16 +1,26 @@
 from pydantic import BaseModel, EmailStr
 
 class FamiliarBase(BaseModel):
+    id_familiar: int
     nombre: str
-    correo: EmailStr
-    Telefono: str
-    id_info: int  
+    correo: str
+    tipo: str   
 
-class FamiliarCreate(FamiliarBase):
-    pass
-
-class FamiliarResponse(FamiliarBase):
-    id_familiar: int 
-    id_paciente: int
     class Config:
-        from_attributes = True
+        orm_mode = True
+
+
+class FamiliarCreate(BaseModel):
+    nombre: str
+    correo: str
+    id_info: int   
+
+
+class FamiliarResponse(BaseModel):
+    id_familiar: int
+    nombre: str
+    correo: str
+    tipo: str   # 👈 devolvemos nombre de la relación
+
+    class Config:
+        orm_mode = True

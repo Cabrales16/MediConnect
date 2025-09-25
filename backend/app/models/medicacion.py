@@ -1,7 +1,8 @@
-from app.db.base import Base
+from app.db.database import Base
 from sqlalchemy import Column, Integer, String, Date, Time, ForeignKey, Enum as SqlEnum
 from sqlalchemy.orm import relationship
 from enum import Enum as PyEnum
+from .AuditMixin import AuditMixin
 
 class EstadoMedicacion(PyEnum):
     PENDIENTE = "Pendiente"
@@ -10,7 +11,7 @@ class EstadoMedicacion(PyEnum):
     CANCELADA = "Cancelada"
 
 
-class Medicacion(Base):
+class Medicacion(Base, AuditMixin):
     __tablename__ = "Medicacion"
 
     id_medicacion = Column(Integer, primary_key=True, autoincrement=True)

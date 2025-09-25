@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-import useLockBodyScroll from "../../../hooks/useLockBodyScroll";
-
 export default function ModificarCitaModal({ cita, onCancel, onSave }) {
   const [fecha, setFecha] = useState(cita.fecha || "");
   const [hora, setHora] = useState(cita.hora || "");
   const [direccion, setDireccion] = useState(cita.direccion || "");
-
-  useLockBodyScroll(true);
 
   const direcciones = [
     "Calle 123, Bogotá",

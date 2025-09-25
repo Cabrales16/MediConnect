@@ -1,14 +1,14 @@
 import React from "react";
-import faqIcon from "./NavbarIcons/faqIcon.png";
+import { Link } from "react-router-dom";
+import { HelpCircle } from "lucide-react";
 
 export default function FaqButton() {
   return (
-    <a
-      href="/faq"
-      className="p-2 rounded-md bg-gray-50 hover:bg-gray-100 transition"
-      aria-label="FAQ"
+    <Link
+      to="/admin/faq"
+      className="p-2 rounded-md bg-gray-50 hover:bg-gray-100 transition relative"
     >
-      <img src={faqIcon} alt="FAQ" className="w-6 h-6" />
-    </a>
+      <HelpCircle className="w-6 h-6 text-gray-600" />
+    </Link>
   );
 }

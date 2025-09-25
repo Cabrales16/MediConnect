@@ -12,9 +12,11 @@ export default function CitaDetails({ cita, mode = "por", onClose, onModificar, 
         {/* HEADER */}
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="text-lg font-semibold">{cita.tipo}</h3>
+            <h3 className="text-lg font-semibold">
+              {cita.especialidad_medico || "Cita médica"}
+            </h3>
             <p className="text-sm text-gray-500">
-              {cita.fechaReadable} • {cita.hora}
+              {cita.fecha}
             </p>
           </div>
           <button
@@ -30,18 +32,33 @@ export default function CitaDetails({ cita, mode = "por", onClose, onModificar, 
           {/* LEFT: Info */}
           <div className="w-1/2 pr-4">
             <div className="mb-4">
-              <h4 className="text-sm font-semibold text-gray-700">Médico</h4>
-              <p className="text-black">{cita.medico || "Sin asignar"}</p>
+              <h4 className="text-sm font-semibold text-gray-700">Paciente</h4>
+              <p className="text-black">
+                {cita.nombre_paciente} {cita.apellido_paciente}
+              </p>
             </div>
 
             <div className="mb-4">
-              <h4 className="text-sm font-semibold text-gray-700">Dirección</h4>
-              <p className="text-black">{cita.direccion || "No especificada"}</p>
+              <h4 className="text-sm font-semibold text-gray-700">Médico</h4>
+              <p className="text-black">
+                {cita.nombre_medico} {cita.apellido_medico}
+              </p>
+              <p className="text-gray-500 text-sm">
+                {cita.especialidad_medico}
+              </p>
             </div>
 
             <div className="mb-4">
               <h4 className="text-sm font-semibold text-gray-700">Estado</h4>
-              <p className="text-black">{cita.estado || "Programada"}</p>
+              <span
+                className={`py-1 rounded-lg text-sm ${
+                  cita.estado_cita === "PROGRAMADA"
+                    ? "text-green-700"
+                    : "text-red-600"
+                }`}
+              >
+                {cita.estado_cita}
+              </span>
             </div>
           </div>
 
@@ -59,18 +76,15 @@ export default function CitaDetails({ cita, mode = "por", onClose, onModificar, 
             ) : (
               <div className="h-full overflow-auto">
                 <h4 className="text-sm font-semibold mb-2">Notas del médico</h4>
-                <p className="text-gray-700 mb-4">{cita.notas}</p>
-
-                <h4 className="text-sm font-semibold mb-2">
-                  Indicaciones médicas
-                </h4>
-                <p className="text-gray-700">{cita.indicaciones}</p>
+                <p className="text-gray-700 mb-4">
+                  {cita.notas || "Sin notas registradas"}
+                </p>
               </div>
             )}
           </div>
         </div>
 
-        {/* FOOTER: Solo visible en "por tomar" */}
+        {/* FOOTER: Solo en "por tomar" */}
         {mode === "por" && (
           <div className="mt-6 flex gap-3 justify-end">
             <button

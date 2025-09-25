@@ -1,19 +1,34 @@
 import React, { useState } from "react";
 import { Lock } from "lucide-react";
-import calendario from "./RestablecerContraseñaImages/calendario.jpeg"
-import Volver from "./RestablecerContraseñaImages/flechaIconIzq.png"
+import { useParams, useNavigate } from "react-router-dom";
+import calendario from "./RestablecerContraseñaImages/calendario.jpeg";
+import Volver from "./RestablecerContraseñaImages/flechaIconIzq.png";
+import { restablecerContrasena } from "../services/authService"; 
 
 export default function RestablecerContrasena() {
+  const { token } = useParams(); // 👈 obtenemos el token de la URL
+  const navigate = useNavigate();
+
   const [password, setPassword] = useState("");
   const [confirmar, setConfirmar] = useState("");
   const [mensaje, setMensaje] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     if (password !== confirmar) {
-      setMensaje("Las contraseñas no coinciden.");
-    } else {
+      setError("Las contraseñas no coinciden.");
+      return;
+    }
+    try {
+      const resp = await restablecerContrasena(token, password);
+      console.log("Respuesta:", resp);
       setMensaje("✅ Tu contraseña ha sido restablecida con éxito.");
+      setTimeout(() => navigate("/login"), 2000); // Redirige al login
+    } catch (err) {
+      console.error(err);
+      setError("Hubo un error al restablecer la contraseña.");
     }
   };
 
@@ -43,7 +58,8 @@ export default function RestablecerContrasena() {
         <a href="/login" className="w-2 h-2 absolute flex ml-4 mt-5 items-center">
           <img src={Volver} alt="regresar" /> <p className="pl-3">Volver</p>
         </a>
-        {/* Caja izquierda con ilustración */}
+
+        {/* Caja izquierda */}
         <div className="w-1/2 bg-white flex items-center justify-center p-6">
           <img
             src={calendario}
@@ -52,18 +68,22 @@ export default function RestablecerContrasena() {
           />
         </div>
 
-        {/* Caja derecha con formulario */}
+        {/* Caja derecha */}
         <div className="w-1/2 bg-green-500 flex items-center justify-center p-6">
           <div className="bg-white rounded-2xl shadow-lg p-8 w-full">
             <h2 className="text-xl font-bold text-center mb-6">
               Restablecer contraseña
             </h2>
 
-            {mensaje ? (
+            {mensaje && (
               <div className="bg-green-100 border border-green-300 text-green-700 text-sm p-4 rounded-lg text-center mb-4">
                 {mensaje}
               </div>
-            ) : null}
+            )}
+
+            {error && (
+              <p className="text-red-500 text-xs text-center mb-4">{error}</p>
+            )}
 
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>

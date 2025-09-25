@@ -11,18 +11,7 @@ export default function CitaRapidaButton() {
     setIsOpen(false);
 
     // Redirigir con datos prellenados
-    navigate("/citas", {
-      state: {
-        tipoCita,
-        selectedDate: "2025-08-30", // 30 de agosto 2025
-        hora: {
-          tipo: "especifica",
-          inicio: "08:00",
-          am_pm: "AM",
-        },
-        ubicacion: "Sede Principal",
-      },
-    });
+    navigate("/paciente/citas", { state: { tipoCita } });
   };
 
   return (

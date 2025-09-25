@@ -1,23 +1,24 @@
 import React, { useState } from "react";
-import useLockBodyScroll from "../../../hooks/useLockBodyScroll";
+import { toast } from "react-toastify";
 
 export default function ReportErrorModal({ isOpen, onClose }) {
   const [errorType, setErrorType] = useState("");
   const [description, setDescription] = useState("");
 
-  useLockBodyScroll(isOpen);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Reporte enviado:", { errorType, description });
-    // Aquí puedes enviar al backend cuando lo tengas
+    toast.success("Gracias por reportar el error. ¡Trabajaremos para solucionarlo!");
+    // Aquí se puede enviar al backend cuando se tenga
     onClose();
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
+
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative bg-white rounded-xl shadow-lg w-full max-w-md p-6 z-10">
         <h2 className="text-xl font-semibold mb-4">Reportar un error</h2>

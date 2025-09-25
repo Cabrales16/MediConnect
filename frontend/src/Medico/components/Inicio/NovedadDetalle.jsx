@@ -14,7 +14,7 @@ export default function NovedadDetalle() {
       <div className="p-8">
         <p>No se encontró la novedad solicitada.</p>
         <button
-          onClick={() => navigate("/inicio")}
+          onClick={() => navigate("/medico/inicio")}
           className="mt-4 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-xl shadow-sm transition-all"
         >
         Volver
@@ -24,8 +24,7 @@ export default function NovedadDetalle() {
   }
 
   const breadcrumbItems = [
-    { label: "Inicio", href: "/inicio" },
-    { label: "Novedades", href: "/inicio" },
+    { label: "Inicio", href: "/medico/inicio" },
     { label: novedad.titulo },
   ];
 
@@ -48,7 +47,7 @@ export default function NovedadDetalle() {
         </p>
         {/* Botón de volver */}
         <button
-          onClick={() => navigate("/inicio")}
+          onClick={() => navigate("/medico/inicio")}
           className="mb-6 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md shadow-sm transition-all mt-4"
         >
         Volver

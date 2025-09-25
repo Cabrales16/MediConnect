@@ -13,7 +13,12 @@ def enviar_email(db: Session, destinatario: str, asunto: str, contenido_html: st
     if not usuario:
         print(f"❌ No se encontró el usuario con el correo: {destinatario}")
         return False
+
     try:
+        print(f"🔑 API Key: {settings.SENDGRID_API_KEY[:10]}...")  # Debug
+        print(f"📧 Enviando desde: dgersonsamuel080@gmail.com")
+        print(f"📧 Enviando a: {destinatario}")
+
         sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
         message = Mail(
             from_email=("dgersonsamuel080@gmail.com", 'Soporte Euipomed'),
@@ -21,9 +26,12 @@ def enviar_email(db: Session, destinatario: str, asunto: str, contenido_html: st
             subject=asunto,
             html_content=contenido_html
         )
+
         respuesta = sg.send(message)
         print(f"✅ Correo enviado a {destinatario}, status: {respuesta.status_code}")
         return True
+
     except Exception as e:
-        print("❌ Error al enviar el correo:", e)
+        print(f"❌ Error al enviar el correo: {e}")
+        print(f"❌ Tipo de error: {type(e)}")
         return False

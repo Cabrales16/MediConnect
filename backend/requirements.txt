@@ -2,6 +2,7 @@ alembic==1.15.2
 annotated-types==0.7.0
 anyio==4.9.0
 bcrypt==4.0.1
+bleach==6.2.0
 certifi==2025.8.3
 cffi==1.17.1
 click==8.2.1
@@ -39,4 +40,5 @@ starlette==0.46.2
 typing-inspection==0.4.0
 typing_extensions==4.13.2
 uvicorn==0.34.2
+webencodings==0.5.1
 Werkzeug==3.1.3

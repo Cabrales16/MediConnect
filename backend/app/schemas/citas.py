@@ -68,3 +68,4 @@ class CitaUpdate(BaseModel):
     hora: time
     estado: EstadoCita
     id_hospital: int
+

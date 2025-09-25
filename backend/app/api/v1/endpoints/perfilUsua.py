@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.schemas.perfil import UsuarioResponse, UsuarioEdid, TipoDocumentoEnum
 from app.services import perfil_service
+from app.core.sanitizer import sanitize_text
 
 
 router = APIRouter(prefix="/perfil", tags=["Perfil"])
@@ -19,4 +20,10 @@ def editar_perfil(id_usuario: int, perfil: UsuarioEdid, db: Session = Depends(ge
     perfil_editado = perfil_service.editar_perfil(db, id_usuario, perfil)
     if not perfil_editado:
         raise HTTPException(status_code=404, detail="Perfil no encontrado")
+    # Sanitizar campos antes de guardarlos en la BD
+    perfil_editado.nombre = sanitize_text(perfil_editado.nombre)
+    perfil_editado.apellido = sanitize_text(perfil_editado.apellido)
+    perfil_editado.direccion = sanitize_text(perfil_editado.direccion)
+    perfil_editado.telefono = sanitize_text(perfil_editado.telefono)
+    perfil_editado.correo = sanitize_text(perfil_editado.correo)
     return {"msg": "Perfil actualizado con éxito", "horario": perfil_editado}

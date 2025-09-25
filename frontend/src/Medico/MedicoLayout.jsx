@@ -9,6 +9,8 @@ import ConfigCont from "./pages/ConfigCont";
 import PerfilCont from "./pages/PerfilCont";
 import EditarPerfilCont from "./pages/EditarPerfilCont";
 import NovedadDetalle from "./components/Inicio/NovedadDetalle";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function MedicoLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -33,7 +35,7 @@ export default function MedicoLayout() {
           <Routes>
             <Route path="/" element={<Navigate to="inicio" replace />} />
             <Route path="inicio" element={<InicioCont />} />
-            <Route path="novedad/:id" element={<NovedadDetalle />} />
+            <Route path="/inicio/:id" element={<NovedadDetalle />} />
             <Route path="planilla" element={<PlanillaCont />} />
             <Route path="faq" element={<FaqCont />} />
             <Route path="configuracion" element={<ConfigCont />} />
@@ -43,6 +45,7 @@ export default function MedicoLayout() {
           </Routes>
         </main>
       </div>
+      <ToastContainer position="bottom-left" autoClose={3000} />
     </div>
   );
 }
