@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import AddFamilia from "../components/Familiares/AddFamiliar";
 import EditFamilia from "../components/Familiares/EditFamiliar";
-import ConfirmModal from "../components/UI/ConfirmModal";
+import ConfirmModal from "../components/UI/ConfirmModalFamiliar"
 import editarVerdeIcon from "../components/Familiares/FamiliaresIcons/editarVerdeIcon.png";
 import eliminarRojoIcon from "../components/Familiares/FamiliaresIcons/eliminarRojoIcon.png";
 import agregarIcon from "../components/Familiares/FamiliaresIcons/agregarIcon.png";
+import { toast } from "react-toastify";
 
-// 👉 Importamos los servicios
+// Importamos los servicios
 import {
   getFamiliaresPaciente,
   crearFamiliar,
@@ -17,7 +18,7 @@ import {
 
 export default function FamiliaresCont() {
   const breadcrumbItems = [
-    { label: "Inicio", href: "/inicio" },
+    { label: "Inicio", href: "/paciente/inicio" },
     { label: "Familiares" },
   ];
 
@@ -26,47 +27,54 @@ export default function FamiliaresCont() {
   const [editing, setEditing] = useState(null);
   const [deleting, setDeleting] = useState(null);
 
-  // ⚡ Cargar familiares desde la API
+  // Cargar familiares desde la API
   useEffect(() => {
     const fetchFamiliares = async () => {
       try {
-        const id_paciente = localStorage.getItem("id_usuario"); // asegúrate que lo guardas al iniciar sesión
+        const id_paciente = localStorage.getItem("id_usuario"); 
         if (!id_paciente) return;
         const data = await getFamiliaresPaciente(id_paciente);
         setFamiliares(data);
       } catch (error) {
         console.error("Error cargando familiares:", error);
+
       }
     };
     fetchFamiliares();
   }, []);
 
-  // ➕ Crear familiar
+  // Crear familiar
   const handleAdd = async (newF) => {
     try {
       const id_paciente = localStorage.getItem("id_usuario");
       const creado = await crearFamiliar(id_paciente, newF);
       setFamiliares((s) => [...s, creado]);
+      toast.success("¡Familiar añadido correctamente!");
       setShowAdd(false);
     } catch (error) {
       console.error("Error creando familiar:", error);
+      toast.error("Error al crear el familiar."); //LOS TOAST SE MANEJAN EN LAS FUNCIONES 
     }
   };
 
-  // ✏️ Editar familiar (requiere un endpoint update, de momento solo local)
-const handleUpdate = async (updated) => {
-  try {
-    const actualizado = await actualizarFamiliar(updated.id_familiar, updated);
-    setFamiliares((s) =>
-      s.map((f) => (f.id_familiar === actualizado.id_familiar ? actualizado : f))
-    );
-    setEditing(null);
-  } catch (error) {
-    console.error("Error actualizando familiar:", error);
-  }
-};
+  // Editar familiar
+  const handleUpdate = async (updated) => {
+    try {
+      const actualizado = await actualizarFamiliar(updated.id_familiar, updated);
+      setFamiliares((s) =>
+        s.map((f) =>
+          f.id_familiar === actualizado.id_familiar ? actualizado : f
+        )
+      );
+      toast.info("¡Familiar actualizado!");
+      setEditing(null);
+    } catch (error) {
+      console.error("Error actualizando familiar:", error);
+      toast.error("Error al actualizar el familiar.");
+    }
+  };
 
-  // ❌ Eliminar familiar
+  // Eliminar familiar
   const handleDelete = async (id_familiar) => {
     try {
       await eliminarFamiliar(id_familiar);
@@ -74,9 +82,17 @@ const handleUpdate = async (updated) => {
       setDeleting(null);
     } catch (error) {
       console.error("Error eliminando familiar:", error);
+      toast.error("Error al eliminar el familiar.");
     }
   };
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+  
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />

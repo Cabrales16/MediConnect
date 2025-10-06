@@ -51,10 +51,10 @@ export default function CitaDetails({ cita, mode = "por", onClose, onModificar, 
             <div className="mb-4">
               <h4 className="text-sm font-semibold text-gray-700">Estado</h4>
               <span
-                className={`px-2 py-1 rounded-lg text-sm ${
+                className={`py-1 rounded-lg text-sm ${
                   cita.estado_cita === "PROGRAMADA"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-600"
+                    ? "text-green-700"
+                    : "text-red-600"
                 }`}
               >
                 {cita.estado_cita}
@@ -78,13 +78,6 @@ export default function CitaDetails({ cita, mode = "por", onClose, onModificar, 
                 <h4 className="text-sm font-semibold mb-2">Notas del médico</h4>
                 <p className="text-gray-700 mb-4">
                   {cita.notas || "Sin notas registradas"}
-                </p>
-
-                <h4 className="text-sm font-semibold mb-2">
-                  Indicaciones médicas
-                </h4>
-                <p className="text-gray-700">
-                  {cita.indicaciones || "Sin indicaciones registradas"}
                 </p>
               </div>
             )}

@@ -7,21 +7,9 @@ export default function ModificarDatos() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleConfirm = (tipoCita) => {
+  const handleConfirm = () => {
     setIsOpen(false);
-
-    // Redirigir con datos prellenados
-    navigate("/citas", {
-      state: {
-        tipoCita,
-        selectedDate: "2025-08-30", // 30 de agosto 2025
-        hora: {
-          tipo: "especifica",
-          inicio: "08:00",
-          am_pm: "AM",
-        },
-        ubicacion: "Sede Principal",
-      },
+    navigate("/medico/inicio", {
     });
   };
 
@@ -42,6 +30,7 @@ export default function ModificarDatos() {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         onConfirm={handleConfirm}
+        navigate={navigate}
       />
     </>
   );

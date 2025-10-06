@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import Calendar from "../components/Citas/Calendario";
 import TipoCita from "../components/Citas/TipoCita";
@@ -7,17 +8,25 @@ import Ubicacion from "../components/Citas/Ubicacion";
 import HoraRango from "../components/Citas/HoraRango";
 import HoraDetalle from "../components/Citas/HoraDetalle";
 import BuscarButton from "../components/Citas/BuscarButton";
-import { agendarCita } from "../../services/citasService"; 
+import {
+  filtrarMedicosHorafija,
+  filtrarMedicosRango,
+} from "../../services/citasService";
+import { toast } from "react-toastify"
 
 export default function Citas() {
   const breadcrumbItems = [
-    { label: "Inicio", href: "/inicio" },
+    { label: "Inicio", href: "/paciente/inicio" },
     { label: "Citas" },
   ];
 
   const location = useLocation();
   const navigate = useNavigate();
-  const quickData = location.state;
+  
+  // Memorizar quickData para evitar re-renders innecesarios
+  const quickData = useMemo(() => {
+    return location.state || null;
+  }, [location.state]);
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [tipoCita, setTipoCita] = useState("");
@@ -32,102 +41,193 @@ export default function Citas() {
   });
   const [loading, setLoading] = useState(false);
 
-  // Si viene desde cita rápida, prellenar
+  // Si viene desde cita rápida, prellenar - ejecutar solo una vez
   useEffect(() => {
     if (quickData) {
+      console.log("Prellenando con quickData:", quickData);
       setSelectedDate(quickData.selectedDate);
-      setTipoCita(quickData.tipoCita);
-      setUbicacion(quickData.ubicacion);
-      setHora(quickData.hora);
+      setTipoCita(quickData.tipoCita || "");
+      setUbicacion(quickData.ubicacion || "");
+      setHora(quickData.hora || {
+        tipo: "",
+        inicio: "",
+        fin: "",
+        am_pm: "",
+        am_pm_inicio: "",
+        am_pm_fin: "",
+      });
     }
   }, [quickData]);
 
-  // Validación de botón buscar
-  const isDisabled =
-    !selectedDate ||
-    !tipoCita ||
-    !ubicacion ||
-    !hora.tipo ||
-    (hora.tipo === "especifica" && (!hora.inicio || !hora.am_pm)) ||
-    (hora.tipo === "rango" &&
-      (!hora.inicio || !hora.fin || !hora.am_pm_inicio || !hora.am_pm_fin));
+  // Efecto de body overflow con limpieza apropiada
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
+  // 🔹 Convierte "09:30" + "PM" -> "21:30:00"
+  const convertirHora = (time, ampm) => {
+    if (!time || !ampm) return null;
+    const [hhStr, mmStr] = time.split(":");
+    let hh = parseInt(hhStr, 10);
+    let mm = parseInt(mmStr || "0", 10);
+
+    if (ampm === "PM" && hh !== 12) hh += 12;
+    if (ampm === "AM" && hh === 12) hh = 0;
+
+    return `${hh.toString().padStart(2, "0")}:${mm
+      .toString()
+      .padStart(2, "0")}:00`;
+  };
+
+  // Memorizar validación para evitar recálculos innecesarios
+  const isDisabled = useMemo(() => {
+    return (
+      !selectedDate ||
+      !tipoCita ||
+      !ubicacion ||
+      !hora.tipo ||
+      (hora.tipo === "especifica" && (!hora.inicio || !hora.am_pm)) ||
+      (hora.tipo === "rango" &&
+        (!hora.inicio || !hora.fin || !hora.am_pm_inicio || !hora.am_pm_fin))
+    );
+  }, [selectedDate, tipoCita, ubicacion, hora]);
 
   const handleBuscar = async () => {
+    console.log("=== INICIO handleBuscar ===");
+    console.log("selectedDate:", selectedDate);
+    console.log("tipoCita:", tipoCita);
+    console.log("ubicacion:", ubicacion);
+    console.log("hora:", hora);
+    
     try {
       setLoading(true);
-
-      // Preparar payload según backend (ajusta los nombres de campos)
-      const citaPayload = {
-        id_paciente: 1, // 👈 reemplazar con el id del paciente autenticado
-        id_medico: parseInt(tipoCita), // si tipoCita es el id del médico
-        id_hospital: parseInt(ubicacion),
-        fecha: selectedDate,
-        hora: hora.inicio, // ajusta si manejas rangos
-        estado: "PENDIENTE",
+      console.log("Loading activado");
+    
+      let slots = [];
+    
+      const fechaFormateada = dayjs(selectedDate).format("YYYY-MM-DD");
+      console.log("Fecha formateada:", fechaFormateada);
+    
+      if (hora.tipo === "especifica") {
+        const horaCompleta = convertirHora(hora.inicio, hora.am_pm);
+        console.log("Llamando filtrarMedicosHorafija con:", { fechaFormateada, tipoCita, horaCompleta, ubicacion });
+        slots = await filtrarMedicosHorafija(
+          fechaFormateada,
+          tipoCita,
+          horaCompleta,
+          ubicacion
+        );
+      } else if (hora.tipo === "rango") {
+        const horaInicio = convertirHora(hora.inicio, hora.am_pm_inicio);
+        const horaFin = convertirHora(hora.fin, hora.am_pm_fin);
+        console.log("Llamando filtrarMedicosRango con:", { tipoCita, fechaFormateada, horaInicio, horaFin, ubicacion });
+        slots = await filtrarMedicosRango(
+          tipoCita,
+          fechaFormateada,
+          horaInicio,
+          horaFin,
+          ubicacion
+        );
+      }
+    
+      console.log("Slots obtenidos desde el servicio:", slots);
+      console.log("Tipo de slots:", typeof slots, "Es array:", Array.isArray(slots));
+      console.log("Cantidad de slots:", slots?.length);
+    
+      if (!slots || !slots.length) {
+        console.log("No hay slots, mostrando error");
+        toast.error("No hay citas disponibles en ese horario.");
+        setLoading(false);
+        return;
+      }
+    
+      const dataToNavigate = {
+        slots,
+        fecha: fechaFormateada,
+        tipoCita,
+        ubicacion,
+        hora,
       };
-
-      const nuevaCita = await agendarCita(citaPayload);
-
-      // Redirigir al detalle de resultados o confirmación
-      navigate("/resultados-cita", { state: { cita: nuevaCita } });
+      
+      console.log("NAVEGANDO con estos datos:", dataToNavigate);
+      console.log("slots antes de navegar (JSON):", JSON.stringify(slots));
+    
+      navigate("/paciente/citas/medicos-cita", {
+        state: dataToNavigate,
+      });
+    
+      console.log("Navigate ejecutado exitosamente");
+      toast.success("Citas encontradas exitosamente");
     } catch (error) {
-      console.error("Error al agendar cita:", error);
-      alert(error.response?.data?.detail || "No se pudo agendar la cita");
+      console.error("Error al buscar citas:", error);
+      console.error("Error completo:", error.message, error.stack);
+      toast.error(error.response?.data?.detail || "No se pudieron obtener las citas");
     } finally {
       setLoading(false);
+      console.log("=== FIN handleBuscar ===");
     }
   };
 
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
-      <div className="text-2xl font-semibold pl-8 pt-8">Agendar cita</div>
+      <div className="pb-30 overflow-y-auto sm:overflow-y-visible h-[100vh]">
+        <div className="text-2xl font-semibold pl-8 pt-8">Agendar cita</div>
 
-      <div className="pb-30">
-        {/* Calendario */}
-        <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-
-        {/* Filtros principales */}
-        <div className="flex flex-col md:flex-row gap-6 pt-8 px-8">
-          <TipoCita
-            tipoCita={tipoCita}
-            setTipoCita={setTipoCita}
-            disabled={!selectedDate}
+        <div className="pb-70">
+          {/* Calendario */}
+          <Calendar
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
           />
 
-          <Ubicacion
-            ubicacion={ubicacion}
-            setUbicacion={setUbicacion}
-            disabled={!selectedDate || !tipoCita}
-          />
+          {/* Filtros principales */}
+          <div className="flex flex-col md:flex-row gap-6 pt-8 px-8">
+            <TipoCita
+              tipoCita={tipoCita}
+              setTipoCita={setTipoCita}
+              disabled={!selectedDate}
+            />
 
-          <HoraRango
-            hora={hora}
-            setHora={setHora}
-            disabled={!selectedDate || !tipoCita || !ubicacion}
-          />
-        </div>
+            <Ubicacion
+              ubicacion={ubicacion}
+              setUbicacion={setUbicacion}
+              disabled={!selectedDate || !tipoCita}
+            />
 
-        {/* Detalle de horas */}
-        {hora.tipo && (
-          <div className="flex flex-col md:flex-row items-start gap-6 px-8 pt-10">
-            <div className="flex-1">
-              <div className="font-semibold mb-2">
-                {hora.tipo === "especifica"
-                  ? "Seleccionar hora"
-                  : "Seleccionar rango"}
-              </div>
-              <HoraDetalle hora={hora} setHora={setHora} />
-            </div>
-
-            <div className="flex justify-center md:justify-end w-full md:w-auto">
-              <BuscarButton
-                disabled={isDisabled || loading}
-                onClick={handleBuscar}
-              />
-            </div>
+            <HoraRango
+              hora={hora}
+              setHora={setHora}
+              disabled={!selectedDate || !tipoCita || !ubicacion}
+            />
           </div>
-        )}
+
+          {/* Detalle de horas */}
+          {hora.tipo && (
+            <div className="flex flex-col md:flex-row items-start gap-6 px-8 pt-10">
+              <div className="flex-1">
+                <div className="font-semibold mb-2">
+                  {hora.tipo === "especifica"
+                    ? "Seleccionar hora"
+                    : "Seleccionar rango"}
+                </div>
+                <HoraDetalle hora={hora} setHora={setHora} />
+              </div>
+
+              <div className="flex justify-center md:justify-end w-full md:w-auto">
+                <BuscarButton
+                  disabled={isDisabled || loading}
+                  onClick={handleBuscar}
+                />
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

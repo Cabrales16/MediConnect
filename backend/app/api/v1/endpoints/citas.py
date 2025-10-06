@@ -7,6 +7,9 @@ from app.services.citas_medicas import obtener_citas, obtener_cita
 from app.services import citas_service
 from typing import List
 from app.services.historial_service import cancelar_cita
+from datetime import date, time
+from app.models.medico import EspecialidadMedica
+
 
 router = APIRouter(prefix="/Citas", tags=["Citas"])
 
@@ -62,5 +65,29 @@ def cancelar_cita_endpoint(id_cita: int, db: Session = Depends(get_db)):
     - Registra la fecha/hora de cancelación en `eliminado_en`
     """
     return cancelar_cita(db, id_cita)
+
+@router.get("/slots-disponibles-hora_fija/")
+def get_slots_disponibles(
+    especialidad: EspecialidadMedica,
+    fecha: date,
+    hora: time | None = None,  
+    id_hospital: int | None = None,
+    db: Session = Depends(get_db)
+):
+    return citas_service.obtener_slots_disponibles(db, especialidad, fecha, hora, id_hospital)
+
+
+@router.get("/slots-disponibles-rango/")
+def slots_disponibles_rango(
+    fecha: date,
+    especialidad: EspecialidadMedica,
+    hora_inicio: time,
+    hora_fin: time,
+    id_hospital: int | None = None,
+    db: Session = Depends(get_db)
+):
+    return citas_service.obtener_slots_disponibles_rango(
+        db, especialidad, fecha, hora_inicio, hora_fin, id_hospital
+    )
 
 

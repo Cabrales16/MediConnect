@@ -45,3 +45,23 @@ export const cancelarCita = async (id_cita) => {
   });
   return res.data;
 };
+
+// Hora fija
+export const filtrarMedicosHorafija = async (fecha, especialidad, hora, id_hospital) => {
+  const token = localStorage.getItem("token");
+  const res = await api.get(`/Citas/slots-disponibles-hora_fija/`, {
+    params: { fecha, especialidad, hora, id_hospital },
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
+
+// Rango
+export const filtrarMedicosRango = async (especialidad, fecha, hora_inicio, hora_fin, id_hospital) => {
+  const token = localStorage.getItem("token");
+  const res = await api.get(`/Citas/slots-disponibles-rango/`, {
+    params: { especialidad, fecha, hora_inicio, hora_fin, id_hospital },
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};

@@ -38,9 +38,12 @@ export default function AddFamilia({ onCancel, onAdd }) {
           value={idInfo}
           onChange={(e) => setIdInfo(e.target.value)}
         >
-          <option value={1}>Citas médicas</option>
-          <option value={2}>Medicamentos</option>
-          <option value={3}>Medicamentos y citas médicas</option>
+          <option value="">Seleccione...</option>
+          <option value={4}>Emergencias y citas</option>
+          <option value={2}>Emergencias y indicaciones medicas</option>
+          <option value={3}>Emergencias y Medicamentos</option>
+          <option value={5}>Solo emergencias</option>
+          <option value={1}>toda información</option>
         </select>
 
         <div className="flex justify-end gap-3">

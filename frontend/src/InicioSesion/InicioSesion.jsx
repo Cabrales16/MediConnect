@@ -19,7 +19,7 @@ export default function Login() {
     setError("");
 
     try {
-    const data = await login(correo, contrasena); // { access_token, token_type, rol }
+    const data = await login(correo, contrasena); 
     
     // Guardar token y rol
     localStorage.setItem("token", data.access_token);
@@ -34,7 +34,7 @@ export default function Login() {
     } else if (data.rol === "Médico") {
       navigate("/medico/inicio");
     } else if (data.rol === "Administrador") {
-      navigate("/admin/panel");
+      navigate("/admin/inicio");
     } else {
       navigate("/"); // fallback
     }

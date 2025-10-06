@@ -14,26 +14,33 @@ export default function ModalDoctor({ doctor, isOpen, onClose, onConfirm }) {
 
         <div className="flex items-center gap-4">
           <img
-            src={doctor.image}
-            alt={doctor.name}
+            src={doctor.image || "/default-doctor.png"}
+            alt={`${doctor.nombre} ${doctor.apellido}`}
             className="w-20 h-20 rounded-full object-cover border"
           />
           <div>
-            <h3 className="text-lg font-bold">{doctor.name}</h3>
-            <p className="text-gray-500 font-medium">{doctor.specialty}</p>
+            <h3 className="text-lg font-bold">
+              {doctor.nombre} {doctor.apellido}
+            </h3>
+            <p className="text-gray-500 font-medium">
+              {doctor.especialidad}
+            </p>
+            <p className="text-gray-400 text-sm">
+              {doctor.hospital}
+            </p>
           </div>
         </div>
 
-        <p className="mt-3 italic text-gray-600">{doctor.experience}</p>
+        <p className="mt-3 italic text-gray-600">
+          {doctor.estudios || "Estudios no registrados"}
+        </p>
 
         <p className="mt-2 text-yellow-500 text-lg">
-          {"⭐".repeat(Math.floor(doctor.rating))}
-          {"☆".repeat(5 - Math.floor(doctor.rating))}
+          {"⭐".repeat(Math.floor(doctor.calificacion || 0))}
+          {"☆".repeat(5 - Math.floor(doctor.calificacion || 0))}
         </p>
 
         <hr className="my-4" />
-
-        <p className="text-gray-700">{doctor.description}</p>
 
         <button
           onClick={onConfirm}

@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import useLockBodyScroll from "../../../hooks/useLockBodyScroll";
 
 export default function CitaRapidaModal({ isOpen, onClose, onConfirm }) {
   const [tipoCita, setTipoCita] = useState("");
-
-  useLockBodyScroll(isOpen);
 
   if (!isOpen) return null;
 

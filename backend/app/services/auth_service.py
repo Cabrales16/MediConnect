@@ -156,8 +156,11 @@ def enviar_correo_recuperacion(correo: str, db: Session):
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado.")
 
+    # Generar token
     token = generar_token_email(correo)
-    enlace = f"http://localhost:8000/auth/restablecer-contrasena/{token}"
+
+    # Usar la URL del frontend en lugar de la del backend
+    enlace = f"{settings.FRONTEND_URL}/restablecer/{token}"
 
     asunto = "Recuperación de contraseña"
     cuerpo_html = f"""
@@ -201,7 +204,7 @@ def verificar_token_confirmacion(token: str, max_age=86400):  # 24h
         raise HTTPException(status_code=400, detail="Token inválido.")
     
 def enviar_correo_confirmacion(usuario, db: Session):
-    enlace = f"http://localhost:8000/auth/confirmar/{usuario.token_confirmacion}"
+    enlace = f"{settings.FRONTEND_URL}/bienvenida/{usuario.token_confirmacion}"
 
     asunto = "Confirma tu cuenta"
     cuerpo_html = f"""

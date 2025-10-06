@@ -8,12 +8,13 @@ from models.AuditMixin import AuditMixin
 
 
 
+
 class EspecialidadMedica(PyEnum):
-    CARDIOLOGIA = "Cardiología"
-    PEDIATRIA = "Pediatría"
-    TRAUMATOLOGIA = "Traumatología"
-    NEUROLOGIA = "Neurología" 
-    # ... otros omitidos por brevedad
+    CARDIOLOGIA = "Cardiologia"
+    PEDIATRIA = "Pediatria"
+    TRAUMATOLOGIA = "Traumatologia"
+    NEUROLOGIA = "Neurologia" 
+
 
 # Modelo Medico
 class Medico(Base, AuditMixin):

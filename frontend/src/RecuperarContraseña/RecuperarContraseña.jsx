@@ -1,14 +1,25 @@
 import React, { useState } from "react";
 import { Mail } from "lucide-react";
 import calendario from "./RecuperarContraseñaImages/calendario.jpeg";
-import Volver from "./RecuperarContraseñaImages/flechaIconIzq.png"
+import Volver from "./RecuperarContraseñaImages/flechaIconIzq.png";
+import { recuperarContrasena } from "../services/authService";
 
 export default function RecuperarContrasena() {
   const [enviado, setEnviado] = useState(false);
+  const [correo, setCorreo] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setEnviado(true); // Cambia al estado "mensaje enviado"
+    setError("");
+    try {
+      const resp = await recuperarContrasena(correo);
+      console.log("Respuesta:", resp);
+      setEnviado(true);
+    } catch (err) {
+      console.error(err);
+      setError("Hubo un problema al enviar el correo. Verifica tu email.");
+    }
   };
 
   return (
@@ -37,7 +48,8 @@ export default function RecuperarContrasena() {
         <a href="/login" className="w-2 h-2 absolute flex ml-4 mt-5 items-center">
           <img src={Volver} alt="regresar" /> <p className="pl-3">Volver</p>
         </a>
-        {/* Caja izquierda (con la ilustración) */}
+
+        {/* Caja izquierda */}
         <div className="w-1/2 bg-white flex items-center justify-center p-6">
           <img
             src={calendario}
@@ -53,14 +65,12 @@ export default function RecuperarContrasena() {
               Recuperar contraseña
             </h2>
 
-            {/* Si ya envió, mostramos el mensaje */}
             {enviado ? (
               <div className="bg-green-100 border border-green-300 text-green-700 text-sm p-4 rounded-lg text-center">
                 Te hemos enviado un correo para recuperar tu contraseña.  
-                Puede hasta durar un minuto en llegar.
+                Puede tardar hasta un minuto en llegar.
               </div>
             ) : (
-              // Formulario
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <label className="block text-sm text-gray-700 mb-1">
                   Ingresa tu correo electrónico:
@@ -68,12 +78,17 @@ export default function RecuperarContrasena() {
                 <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 focus-within:ring-2 focus-within:ring-green-400">
                   <input
                     type="email"
-                   
+                    value={correo}
+                    onChange={(e) => setCorreo(e.target.value)}
                     className="flex-1 outline-none text-sm"
                     required
                   />
                   <Mail className="text-gray-400 w-5 h-5 ml-2" />
                 </div>
+
+                {error && (
+                  <p className="text-red-500 text-xs text-center">{error}</p>
+                )}
 
                 <button
                   type="submit"

@@ -226,49 +226,133 @@ def generar_slots(horario, duracion_minutos: int):
     return slots
 
 
-def obtener_slots_disponibles(db: Session, id_medico: int, fecha: date):
-    # Buscar médico
-    medico = db.query(Medico).filter(Medico.id == id_medico).first()
-    if not medico or not medico.especialidad:
-        raise HTTPException(status_code=404, detail="Médico o especialidad no encontrado")
+from datetime import time
 
-    # Duración según especialidad
-    duracion = duracion_especialidades.get(medico.especialidad, 30)
+def obtener_slots_disponibles(
+    db: Session, 
+    especialidad: EspecialidadMedica, 
+    fecha: date,
+    hora: time | None = None,         # filtro opcional por hora
+    id_hospital: int | None = None    # filtro opcional por hospital
+):
+    # 1. Buscar médicos con esa especialidad (y hospital si se pasa)
+    query = db.query(Medico).filter(Medico.especialidad == especialidad)
+    if id_hospital:
+        query = query.filter(Medico.id_hospital == id_hospital)
 
-    # Día de la semana
+    medicos = query.all()
+    if not medicos:
+        raise HTTPException(status_code=404, detail="No hay médicos con esa especialidad en ese hospital")
+
+    duracion = duracion_especialidades.get(especialidad, 30)  # default 30 min
     dia_semana = fecha.strftime("%A")
     traduccion_dias = {
-        "Monday": "Lunes", "Tuesday": "Martes", "Wednesday": "Miercoles",
-        "Thursday": "Jueves", "Friday": "Viernes", "Saturday": "Sabado", "Sunday": "Domingo"
+        "Monday": "Lunes", "Tuesday": "Martes", "Wednesday": "Miércoles",
+        "Thursday": "Jueves", "Friday": "Viernes", "Saturday": "Sábado", "Sunday": "Domingo"
     }
+    dia_db = traduccion_dias[dia_semana]
 
-    # Buscar horario
-    horario = db.query(Horario).filter(
-        Horario.id_medico == id_medico,
-        Horario.dia == traduccion_dias[dia_semana]
-    ).first()
+    resultado = []
 
-    if not horario:
-        raise HTTPException(status_code=400, detail="El médico no tiene horario ese día")
+    for medico in medicos:
+        # 2. Buscar horario de ese médico para el día
+        horario = db.query(Horario).filter(
+            Horario.id_medico == medico.id_medico,
+            Horario.dia == dia_db
+        ).first()
 
-    # Generar slots posibles
-    slots = generar_slots(horario, duracion)
+        if not horario:
+            continue  # este médico no trabaja ese día
 
-    # Citas ocupadas
-    citas_ocupadas = db.query(Cita.hora).filter(
-        Cita.id_medico == id_medico,
-        Cita.fecha == fecha,
-        Cita.estado != EstadoCita.CANCELADA.value
-    ).all()
+        # 3. Generar slots
+        slots = generar_slots(horario, duracion)
 
-    horas_ocupadas = {c.hora for c in citas_ocupadas}
+        # 4. Filtrar los slots ocupados
+        citas_ocupadas = db.query(Cita.hora).filter(
+            Cita.id_medico == medico.id_medico,
+            Cita.fecha == fecha,
+            Cita.estado != EstadoCita.CANCELADA.value
+        ).all()
+        horas_ocupadas = {c[0] for c in citas_ocupadas}
 
-    # Filtrar disponibles
-    disponibles = [s.strftime("%H:%M") for s in slots if s not in horas_ocupadas]
+        slots_libres = [s for s in slots if s not in horas_ocupadas]
 
-    return {
-        "medico": medico.id,
-        "especialidad": medico.especialidad.value,
-        "fecha": str(fecha),
-        "disponibles": disponibles
+        # 5. 🔑 Si se pasa hora, filtrar por esa hora exacta
+        if hora:
+            slots_libres = [s for s in slots_libres if s == hora]
+
+        if slots_libres:
+            resultado.append({
+                "medico": medico.id_medico,
+                "nombre": medico.medico.nombre,
+                "hospital": medico.hospital.nombre if medico.hospital else None, 
+                "especialidad": medico.especialidad,
+                "slots_disponibles": slots_libres
+            })
+
+    return resultado
+
+
+def obtener_slots_disponibles_rango(
+    db: Session, 
+    especialidad: EspecialidadMedica, 
+    fecha: date,
+    hora_inicio: time,                # rango desde
+    hora_fin: time,                   # rango hasta
+    id_hospital: int | None = None    # filtro opcional por hospital
+):
+    # 1. Buscar médicos con esa especialidad (y hospital si se pasa)
+    query = db.query(Medico).filter(Medico.especialidad == especialidad)
+    if id_hospital:
+        query = query.filter(Medico.id_hospital == id_hospital)
+
+    medicos = query.all()
+    if not medicos:
+        raise HTTPException(status_code=404, detail="No hay médicos con esa especialidad en ese hospital")
+
+    duracion = duracion_especialidades.get(especialidad, 30)  # default 30 min
+    dia_semana = fecha.strftime("%A")
+    traduccion_dias = {
+        "Monday": "Lunes", "Tuesday": "Martes", "Wednesday": "Miércoles",
+        "Thursday": "Jueves", "Friday": "Viernes", "Saturday": "Sábado", "Sunday": "Domingo"
     }
+    dia_db = traduccion_dias[dia_semana]
+
+    resultado = []
+
+    for medico in medicos:
+        # 2. Buscar horario de ese médico para el día
+        horario = db.query(Horario).filter(
+            Horario.id_medico == medico.id_medico,
+            Horario.dia == dia_db
+        ).first()
+
+        if not horario:
+            continue  # este médico no trabaja ese día
+
+        # 3. Generar slots
+        slots = generar_slots(horario, duracion)
+
+        # 4. Filtrar los slots ocupados
+        citas_ocupadas = db.query(Cita.hora).filter(
+            Cita.id_medico == medico.id_medico,
+            Cita.fecha == fecha,
+            Cita.estado != EstadoCita.CANCELADA.value
+        ).all()
+        horas_ocupadas = {c[0] for c in citas_ocupadas}
+
+        slots_libres = [s for s in slots if s not in horas_ocupadas]
+
+        # 5. Filtrar solo los que estén dentro del rango [hora_inicio, hora_fin]
+        slots_en_rango = [s for s in slots_libres if hora_inicio <= s <= hora_fin]
+
+        if slots_en_rango:
+            resultado.append({
+                "medico": medico.id_medico,
+                "nombre": medico.medico.nombre,
+                "hospital": medico.hospital.nombre if medico.hospital else None, 
+                "especialidad": medico.especialidad,
+                "slots_disponibles": slots_en_rango
+            })
+
+    return resultado

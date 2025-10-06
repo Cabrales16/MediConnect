@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import useLockBodyScroll from "../../../hooks/useLockBodyScroll";
+import { toast } from "react-toastify";
 
 export default function ModificarCitaModal({ cita, onCancel, onSave }) {
   const [fecha, setFecha] = useState(cita.fecha || "");
   const [hora, setHora] = useState(cita.hora || "");
   const [direccion, setDireccion] = useState(cita.direccion || "");
-
-  useLockBodyScroll(true);
 
   const direcciones = [
     "Calle 123, Bogotá",
@@ -19,6 +17,7 @@ export default function ModificarCitaModal({ cita, onCancel, onSave }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave({ ...cita, fecha, hora, direccion });
+    toast.success("Cita modificada con éxito");
   };
 
   return (

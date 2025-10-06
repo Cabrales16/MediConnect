@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import useLockBodyScroll from "../../../hooks/useLockBodyScroll";
 
 export default function EditFamilia({ initial, onCancel, onSave }) {
   const [nombre, setNombre] = useState(initial.nombre);
   const [correo, setCorreo] = useState(initial.correo);
   // Guardamos el id_info (1, 2, 3) en vez de la descripción
   const [idInfo, setIdInfo] = useState(initial.id_info || "");
-
-  useLockBodyScroll(true);
 
   const submit = (e) => {
     e.preventDefault();
@@ -21,6 +18,7 @@ export default function EditFamilia({ initial, onCancel, onSave }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
+
       <div className="absolute inset-0 bg-black/30" onClick={onCancel} />
       <form
         onSubmit={submit}
@@ -53,9 +51,11 @@ export default function EditFamilia({ initial, onCancel, onSave }) {
           required
         >
           <option value="">Seleccione...</option>
-          <option value={1}>Citas médicas</option>
-          <option value={2}>Medicamentos</option>
-          <option value={3}>Medicamentos y citas médicas</option>
+          <option value={4}>Emergencias y citas</option>
+          <option value={2}>Emergencias y indicaciones medicas</option>
+          <option value={3}>Emergencias y Medicamentos</option>
+          <option value={5}>Solo emergencias</option>
+          <option value={1}>toda información</option>
         </select>
 
         <div className="flex flex-col sm:flex-row justify-end gap-3">

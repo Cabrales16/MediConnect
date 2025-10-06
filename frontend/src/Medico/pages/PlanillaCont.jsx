@@ -1,61 +1,78 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import PlanillaTable from "../components/Planilla/PlanillaTable";
 import CitaDetails from "../components/Planilla/CitaDetails";
 
 const samplePorTomar = [
   {
-    id: 1,
-    tipo: "Consulta general",
+    id_cita: 1,
+    nombre_paciente: "Andrés",
+    apellido_paciente: "Cabrales",
+    nombre_medico: "Gerson",
+    apellido_medico: "Sánchez",
+    especialidad_medico: "Consulta general",
     fecha: "2025-08-20",
     fechaReadable: "20 de agosto de 2025",
     hora: "08:00 A.M.",
-    medico: "Dr. Gerson Sánchez",
     direccion: "Calle 123, Bogotá",
-    estado: "Programada",
+    estado_cita: "PROGRAMADA",
   },
   {
-    id: 2,
-    tipo: "Consulta de seguimiento",
+    id_cita: 2,
+    nombre_paciente: "María",
+    apellido_paciente: "Gómez",
+    nombre_medico: "Juliana",
+    apellido_medico: "García",
+    especialidad_medico: "Consulta de seguimiento",
     fecha: "2025-08-23",
     fechaReadable: "23 de agosto de 2025",
     hora: "10:00 A.M.",
-    medico: "Dra. Juliana García",
     direccion: "Av. Siempre Viva 45",
-    estado: "Programada",
+    estado_cita: "PROGRAMADA",
   },
   {
-    id: 3,
-    tipo: "Consulta de seguimiento",
+    id_cita: 3,
+    nombre_paciente: "Carlos",
+    apellido_paciente: "Torres",
+    nombre_medico: "Carlos",
+    apellido_medico: "Pérez",
+    especialidad_medico: "Consulta de seguimiento",
     fecha: "2025-08-30",
     fechaReadable: "30 de agosto de 2025",
     hora: "02:00 P.M.",
-    medico: "Dr. Carlos Pérez",
     direccion: "Cll 50 #20-10",
-    estado: "Programada",
+    estado_cita: "PROGRAMADA",
   },
 ];
 
 const sampleTomadas = [
   {
-    id: 11,
-    tipo: "Consulta general",
+    id_cita: 11,
+    nombre_paciente: "Lucía",
+    apellido_paciente: "Martínez",
+    nombre_medico: "Luna",
+    apellido_medico: "",
+    especialidad_medico: "Consulta general",
     fecha: "2025-07-15",
     fechaReadable: "15 de julio de 2025",
     hora: "09:00 A.M.",
-    medico: "Dra. Luna",
+    estado_cita: "TOMADA",
     notas:
       "El paciente se queja de dolores de cabeza frecuentes y fatiga. Revisar historial médico.",
     indicaciones:
       "Tome Ibuprofeno 200 mg cada 6 horas con comida durante 3 días.",
   },
   {
-    id: 12,
-    tipo: "Control postoperatorio",
+    id_cita: 12,
+    nombre_paciente: "Juan",
+    apellido_paciente: "Ríos",
+    nombre_medico: "Ramírez",
+    apellido_medico: "",
+    especialidad_medico: "Control postoperatorio",
     fecha: "2025-07-22",
     fechaReadable: "22 de julio de 2025",
     hora: "11:00 A.M.",
-    medico: "Dr. Ramírez",
+    estado_cita: "TOMADA",
     notas: "Evolución favorable, retirar puntos en 7 días.",
     indicaciones: "Aplicar pomada 2 veces al día durante 5 días.",
   },
@@ -63,17 +80,26 @@ const sampleTomadas = [
 
 export default function PlanillaCont() {
   const breadcrumbItems = [
-    { label: "Inicio", href: "/inicio" },
+    { label: "Inicio", href: "/medico/inicio" },
     { label: "Planilla" },
   ];
 
   const [tab, setTab] = useState("por"); // 'por' | 'tomadas'
   const [selectedCita, setSelectedCita] = useState(null);
 
+  useEffect(() => {
+    // Block scroll
+    document.body.style.overflow = "hidden";
+    return () => {
+      // Unblock scroll on cleanup
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
-      <div className="p-8">
+      <div className="p-8 overflow-y-auto h-[calc(100vh-9rem)]">
         <h2 className="text-2xl font-semibold mb-4">Citas por tomar</h2>
 
         {/* Tabs */}

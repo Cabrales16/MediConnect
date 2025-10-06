@@ -1,7 +1,6 @@
 import rangoHoraIcon from "./CitasIcon/rangoHoraIcon.png";
 
 export default function HoraDetalle({ hora, setHora }) {
-  // Convierte hora+AM/PM a minutos desde 00:00
   const normalizeTo24h = (time, ampm) => {
     if (!time || !ampm) return null;
     const [hhStr, mmStr] = time.split(":");
@@ -17,21 +16,16 @@ export default function HoraDetalle({ hora, setHora }) {
     return hh * 60 + mm;
   };
 
-  // Normaliza entrada (acepta solo números y agrega ":")
-  const formatTime = (value) => {
-    let digits = value.replace(/\D/g, ""); // solo números
+  const handleTimeInput = (field, value) => {
+    let digits = value.replace(/\D/g, "");
     if (digits.length > 4) digits = digits.slice(0, 4);
     if (digits.length > 2) digits = digits.slice(0, 2) + ":" + digits.slice(2);
-    return digits;
-  };
 
-  const handleTimeInput = (field, value) => {
-    let formatted = formatTime(value);
-    let newHora = { ...hora, [field]: formatted };
+    let newHora = { ...hora, [field]: digits };
 
     if (field === "fin") {
       const inicioMins = normalizeTo24h(newHora.inicio, newHora.am_pm_inicio);
-      const finMins = normalizeTo24h(formatted, newHora.am_pm_fin);
+      const finMins = normalizeTo24h(digits, newHora.am_pm_fin);
 
       if (inicioMins !== null && finMins !== null && finMins <= inicioMins) {
         newHora.fin = "";
@@ -61,7 +55,6 @@ export default function HoraDetalle({ hora, setHora }) {
 
   return (
     <div className="pt-2 flex flex-wrap gap-4">
-      {/* Caso: Hora específica */}
       {hora.tipo === "especifica" && (
         <>
           <input
@@ -86,7 +79,6 @@ export default function HoraDetalle({ hora, setHora }) {
         </>
       )}
 
-      {/* Caso: Rango de horas */}
       {hora.tipo === "rango" && (
         <div className="flex flex-col md:flex-row items-center gap-4">
           {/* Inicio */}
@@ -111,10 +103,10 @@ export default function HoraDetalle({ hora, setHora }) {
               <option value="PM">PM</option>
             </select>
           </div>
-
+      
           {/* Icono rango */}
           <img className="w-4 self-center" src={rangoHoraIcon} alt="Rango" />
-
+      
           {/* Fin */}
           <div className="flex gap-2 items-center w-full md:w-auto">
             <input
@@ -139,6 +131,7 @@ export default function HoraDetalle({ hora, setHora }) {
           </div>
         </div>
       )}
+
     </div>
   );
 }

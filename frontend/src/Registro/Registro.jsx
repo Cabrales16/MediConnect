@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 import logo from "./RegistroImages/Logo.png";
 import { useNavigate } from "react-router-dom";
-import { User, Mail, Lock, Phone, Home, CreditCard } from "lucide-react";
+import {
+  User,
+  Mail,
+  Lock,
+  Phone,
+  Home,
+  CreditCard,
+  IdCard,
+  VenusAndMars,
+  Calendar,
+} from "lucide-react";
 import calendario from "./RegistroImages/calendario.jpeg";
 import Volver from "./RegistroImages/flechaIconIzq.png";
 import { register } from "../services/authService";
+import ModalConfirmacion from "./ModalConfirmacion";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -17,10 +28,12 @@ export default function Register() {
     direccion: "",
     correo: "",
     contrasena: "",
+    genero: "",
+    fecha_nacimiento: "",
   });
 
   const [loading, setLoading] = useState(false);
-
+  const [isOpen, setIsOpen] = useState(false);
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -37,12 +50,28 @@ export default function Register() {
       console.log("✅ Registro exitoso:", data);
 
       alert("Usuario registrado correctamente ✅");
-      navigate("/login"); // redirige al login
+      setIsOpen(true);
     } catch (error) {
       console.error("❌ Error en registro:", error);
-      alert(
-        error.response?.data?.detail || "Error al registrar. Inténtalo de nuevo."
-      );
+
+      if (error.response?.data?.detail) {
+        const detail = error.response.data.detail;
+
+        if (Array.isArray(detail)) {
+          // FastAPI devuelve lista de errores de validación
+          const mensajes = detail
+            .map((err) => `${err.loc.join(".")}: ${err.msg}`)
+            .join("\n");
+          alert(mensajes);
+        } else if (typeof detail === "string") {
+          // FastAPI devuelve un solo mensaje
+          alert(detail);
+        } else {
+          alert("Error inesperado en el registro.");
+        }
+      } else {
+        alert("Error al registrar. Inténtalo de nuevo.");
+      }
     } finally {
       setLoading(false);
     }
@@ -72,23 +101,14 @@ export default function Register() {
       {/* Caja principal */}
       <div className="relative flex flex-col md:flex-row max-w-6xl w-full shadow-md rounded-2xl overflow-hidden z-10 bg-white">
         {/* Botón volver */}
-        <a
-          href="/home"
-          className="w-2 h-2 absolute flex ml-4 mt-5 items-center"
-        >
+        <a href="/home" className="w-2 h-2 absolute flex ml-4 mt-5 items-center">
           <img src={Volver} alt="regresar" /> <p className="pl-3">Volver</p>
         </a>
 
         {/* Caja izquierda */}
         <div className="w-full md:w-5/12 bg-white flex flex-col items-center justify-start p-8 text-center shadow-lg">
-          <img
-            src={logo}
-            alt="Logo"
-            className="w-16 h-16 object-contain mb-4"
-          />
-          <h2 className="text-xl font-bold text-gray-800">
-            Hola, Bienvenidos!
-          </h2>
+          <img src={logo} alt="Logo" className="w-16 h-16 object-contain mb-4" />
+          <h2 className="text-xl font-bold text-gray-800">Hola, Bienvenidos!</h2>
           <p className="text-gray-600 mt-2 text-sm px-4">
             ¡Bienvenido de nuevo! Nos alegra tenerte aquí, crea tu cuenta para
             continuar.
@@ -116,7 +136,7 @@ export default function Register() {
                 <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 flex-1">
                   <select
                     name="tipo_documento"
-                    className="flex-1 outline-none bg-transparent cursor-pointer text-sm"
+                    className="w-full outline-none bg-transparent cursor-pointer text-sm"
                     value={formData.tipo_documento}
                     onChange={handleChange}
                   >
@@ -126,7 +146,7 @@ export default function Register() {
                     <option value="PAS">Pasaporte</option>
                     <option value="RC">Registro civil</option>
                   </select>
-                  <CreditCard className="text-gray-400 w-5 h-5 ml-2" />
+                  <CreditCard className="text-gray-400 w-5 h-5 ml-2 shrink-0" />
                 </div>
 
                 <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 flex-1">
@@ -136,9 +156,9 @@ export default function Register() {
                     placeholder="Número de documento"
                     value={formData.num_documento}
                     onChange={handleChange}
-                    className="flex-1 outline-none text-sm"
+                    className="w-full outline-none text-sm"
                   />
-                  <User className="text-gray-400 w-5 h-5 ml-2" />
+                  <IdCard className="text-gray-400 w-5 h-5 ml-2 shrink-0" />
                 </div>
               </div>
 
@@ -151,9 +171,9 @@ export default function Register() {
                     placeholder="Nombres"
                     value={formData.nombre}
                     onChange={handleChange}
-                    className="flex-1 outline-none text-sm"
+                    className="w-full outline-none text-sm"
                   />
-                  <User className="text-gray-400 w-5 h-5 ml-2" />
+                  <User className="text-gray-400 w-5 h-5 ml-2 shrink-0" />
                 </div>
                 <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 flex-1">
                   <input
@@ -162,9 +182,36 @@ export default function Register() {
                     placeholder="Apellidos"
                     value={formData.apellido}
                     onChange={handleChange}
-                    className="flex-1 outline-none text-sm"
+                    className="w-full outline-none text-sm"
                   />
-                  <User className="text-gray-400 w-5 h-5 ml-2" />
+                  <User className="text-gray-400 w-5 h-5 ml-2 shrink-0" />
+                </div>
+              </div>
+
+              {/* Género y fecha nacimiento */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 flex-1">
+                  <select
+                    name="genero"
+                    className="w-full outline-none bg-transparent cursor-pointer text-sm"
+                    value={formData.genero}
+                    onChange={handleChange}
+                  >
+                    <option value="">Selecciona género</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Masculino">Masculino</option>
+                  </select>
+                  <VenusAndMars className="text-gray-400 w-5 h-5 ml-2 shrink-0" />
+                </div>
+                <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 flex-1">
+                  <input
+                    type="date"
+                    name="fecha_nacimiento"
+                    value={formData.fecha_nacimiento}
+                    onChange={handleChange}
+                    className="w-full outline-none text-sm"
+                  />
+                  <Calendar className="text-gray-400 w-5 h-5 ml-2 shrink-0" />
                 </div>
               </div>
 
@@ -177,9 +224,9 @@ export default function Register() {
                     placeholder="Teléfono"
                     value={formData.telefono}
                     onChange={handleChange}
-                    className="flex-1 outline-none text-sm"
+                    className="w-full outline-none text-sm"
                   />
-                  <Phone className="text-gray-400 w-5 h-5 ml-2" />
+                  <Phone className="text-gray-400 w-5 h-5 ml-2 shrink-0" />
                 </div>
                 <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 flex-1">
                   <input
@@ -188,9 +235,9 @@ export default function Register() {
                     placeholder="Dirección"
                     value={formData.direccion}
                     onChange={handleChange}
-                    className="flex-1 outline-none text-sm"
+                    className="w-full outline-none text-sm"
                   />
-                  <Home className="text-gray-400 w-5 h-5 ml-2" />
+                  <Home className="text-gray-400 w-5 h-5 ml-2 shrink-0" />
                 </div>
               </div>
 
@@ -203,9 +250,9 @@ export default function Register() {
                     placeholder="Correo"
                     value={formData.correo}
                     onChange={handleChange}
-                    className="flex-1 outline-none text-sm"
+                    className="w-full outline-none text-sm"
                   />
-                  <Mail className="text-gray-400 w-5 h-5 ml-2" />
+                  <Mail className="text-gray-400 w-5 h-5 ml-2 shrink-0" />
                 </div>
                 <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 flex-1">
                   <input
@@ -214,9 +261,9 @@ export default function Register() {
                     placeholder="Contraseña"
                     value={formData.contrasena}
                     onChange={handleChange}
-                    className="flex-1 outline-none text-sm"
+                    className="w-full outline-none text-sm"
                   />
-                  <Lock className="text-gray-400 w-5 h-5 ml-2" />
+                  <Lock className="text-gray-400 w-5 h-5 ml-2 shrink-0" />
                 </div>
               </div>
 
@@ -254,6 +301,12 @@ export default function Register() {
           </div>
         </div>
       </div>
+        <ModalConfirmacion
+          isOpen={isOpen}
+          email={formData.correo}
+          onClose={() => setIsOpen(false)}
+          onResend={() => alert(`Correo reenviado a: ${formData.correo}`)}
+        />
     </div>
   );
 }
