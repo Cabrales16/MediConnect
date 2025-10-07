@@ -1,17 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumb from "../components/UI/Breadcrumb";
-import { novedades } from "../../data/novedades";
+import { getNovedades } from "../../services/novedades"; // importa tus funciones del backend
 
 export default function InicioCont() {
   const breadcrumbItems = [{ label: "Inicio", href: "/paciente/inicio" }];
 
-  // ---------- PAGINACIÓN ----------
+  // ---------- ESTADOS ----------
+  const [novedades, setNovedades] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9; // puedes ajustar a tu gusto
+  const itemsPerPage = 9;
 
+  // ---------- FETCH NOVEDADES ----------
+  useEffect(() => {
+    const fetchNovedades = async () => {
+      try {
+        const data = await getNovedades();
+        setNovedades(data);
+      } catch (error) {
+        console.error("Error al obtener novedades:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchNovedades();
+  }, []);
+
+  // ---------- PAGINACIÓN ----------
   const totalPages = Math.ceil(novedades.length / itemsPerPage);
-
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentNovedades = novedades.slice(indexOfFirstItem, indexOfLastItem);
@@ -23,14 +40,16 @@ export default function InicioCont() {
   };
 
   useEffect(() => {
-    // Block scroll
     document.body.style.overflow = "hidden";
     return () => {
-      // Unblock scroll on cleanup
       document.body.style.overflow = "";
     };
   }, []);
-  
+
+  if (loading) {
+    return <div className="p-8">Cargando novedades...</div>;
+  }
+
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
@@ -42,11 +61,11 @@ export default function InicioCont() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {currentNovedades.map((item) => (
             <div
-              key={item.id}
+              key={item.id_novedad}
               className="bg-white rounded-2xl shadow-sm border border-gray-400 overflow-hidden flex flex-col"
             >
               <img
-                src={item.img}
+                src={item.src}
                 alt={item.titulo}
                 className="h-40 w-full object-cover"
               />
@@ -56,7 +75,7 @@ export default function InicioCont() {
                   {item.descripcion}
                 </p>
                 <Link
-                  to={`/paciente/inicio/${item.id}`}
+                  to={`/paciente/inicio/${item.id_novedad}`}
                   className="mt-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl shadow-sm transition-all text-center"
                 >
                   Ver más

@@ -20,7 +20,7 @@ class FamiliarResponse(BaseModel):
     id_familiar: int
     nombre: str
     correo: str
-    tipo: str   # 👈 devolvemos nombre de la relación
+    tipo: str
 
     class Config:
         orm_mode = True
