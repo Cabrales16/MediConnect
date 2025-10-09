@@ -17,3 +17,6 @@ class NovedadCreate(BaseModel):
     titulo: str
     descripcion: str
 
+class NovedadUpdateResponse(BaseModel):
+    msg: str
+    novedad: NovedadBase

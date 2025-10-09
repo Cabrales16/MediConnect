@@ -20,8 +20,8 @@ export default function UsuaTable({ mode = "pacientes", pacientes = [], medicos 
             <tr key={r.id} className="border-t border-gray-200 hover:bg-green-50 transition">
               <td className="px-6 py-3">{r.nombre}</td>
               <td className="px-6 py-3">{r.apellido}</td>
-              <td className="px-6 py-3">{r.tipoDoc}</td>
-              <td className="px-6 py-3">{r.numDoc}</td>
+              <td className="px-6 py-3">{r.tipo_documento}</td>
+              <td className="px-6 py-3">{r.num_documento}</td>
               <td className="px-6 py-3">
                 <button
                   className="text-green-600 hover:underline"

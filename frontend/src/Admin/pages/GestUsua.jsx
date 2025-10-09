@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Breadcrumb from "../components/UI/Breadcrumb";
-import UsuaTable from "../components//GestUsuarios/UsuaTable";
+import UsuaTable from "../components/GestUsuarios/UsuaTable";
 import UsuaDetails from "../components/GestUsuarios/UsuaDetails";
+import { getUsuarios } from "../../services/usuarios"; // importamos la función
 
 export default function GestUsua() {
   const breadcrumbItems = [
@@ -9,52 +10,31 @@ export default function GestUsua() {
     { label: "Gest. de Usuarios" },
   ];
 
-  // Datos de usuarios
-  const [pacientes] = useState([
-    {
-      id: 1,
-      nombre: "Carlos",
-      apellido: "Pérez Gomez",
-      tipoDoc: "CC",
-      numDoc: "123456789",
-      correo: "carlos@example.com",
-      telefono: "3001234567",
-      genero: "Masculino",
-      direccion: "Calle 123, Bogotá",
-      nacimiento: "1990-05-20",
-      rol: "Paciente",
-    },
-  ]);
-
-  const [medicos] = useState([
-    {
-      id: 101,
-      nombre: "Ana",
-      apellido: "García",
-      tipoDoc: "CC",
-      numDoc: "987654321",
-      correo: "ana.garcia@hospital.com",
-      telefono: "3119876543",
-      genero: "Femenino",
-      direccion: "Av. Siempre Viva 45",
-      nacimiento: "1985-10-12",
-      especialidad: "Cardiología",
-      calificacion: "4.8",
-      rol: "Médico",
-    },
-  ]);
-
-  const [tab, setTab] = useState("pacientes"); // "pacientes" | "medicos"
+  const [pacientes, setPacientes] = useState([]);
+  const [medicos, setMedicos] = useState([]);
+  const [tab, setTab] = useState("pacientes");
   const [selectedUser, setSelectedUser] = useState(null);
 
-    useEffect(() => {
-      // Block scroll
-      document.body.style.overflow = "hidden";
-      return () => {
-        // Unblock scroll on cleanup
-        document.body.style.overflow = "";
-      };
-    }, []);
+  // 🔹 Cargar usuarios desde backend
+  useEffect(() => {
+    const fetchUsuarios = async () => {
+      try {
+        const pacientesData = await getUsuarios(1); // rol 1 = Pacientes
+        const medicosData = await getUsuarios(2);   // rol 2 = Médicos
+        setPacientes(pacientesData);
+        setMedicos(medicosData);
+      } catch (error) {
+        console.error("Error al obtener usuarios:", error);
+      }
+    };
+    fetchUsuarios();
+  }, []);
+
+  // 🔹 Evita scroll en fondo
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
 
   return (
     <>
@@ -66,10 +46,7 @@ export default function GestUsua() {
         {/* Tabs */}
         <div className="flex items-center gap-6 mb-6">
           <button
-            onClick={() => {
-              setTab("pacientes");
-              setSelectedUser(null);
-            }}
+            onClick={() => { setTab("pacientes"); setSelectedUser(null); }}
             className={`px-4 py-2 rounded-md font-medium ${
               tab === "pacientes"
                 ? "border-b-2 border-green-500 text-green-600"
@@ -79,10 +56,7 @@ export default function GestUsua() {
             Pacientes
           </button>
           <button
-            onClick={() => {
-              setTab("medicos");
-              setSelectedUser(null);
-            }}
+            onClick={() => { setTab("medicos"); setSelectedUser(null); }}
             className={`px-4 py-2 rounded-md font-medium ${
               tab === "medicos"
                 ? "border-b-2 border-green-500 text-green-600"

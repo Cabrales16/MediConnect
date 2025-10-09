@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumb from "../components/UI/Breadcrumb";
-import { getNovedades } from "../../services/novedades"; // importa tus funciones del backend
+import { getNovedades } from "../../services/novedades";
 
 export default function InicioCont() {
   const breadcrumbItems = [{ label: "Inicio", href: "/paciente/inicio" }];
 
-  // ---------- ESTADOS ----------
   const [novedades, setNovedades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
-  // ---------- FETCH NOVEDADES ----------
   useEffect(() => {
     const fetchNovedades = async () => {
       try {
@@ -27,7 +25,6 @@ export default function InicioCont() {
     fetchNovedades();
   }, []);
 
-  // ---------- PAGINACIÓN ----------
   const totalPages = Math.ceil(novedades.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -71,7 +68,10 @@ export default function InicioCont() {
               />
               <div className="p-4 flex flex-col flex-grow">
                 <h3 className="text-lg font-semibold mb-2">{item.titulo}</h3>
-                <p className="text-gray-600 text-sm flex-grow">
+                <p
+                  className="text-gray-600 text-sm flex-grow line-clamp-2 overflow-hidden text-ellipsis"
+                  title={item.descripcion}
+                >
                   {item.descripcion}
                 </p>
                 <Link
