@@ -12,6 +12,8 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
   const nextMonth = () => setCurrentMonth((m) => m.add(1, "month"));
   const prevMonth = () => setCurrentMonth((m) => m.subtract(1, "month"));
 
+  const normalizedSelected = selectedDate ? dayjs(selectedDate) : null;
+
   const renderMonth = (month) => {
     const year = month.year();
     const monthIndex = month.month();
@@ -32,17 +34,15 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
           {month.format("MMMM YYYY")}
         </h3>
         <div className="grid grid-cols-7 gap-x-2 gap-y-1 text-center min-h-[320px]">
-          {/* ✅ Nombres únicos y claros para los días */}
           {["D", "L", "Ma", "Mi", "J", "V", "S"].map((d) => (
             <div key={d} className="font-bold pb-2">
               {d}
             </div>
           ))}
           {days.map((d) => {
-            const isCurrentMonth = d.month() === month.month();
+            const isCurrentMonth = d.month() === month.month() && d.year() === month.year();
             const isSelected =
-              selectedDate && selectedDate.isSame(d, "day");
-
+              normalizedSelected && normalizedSelected.isSame(d, "day") && isCurrentMonth;
             return (
               <button
                 key={d.format("YYYY-MM-DD")}
@@ -53,7 +53,7 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
                     ? "hover:bg-green-100"
                     : "text-gray-400"
                 }`}
-                onClick={() => setSelectedDate(d)} // guardamos un objeto dayjs
+                onClick={() => setSelectedDate(d)}
                 disabled={!isCurrentMonth}
               >
                 {d.date()}
@@ -72,11 +72,10 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
           <img className="w-3" src={flechaIconIzq} alt="Anterior" />
         </button>
 
-        {/* 📱 móvil: un mes | 💻 desktop: dos meses */}
         <div className="flex gap-8 flex-col md:flex-row">
           {renderMonth(currentMonth)}
           <div className="hidden md:block">
-            {renderMonth(currentMonth.add(1, "month"))}
+            {renderMonth(currentMonth.clone().add(1, "month"))}
           </div>
         </div>
 

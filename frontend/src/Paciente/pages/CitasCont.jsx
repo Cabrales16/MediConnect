@@ -68,6 +68,7 @@ export default function Citas() {
       document.body.style.overflow = originalOverflow;
     };
   }, []);
+  
 
   // 🔹 Convierte "09:30" + "PM" -> "21:30:00"
   const convertirHora = (time, ampm) => {
@@ -83,19 +84,6 @@ export default function Citas() {
       .toString()
       .padStart(2, "0")}:00`;
   };
-
-  // Memorizar validación para evitar recálculos innecesarios
-  const isDisabled = useMemo(() => {
-    return (
-      !selectedDate ||
-      !tipoCita ||
-      !ubicacion ||
-      !hora.tipo ||
-      (hora.tipo === "especifica" && (!hora.inicio || !hora.am_pm)) ||
-      (hora.tipo === "rango" &&
-        (!hora.inicio || !hora.fin || !hora.am_pm_inicio || !hora.am_pm_fin))
-    );
-  }, [selectedDate, tipoCita, ubicacion, hora]);
 
   const handleBuscar = async () => {
     console.log("=== INICIO handleBuscar ===");
@@ -173,6 +161,17 @@ export default function Citas() {
     }
   };
 
+  useEffect(() => {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }, []);
+  
+    if (loading) {
+      return <div className="p-8">Cargando novedades...</div>;
+  }
+
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
@@ -216,14 +215,22 @@ export default function Citas() {
                     ? "Seleccionar hora"
                     : "Seleccionar rango"}
                 </div>
-                <HoraDetalle hora={hora} setHora={setHora} />
+                <HoraDetalle hora={hora} setHora={setHora} tipoCita={tipoCita} />
               </div>
 
               <div className="flex justify-center md:justify-end w-full md:w-auto">
                 <BuscarButton
-                  disabled={isDisabled || loading}
+                  disabled={
+                    !selectedDate ||
+                    !tipoCita ||
+                    !ubicacion ||
+                    !hora.tipo ||
+                    !hora.inicio ||
+                    (hora.tipo === "rango" && !hora.fin)
+                  }
                   onClick={handleBuscar}
                 />
+
               </div>
             </div>
           )}
