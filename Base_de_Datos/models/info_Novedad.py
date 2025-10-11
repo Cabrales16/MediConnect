@@ -11,7 +11,7 @@ class Info_Novedad(Base, AuditMixin):
     id_novedad = Column(Integer, ForeignKey("Novedad.id_novedad"))
     titulo = Column(String(60), nullable=False)
     descripcion = Column(Text, nullable=False)
-    src = Column(String(20), nullable=False)
+    src = Column(String(200), nullable=False)
     
 
     # Relaciones

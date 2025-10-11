@@ -14,8 +14,7 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
 
   // cerrar el drawer si se cambia de ruta (útil en móvil)
   useEffect(() => {
-    onClose();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [location.pathname]);
 
   const menuItems = [

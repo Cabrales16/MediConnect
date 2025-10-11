@@ -38,24 +38,24 @@ export default function UsuaDetails({ user, onClose }) {
       <div className="space-y-2 text-sm text-gray-700">
         <p><strong>Nombre:</strong> {user.nombre}</p>
         <p><strong>Apellidos:</strong> {user.apellido}</p>
-        <p><strong>Documento:</strong> {user.tipoDoc} {user.numDoc}</p>
+        <p><strong>Documento:</strong> {user.tipo_documento} {user.num_documento}</p>
         <p><strong>Correo:</strong> {user.correo}</p>
         <p><strong>Teléfono:</strong> {user.telefono}</p>
         <p><strong>Género:</strong> {user.genero}</p>
         <p><strong>Dirección:</strong> {user.direccion}</p>
-        <p><strong>Fecha nacimiento:</strong> {user.nacimiento}</p>
-        {user.rol === "Médico" && (
+        <p><strong>Fecha nacimiento:</strong> {user.fecha_nacimiento}</p>
+        {user.id_rol === 2 && (
           <>
             <p><strong>Especialidad:</strong> {user.especialidad}</p>
             <p><strong>Calificación:</strong> {user.calificacion}</p>
           </>
         )}
-        <p><strong>Rol:</strong> {user.rol}</p>
+        <p><strong>Rol:</strong> {user.id_rol}</p>
       </div>
 
       {/* Acciones */}
       <div className="mt-6 flex flex-wrap gap-3">
-        {user.rol === "Paciente" && (
+        {user.id_rol === "paciente" && (
           <button
             onClick={() => setOpenModal("agendar")}
             className="px-3 py-2 rounded-md bg-green-500 text-white hover:bg-green-600"
@@ -121,12 +121,18 @@ export default function UsuaDetails({ user, onClose }) {
         isOpen={openModal === "modificarDatos"}
         onClose={() => setOpenModal(null)}
         onConfirm={handleConfirm}
+        user={user}
       />
 
       <CambiarRolModal
         isOpen={openModal === "cambiarRol"}
         onClose={() => setOpenModal(null)}
-        onConfirm={handleConfirm}
+        onConfirm={() => {
+          // Simplemente cierra y muestra un log, o refresca manualmente en GestUsua
+          console.log("Rol actualizado correctamente");
+          setOpenModal(null);
+        }}
+        user={user}
       />
 
       <HistorialModal
@@ -147,6 +153,7 @@ export default function UsuaDetails({ user, onClose }) {
         isOpen={openModal === "deshabilitar"}
         onClose={() => setOpenModal(null)}
         onConfirm={handleConfirm}
+        user={user}
       />
     </div>
     </>
