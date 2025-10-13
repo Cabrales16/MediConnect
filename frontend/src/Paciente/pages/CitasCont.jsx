@@ -70,20 +70,28 @@ export default function Citas() {
   }, []);
   
 
-  // 🔹 Convierte "09:30" + "PM" -> "21:30:00"
-  const convertirHora = (time, ampm) => {
-    if (!time || !ampm) return null;
-    const [hhStr, mmStr] = time.split(":");
-    let hh = parseInt(hhStr, 10);
-    let mm = parseInt(mmStr || "0", 10);
+const convertirHora = (time, ampm) => {
+  if (!time) return null;
 
-    if (ampm === "PM" && hh !== 12) hh += 12;
-    if (ampm === "AM" && hh === 12) hh = 0;
+  // Este es una vez para que inclutya el AM o PM
+  if (time.toUpperCase().includes("AM") || time.toUpperCase().includes("PM")) {
+    const [horaStr, ampmPart] = time.split(" ");
+    ampm = ampmPart; // Trae de una vez si es AM o PM dependioendo, si es mas de las 12, cambia a PM abajo 
+    time = horaStr;
+  }
 
-    return `${hh.toString().padStart(2, "0")}:${mm
-      .toString()
-      .padStart(2, "0")}:00`;
-  };
+  const [hhStr, mmStr] = time.split(":");
+  let hh = parseInt(hhStr, 10);
+  let mm = parseInt(mmStr || "0", 10);
+
+  if (ampm ===  "PM" && hh !== 12) hh += 12; //AQUi hago lo que mencione antriormente
+  if (ampm === "AM" && hh === 12) hh = 0;
+
+  return `${hh.toString().padStart(2, "0")}:${mm
+    .toString()
+    .padStart(2, "0")}:00`;
+};
+
 
   const handleBuscar = async () => {
     console.log("=== INICIO handleBuscar ===");

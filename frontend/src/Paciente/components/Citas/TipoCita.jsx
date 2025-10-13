@@ -4,7 +4,6 @@ export default function TipoCita({ tipoCita, setTipoCita, disabled }) {
     "Cita general",
     "Cita odontológica",
     "Cita pediatría",
-    "Cita cardiología",
     "Cita dermatología",
   ];
 
