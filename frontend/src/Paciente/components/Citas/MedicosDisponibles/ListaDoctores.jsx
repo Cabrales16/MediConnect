@@ -26,10 +26,24 @@ export default function ListaDoctores() {
   const memoSlots = useMemo(() => slots, [slots]);
 
   const transformarSlots = useMemo(() => {
+
+    const formatearHora = (hora) => {
+      if (!hora) return "";
+      const [h, m] = hora.split(":");
+      let horas = parseInt(h, 10);
+      const minutos = m || "00";
+      const ampm = horas >= 12 ? "PM" : "AM";
+      horas = horas % 12 || 12;
+      return `${horas}:${minutos.padStart(2, "0")} ${ampm}`;
+    };
+  
     return (slotsData) => {
       if (!Array.isArray(slotsData)) return [];
+    
+ 
       if (slotsData.length === 1) {
         const slot = slotsData[0];
+        const horarios = (slot.slots_disponibles || []).map(formatearHora);
         return [
           {
             id: slot.medico || slot.id || 1,
@@ -37,11 +51,13 @@ export default function ListaDoctores() {
             specialty: slot.especialidad || "Especialidad",
             image: slot.foto_medico || "/default-doctor.jpg",
             hospital: slot.hospital || "Hospital",
-            slots_disponibles: slot.slots_disponibles || [],
+            estudios: slot.estudios || "Estudios",
+            calificacion: slot.calificacion || 3.5,
+            slots_disponibles: horarios,
           },
         ];
       }
-
+    
       const medicosMap = new Map();
       slotsData.forEach((slot) => {
         const medicoId = slot.medico || slot.id;
@@ -52,25 +68,40 @@ export default function ListaDoctores() {
             specialty: slot.especialidad || "Especialidad",
             image: slot.foto_medico || "/default-doctor.jpg",
             hospital: slot.hospital || "Hospital",
+            estudios: slot.estudios || "Estudios",
+            calificacion: slot.calificacion || 3.5,
             slots_disponibles: [],
           });
         }
+      
         if (slot.hora_inicio || slot.hora) {
           medicosMap
             .get(medicoId)
-            .slots_disponibles.push(slot.hora_inicio || slot.hora);
+            .slots_disponibles.push(formatearHora(slot.hora_inicio || slot.hora));
+        } else if (slot.slots_disponibles?.length > 0) {
+          medicosMap
+            .get(medicoId)
+            .slots_disponibles.push(
+              ...slot.slots_disponibles.map(formatearHora)
+            );
         }
       });
-
+    
       return Array.from(medicosMap.values());
     };
   }, []);
 
+
+
+
   useEffect(() => {
-    if (initialSlotsProcessed) {
-      setLoading(false);
-      return;
-    }
+  console.log("📦 Datos de slots recibidos:", memoSlots); // 👈 Agrega esto aquí
+
+  if (initialSlotsProcessed) {
+    setLoading(false);
+    return;
+  }
+
 
     if (Array.isArray(memoSlots) && memoSlots.length > 0) {
       const medicosFormateados = transformarSlots(memoSlots);
@@ -99,13 +130,13 @@ export default function ListaDoctores() {
       setError("No se encontraron médicos disponibles");
       setLoading(false);
     }
-  }, [memoSlots, transformarSlots, initialSlotsProcessed]);
+    }, [memoSlots, transformarSlots, initialSlotsProcessed]);
 
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    useEffect(() => {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
   }, []);
 
   const handleSelectDoctor = (doctor) => {
@@ -156,21 +187,46 @@ export default function ListaDoctores() {
                 onError={(e) => (e.target.src = "/default-doctor.jpg")}
               />
             </div>
-
+        
             {/* Info del doctor */}
             <div className="text-center sm:text-left">
-              <p className="font-semibold">{doctor.name}</p>
+              <p className="font-semibold text-lg">{doctor.name}</p>
               <p className="text-green-600 text-sm">{doctor.specialty}</p>
               {doctor.hospital && (
                 <p className="text-gray-500 text-xs">{doctor.hospital}</p>
               )}
-              {doctor.slots_disponibles.length > 0 && (
+    
+              {/* ⭐ Calificación */}
+              <div className="flex justify-center sm:justify-start items-center mt-1">
+                {[...Array(5)].map((_, i) => (
+                  <span
+                    key={i}
+                    className={`text-sm ${
+                      i < Math.round(doctor.calificacion)
+                        ? "text-yellow-400"
+                        : "text-gray-300"
+                    }`}
+                  >
+                    ★
+                  </span>
+                ))}
+                <span className="text-xs text-gray-500 ml-1">
+                  {doctor.calificacion.toFixed(1)}
+                </span>
+              </div>
+              
+              {/* 🕒 Horarios */}
+              {doctor.slots_disponibles && doctor.slots_disponibles.length > 0 ? (
                 <p className="text-blue-600 text-xs mt-1">
-                  Horarios: {doctor.slots_disponibles.join(", ")}
+                  Horarios disponibles: {doctor.slots_disponibles.join(", ")}
+                </p>
+              ) : (
+                <p className="text-gray-400 text-xs mt-1">
+                  No hay horarios disponibles
                 </p>
               )}
             </div>
-
+            
             {/* Botón Seleccionar */}
             <div className="flex justify-center sm:justify-end">
               <button
@@ -184,6 +240,7 @@ export default function ListaDoctores() {
         ))}
       </div>
     );
+
   };
 
   if (loading) {

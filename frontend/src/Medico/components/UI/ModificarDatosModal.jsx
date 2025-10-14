@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useLockBodyScroll from "../../../hooks/useLockBodyScroll";
+
 import { toast } from "react-toastify";
 
 export default function ModificarDatosModal({ isOpen, onClose, onConfirm }) {
@@ -7,8 +7,6 @@ export default function ModificarDatosModal({ isOpen, onClose, onConfirm }) {
   const [otraEspecialidad, setOtraEspecialidad] = useState("");
   const [estudios, setEstudios] = useState("");
   const [hospital, setHospital] = useState("");
-
-  useLockBodyScroll(isOpen);
 
   if (!isOpen) return null;
 

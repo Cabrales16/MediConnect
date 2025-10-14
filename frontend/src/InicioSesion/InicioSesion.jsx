@@ -1,59 +1,74 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, Mail, Lock } from "lucide-react";
+import { Mail, Lock } from "lucide-react";
 import { login } from "../services/authService"; 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import logo from "./IniciopSesionImages/Logo.png";
 import calendario from "./IniciopSesionImages/calendario.jpeg";
 import Volver from "./IniciopSesionImages/flechaIconIzq.png"
 
 export default function Login() {
-
   const navigate = useNavigate();
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
+  const [intentos, setIntentos] = useState(0);
+  const [bloqueado, setBloqueado] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    try {
-    const data = await login(correo, contrasena); 
-    
-    // Guardar token y rol
-    localStorage.setItem("token", data.access_token);
-    localStorage.setItem("rol", data.rol);
-    localStorage.setItem("id_usuario", data.id_usuario);
-    localStorage.setItem("correo", data.correo);
-    localStorage.setItem("nombre", data.nombre);
-
-    // Redirigir según el rol
-    if (data.rol === "Paciente") {
-      navigate("/paciente/inicio"); 
-    } else if (data.rol === "Médico") {
-      navigate("/medico/inicio");
-    } else if (data.rol === "Administrador") {
-      navigate("/admin/inicio");
-    } else {
-      navigate("/"); // fallback
+    if (bloqueado) {
+      toast.error("La cuenta ha sido bloqueada debido a múltiples intentos fallidos");
+      return;
     }
-  } catch (err) {
-    setError("Credenciales incorrectas o error de servidor");
-  }
-};
+
+    try {
+      const data = await login(correo, contrasena);
+      setIntentos(0); // Resetear contador si login es exitoso
+
+      // Guardar token y rol
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("rol", data.rol);
+      localStorage.setItem("id_usuario", data.id_usuario);
+      localStorage.setItem("correo", data.correo);
+      localStorage.setItem("nombre", data.nombre);
+
+      // Redirigir según rol
+      if (data.rol === "Paciente") navigate("/paciente/inicio");
+      else if (data.rol === "Médico") navigate("/medico/inicio");
+      else if (data.rol === "Administrador") navigate("/admin/inicio");
+      else navigate("/"); 
+    } catch (err) {
+      const nuevosIntentos = intentos + 1;
+      setIntentos(nuevosIntentos);
+
+      if (nuevosIntentos >= 3) {
+        setBloqueado(true);
+        toast.error("La cuenta ha sido bloqueada debido a múltiples intentos fallidos");
+      } else {
+        setError("Credenciales incorrectas o error de servidor");
+      }
+    }
+  };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-green-200 overflow-hidden">
-      {/* SVG decorativos */}
+    <div className="relative min-h-screen flex items-center justify-center bg-green-200 overflow-hidden px-4">
+      {/* Toast Container */}
+      <ToastContainer position="bottom-left" autoClose={5000} />
 
-      <div className="relative flex flex-col md:flex-row max-w-4xl w-full shadow-md rounded-2xl overflow-hidden z-10 my-15">
-        <a href="/home" className="w-2 h-2 absolute flex ml-4 mt-5 items-center">
-          <img src={Volver} alt="regresar" /> <p className="pl-3">Volver</p>
+      <div className="relative flex flex-col md:flex-row max-w-4xl w-full shadow-md rounded-2xl overflow-hidden z-10">
+        {/* Botón volver */}
+        <a href="/home" className="absolute top-4 left-4 flex items-center gap-2">
+          <img src={Volver} alt="regresar" className="w-3"/>
+          <span className="text-gray-800 text-sm">Volver</span>
         </a>
 
         {/* Lado izquierdo */}
-        <div className="md:w-1/2 bg-white flex flex-col items-center justify-start p-6 text-center shadow-lg">
+        <div className="md:w-1/2 w-full bg-white flex flex-col items-center justify-center p-6 text-center shadow-lg">
           <img src={logo} alt="Logo" className="w-16 h-16 object-contain mb-4" />
           <h2 className="text-xl font-bold text-gray-800">Hola, Bienvenido!</h2>
           <p className="text-gray-600 mt-2 text-sm">
@@ -62,13 +77,13 @@ export default function Login() {
           <img
             src={calendario}
             alt="Calendario"
-            className="mt-6 w-full h-40 object-contain rounded-lg"
+            className="mt-6 w-full max-w-xs h-40 object-contain rounded-lg"
           />
         </div>
 
         {/* Lado derecho (formulario) */}
-        <div className="md:w-1/2 bg-green-500 flex items-center justify-center p-4 pl-16">
-          <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm md:-translate-x-6 my-6 py-15">
+        <div className="md:w-1/2 w-full bg-green-500 flex items-center justify-center p-6">
+          <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm">
             <h2 className="text-xl font-bold text-gray-800 text-center mb-2">
               Inicia sesión
             </h2>
@@ -117,6 +132,7 @@ export default function Login() {
               <button
                 type="submit"
                 className="w-full bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition font-medium text-sm"
+                disabled={bloqueado}
               >
                 Iniciar sesión
               </button>
