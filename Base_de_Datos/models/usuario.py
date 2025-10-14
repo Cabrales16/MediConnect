@@ -69,4 +69,7 @@ class Usuario(Base):
     errores_tecnicos = relationship("ErrorTecnico", back_populates="usuario")
     medicos = relationship("Medico", back_populates="medico")
     novedades = relationship("Novedad", back_populates="admin")
-    info_novedades = relationship("Info_Novedad", back_populates="admin")
+    medicamentos = relationship("Medicamento", back_populates="admin")
+    terapias = relationship("CrearTerapia", back_populates="adminT")
+    medico_terapia = relationship("Terapia", back_populates="medico", foreign_keys="[Terapia.id_medico]")
+    paciente_terapia = relationship("Terapia", back_populates="paciente", foreign_keys="[Terapia.id_paciente]")

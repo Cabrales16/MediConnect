@@ -16,12 +16,12 @@ def enviar_email(db: Session, destinatario: str, asunto: str, contenido_html: st
 
     try:
         print(f"🔑 API Key: {settings.SENDGRID_API_KEY[:10]}...")  # Debug
-        print(f"📧 Enviando desde: dgersonsamuel080@gmail.com")
+        print(f"📧 Enviando desde: andrescabrales322@gmail.com")
         print(f"📧 Enviando a: {destinatario}")
 
         sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
         message = Mail(
-            from_email=("dgersonsamuel080@gmail.com", 'Soporte Euipomed'),
+            from_email=("andrescabrales322@gmail.com", 'Soporte Euipomed'),
             to_emails=destinatario,
             subject=asunto,
             html_content=contenido_html

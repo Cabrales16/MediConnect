@@ -15,6 +15,6 @@ class Novedad(Base, AuditMixin):
 
     # Relaciones
     admin = relationship("Usuario", back_populates="novedades")
-    info_novedades = relationship("Info_Novedad", back_populates="novedad")
-
+  
+    
     # Despues del "relationship", va el nombre de la clase
