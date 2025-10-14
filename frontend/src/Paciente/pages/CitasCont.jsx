@@ -177,7 +177,7 @@ const convertirHora = (time, ampm) => {
     }, []);
   
     if (loading) {
-      return <div className="p-8">Cargando novedades...</div>;
+      return <div className="p-8">Cargando médicos...</div>;
   }
 
   return (

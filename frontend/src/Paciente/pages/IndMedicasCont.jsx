@@ -29,7 +29,7 @@ export default function IndMedicasCont() {
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
-      <div className="pb-30 overflow-y-auto sm:overflow-y-visible h-[100vh]">
+      <div className="overflow-y-auto h-[calc(100vh-9rem)]">
         <div className="p-8">
           <h2 className="text-2xl font-semibold mb-4">Indicaciones médicas</h2>
           <p className="text-sm text-gray-600 mb-6">Aquí se muestran procedimientos relacionados contigo (medicamentos, terapias).</p>

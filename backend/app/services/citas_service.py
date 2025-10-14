@@ -113,53 +113,7 @@ def validar_disponibilidad_medico(db: Session, id_medico: int, fecha, hora, cita
             detail="El médico ya tiene una cita en esa fecha y hora"
         )
 
-# ============================================
-# CREAR CITA
-# ============================================
-def crear_cita(db: Session, cita_data: CitaCreate):
-    # Validar existencia de entidades relacionadas
-    paciente = db.query(Usuario).filter(Usuario.id_usuario == cita_data.id_paciente).first()
-    if not paciente:
-        raise HTTPException(status_code=404, detail="Paciente no encontrado")
 
-    medico = db.query(Medico).filter(Medico.id_medico == cita_data.id_medico).first()
-    if not medico:
-        raise HTTPException(status_code=404, detail="Médico no encontrado")
-
-    hospital = db.query(Hospital).filter(Hospital.id_hospital == cita_data.id_hospital).first()
-    if not hospital:
-        raise HTTPException(status_code=404, detail="Hospital no encontrado")
-
-    medicacion = db.query(Medicamento).filter(Medicamento.id_medicamento == cita_data.id_medicacion).first()
-    if not medicacion:
-        raise HTTPException(status_code=404, detail="Medicamento no encontrado")
-
-    info = db.query(TipoNovedad).filter(TipoNovedad.id_info == cita_data.id_info).first()
-    if not info:
-        raise HTTPException(status_code=404, detail="Información adicional no encontrada")
-
-    # Validaciones de reglas de negocio
-    validar_especialidad(db, medico.id)
-    validar_horario(db, medico.id, cita_data.fecha, cita_data.hora)
-    validar_disponibilidad_paciente(db, cita_data.id_paciente, cita_data.fecha, cita_data.hora)
-    validar_disponibilidad_medico(db, medico.id, cita_data.fecha, cita_data.hora)
-
-    # Crear nueva cita
-    nueva_cita = Cita(
-        id_paciente=cita_data.id_paciente,
-        id_medico=medico.id,
-        id_medicacion=cita_data.id_medicacion,
-        id_hospital=cita_data.id_hospital,
-        id_info=cita_data.id_info,
-        fecha=cita_data.fecha,
-        hora=cita_data.hora,
-        estado=cita_data.estado.value,
-    )
-
-    db.add(nueva_cita)
-    db.commit()
-    db.refresh(nueva_cita)
-    return nueva_cita
 
 # ============================================
 # EDITAR CITA
@@ -356,3 +310,85 @@ def obtener_slots_disponibles_rango(
             })
 
     return resultado
+
+
+
+def agendar_cita(db: Session, cita: CitaCreate):
+    # 1. Verificar si el paciente ya tiene una cita en esa fecha y hora
+    cita_existente = db.query(Cita).filter(
+        Cita.id_paciente == cita.id_paciente,
+        Cita.fecha == cita.fecha,
+        Cita.hora == cita.hora,
+        Cita.estado != EstadoCita.CANCELADA.value  # Excluye citas canceladas
+    ).first()
+
+    if cita_existente:
+        raise HTTPException(status_code=400, detail="El paciente ya tiene una cita en esa fecha y hora")
+
+    # 2. Verificar si el médico está disponible en la fecha y hora solicitada
+    cita_ocupada = db.query(Cita).filter(
+        Cita.id_medico == cita.id_medico,
+        Cita.fecha == cita.fecha,
+        Cita.hora == cita.hora,
+        Cita.estado != EstadoCita.CANCELADA.value  # Excluye citas canceladas
+    ).first()
+
+    if cita_ocupada:
+        raise HTTPException(status_code=400, detail="El médico ya tiene una cita en esa fecha y hora")
+
+    # 3. Verificar si el médico trabaja en la fecha seleccionada
+    horario = db.query(Horario).filter(
+        Horario.id_medico == cita.id_medico,
+        Horario.dia == cita.fecha.strftime("%A")  # Traducir la fecha a día de la semana
+    ).first()
+
+    if not horario:
+        raise HTTPException(status_code=400, detail="El médico no tiene horario configurado para el día seleccionado")
+
+    # 4. Verificar si la hora solicitada está dentro del horario del médico
+    if not (horario.hora_inicio <= cita.hora <= horario.hora_fin):
+        raise HTTPException(status_code=400, detail=f"La hora solicitada está fuera del horario laboral del médico ({horario.hora_inicio} - {horario.hora_fin})")
+
+    # 5. Verificar si el paciente existe en la base de datos
+    paciente = db.query(Usuario).filter(Usuario.id == cita.id_paciente).first()
+
+    if not paciente:
+        raise HTTPException(status_code=404, detail="Paciente no encontrado")
+
+    # 6. Verificar si el hospital existe en la base de datos (opcional)
+    if cita.id_hospital:
+        hospital = db.query(Hospital).filter(Hospital.id_hospital == cita.id_hospital).first()
+        if not hospital:
+            raise HTTPException(status_code=404, detail="Hospital no encontrado")
+
+    # 7. Verificar si el medicamento existe en la base de datos (opcional)
+    if cita.id_medicacion:
+        medicacion = db.query(Medicamento).filter(Medicamento.id_medicamento == cita.id_medicacion).first()
+        if not medicacion:
+            raise HTTPException(status_code=404, detail="Medicamento no encontrado")
+
+    # 8. Verificar si la información adicional (tipo novedad) existe en la base de datos (opcional)
+    if cita.id_info:
+        info = db.query(TipoNovedad).filter(TipoNovedad.id_info == cita.id_info).first()
+        if not info:
+            raise HTTPException(status_code=404, detail="Información adicional no encontrada")
+
+    # 9. Crear la cita
+    nueva_cita = Cita(
+        id_paciente=cita.id_paciente,
+        id_medico=cita.id_medico,
+        id_medicacion=cita.id_medicacion,
+        id_hospital=cita.id_hospital,
+        id_info=cita.id_info,
+        fecha=cita.fecha,
+        hora=cita.hora,
+        estado=EstadoCita.Programada.value  # La cita estará pendiente por defecto
+    )
+
+    # 10. Guardar la cita en la base de datos
+    db.add(nueva_cita)
+    db.commit()
+
+    # 11. Devolver la cita creada
+    db.refresh(nueva_cita)
+    return nueva_cita

@@ -105,7 +105,7 @@ export default function AddNovedadModal({ onClose, onSuccess }) {
             <input
               type="file"
               accept="image/*"
-              className="block w-full text-sm"
+              className="border rounded-lg w-full p-2 outline-none focus:ring-2 focus:ring-green-400"
               onChange={handleImageChange}
             />
             {preview && (

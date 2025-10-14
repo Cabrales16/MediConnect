@@ -18,7 +18,7 @@ export default function FaqCont() {
   }, []);
 
   return (
-    <div>
+    <div className="overflow-y-auto h-[calc(100vh-9rem)]">
       <Breadcrumb items={breadcrumbItems} />
 
       <div className="p-8">

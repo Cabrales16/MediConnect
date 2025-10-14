@@ -54,7 +54,7 @@ export default function GestNovedCont() {
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
     fetchNovedades();
   }, []);
 
@@ -108,10 +108,13 @@ export default function GestNovedCont() {
     }
   };
 
+
   useEffect(() => {
-    document.body.style.overflow =
-      isAddModalOpen || isEditModalOpen || isDeleteModalOpen ? "hidden" : "";
-  }, [isAddModalOpen, isEditModalOpen, isDeleteModalOpen]);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
 
   return (
     <>

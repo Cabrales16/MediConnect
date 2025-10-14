@@ -5,7 +5,7 @@ import perfilIcon from "../Navbar/NavbarIcons/perfilIcon.png";
 export default function ProfileButtonPaciente() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const dropdownRef = useRef(null); 
+  const dropdownRef = useRef(null);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -40,7 +40,7 @@ export default function ProfileButtonPaciente() {
       {open && (
         <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-lg p-2 border border-gray-200 z-50">
           <Link
-            to="/paciente/perfil"
+            to="/medico/perfil"
             onClick={() => setOpen(false)}
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
           >
