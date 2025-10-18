@@ -116,8 +116,8 @@ def validar_disponibilidad_medico(db: Session, id_medico: int, fecha, hora, cita
 # ============================================
 # CREAR CITA
 # ============================================
+#  services/citas_service.py
 def crear_cita(db: Session, cita_data: CitaCreate):
-    # Validar existencia de entidades relacionadas
     paciente = db.query(Usuario).filter(Usuario.id_usuario == cita_data.id_paciente).first()
     if not paciente:
         raise HTTPException(status_code=404, detail="Paciente no encontrado")
@@ -130,35 +130,28 @@ def crear_cita(db: Session, cita_data: CitaCreate):
     if not hospital:
         raise HTTPException(status_code=404, detail="Hospital no encontrado")
 
-    medicacion = db.query(Medicamento).filter(Medicamento.id_medicamento == cita_data.id_medicacion).first()
-    if not medicacion:
-        raise HTTPException(status_code=404, detail="Medicamento no encontrado")
-
-    info = db.query(TipoNovedad).filter(TipoNovedad.id_info == cita_data.id_info).first()
-    if not info:
-        raise HTTPException(status_code=404, detail="Información adicional no encontrada")
-
-    # Validaciones de reglas de negocio
-    validar_especialidad(db, medico.id)
-    validar_horario(db, medico.id, cita_data.fecha, cita_data.hora)
+    # Validaciones
+    validar_especialidad(db, medico.id_medico)
+    validar_horario(db, medico.id_medico, cita_data.fecha, cita_data.hora)
     validar_disponibilidad_paciente(db, cita_data.id_paciente, cita_data.fecha, cita_data.hora)
-    validar_disponibilidad_medico(db, medico.id, cita_data.fecha, cita_data.hora)
+    validar_disponibilidad_medico(db, medico.id_medico, cita_data.fecha, cita_data.hora)
 
-    # Crear nueva cita
+    # Crear cita
     nueva_cita = Cita(
         id_paciente=cita_data.id_paciente,
-        id_medico=medico.id,
-        id_medicacion=cita_data.id_medicacion,
+        id_medico=medico.id_medico,
+        id_medicacion=None,
         id_hospital=cita_data.id_hospital,
-        id_info=cita_data.id_info,
+        id_info=1,
         fecha=cita_data.fecha,
         hora=cita_data.hora,
-        estado=cita_data.estado.value,
+        estado="programada",
     )
 
     db.add(nueva_cita)
     db.commit()
     db.refresh(nueva_cita)
+
     return nueva_cita
 
 # ============================================

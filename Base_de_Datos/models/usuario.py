@@ -67,7 +67,7 @@ class Usuario(Base):
     medicamento_medico = relationship("Medicacion", back_populates="medico", foreign_keys="[Medicacion.id_medico]")
     horarios = relationship("Horario", back_populates="medico")
     errores_tecnicos = relationship("ErrorTecnico", back_populates="usuario")
-    medicos = relationship("Medico", back_populates="medico")
+    medicos = relationship("Medico", back_populates="usuario")
     novedades = relationship("Novedad", back_populates="admin")
     medicamentos = relationship("Medicamento", back_populates="admin")
     terapias = relationship("CrearTerapia", back_populates="adminT")

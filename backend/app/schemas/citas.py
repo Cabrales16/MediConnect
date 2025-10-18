@@ -50,8 +50,12 @@ class CitaBase(BaseModel):
     estado: EstadoCita
 
 
-class CitaCreate(CitaBase):
-    pass
+class CitaCreate(BaseModel):
+    id_paciente: int
+    id_medico: int
+    id_hospital: int
+    fecha: date
+    hora: time
 
 
 class CitaResponseA(CitaBase):

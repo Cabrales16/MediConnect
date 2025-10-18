@@ -11,4 +11,5 @@ from .cita import Cita
 from .error import ErrorTecnico
 from .medico import Medico
 from .novedad import Novedad
-from .info_Novedad import Info_Novedad
+from .crearTerapia import CrearTerapia
+from .terapia import Terapia

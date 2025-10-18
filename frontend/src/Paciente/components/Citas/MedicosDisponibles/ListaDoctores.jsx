@@ -22,39 +22,43 @@ export default function ListaDoctores() {
   const [error, setError] = useState(null);
   const [initialSlotsProcessed, setInitialSlotsProcessed] = useState(false);
 
-  // Extraer todo lo que viene de navigate()
   const { slots, fecha, tipoCita, ubicacion, hora } = location.state || {};
+  const memoSlots = useMemo(() => slots, [slots]);
 
-  // Memoize slots
-  const memoSlots = useMemo(() => {
-    console.log("Memoizando slots desde location.state:", slots);
-    return slots;
-  }, [slots]);
-
-  // Transformar los slots
   const transformarSlots = useMemo(() => {
-    return (slotsData) => {
-      if (!Array.isArray(slotsData)) {
-        console.log("Error: slots no es un array");
-        return [];
-      }
 
-      // Si viene un solo slot, convertirlo en médico
+    const formatearHora = (hora) => {
+      if (!hora) return "";
+      const [h, m] = hora.split(":");
+      let horas = parseInt(h, 10);
+      const minutos = m || "00";
+      const ampm = horas >= 12 ? "PM" : "AM";
+      horas = horas % 12 || 12;
+      return `${horas}:${minutos.padStart(2, "0")} ${ampm}`;
+    };
+  
+    return (slotsData) => {
+      if (!Array.isArray(slotsData)) return [];
+    
+ 
       if (slotsData.length === 1) {
         const slot = slotsData[0];
-        return [{
-          id: slot.medico || slot.id || 1,
-          name: slot.nombre || "Médico",
-          specialty: slot.especialidad || "Especialidad",
-          image: slot.foto_medico || '/default-doctor.jpg',
-          hospital: slot.hospital || "Hospital",
-          slots_disponibles: slot.slots_disponibles || []
-        }];
+        const horarios = (slot.slots_disponibles || []).map(formatearHora);
+        return [
+          {
+            id: slot.medico || slot.id || 1,
+            name: slot.nombre || "Médico",
+            specialty: slot.especialidad || "Especialidad",
+            image: slot.foto_medico || "/default-doctor.jpg",
+            hospital: slot.hospital || "Hospital",
+            estudios: slot.estudios || "Estudios",
+            calificacion: slot.calificacion || 3.5,
+            slots_disponibles: horarios,
+          },
+        ];
       }
-
-      // Agrupar múltiples slots por médico
+    
       const medicosMap = new Map();
-
       slotsData.forEach((slot) => {
         const medicoId = slot.medico || slot.id;
         if (!medicosMap.has(medicoId)) {
@@ -62,89 +66,78 @@ export default function ListaDoctores() {
             id: medicoId,
             name: slot.nombre || "Médico",
             specialty: slot.especialidad || "Especialidad",
-            image: slot.foto_medico || '/default-doctor.jpg',
+            image: slot.foto_medico || "/default-doctor.jpg",
             hospital: slot.hospital || "Hospital",
+            estudios: slot.estudios || "Estudios",
+            calificacion: slot.calificacion || 3.5,
             slots_disponibles: [],
           });
         }
-
-        // Agregar horario disponible
+      
         if (slot.hora_inicio || slot.hora) {
           medicosMap
             .get(medicoId)
-            .slots_disponibles.push(slot.hora_inicio || slot.hora);
+            .slots_disponibles.push(formatearHora(slot.hora_inicio || slot.hora));
+        } else if (slot.slots_disponibles?.length > 0) {
+          medicosMap
+            .get(medicoId)
+            .slots_disponibles.push(
+              ...slot.slots_disponibles.map(formatearHora)
+            );
         }
       });
-
+    
       return Array.from(medicosMap.values());
     };
   }, []);
 
-  // Procesar slots - SIN doctoresDisponibles.length en dependencias
+
+
+
   useEffect(() => {
-    console.log("=== INICIANDO ListaDoctores ===");
-    console.log("location.state completo:", location.state);
-    console.log("slots extraído:", memoSlots);
-    console.log("initialSlotsProcessed:", initialSlotsProcessed);
+  console.log("📦 Datos de slots recibidos:", memoSlots); // 👈 Agrega esto aquí
 
-    // Si ya procesamos los slots, mantener los datos
-    if (initialSlotsProcessed) {
-      console.log("Ya procesamos los slots, manteniendo estado");
-      setLoading(false);
-      return;
-    }
+  if (initialSlotsProcessed) {
+    setLoading(false);
+    return;
+  }
 
-    // Procesar slots válidos inmediatamente
+
     if (Array.isArray(memoSlots) && memoSlots.length > 0) {
-      console.log("Procesando slots inmediatamente:", memoSlots);
-      try {
-        const medicosFormateados = transformarSlots(memoSlots);
-        console.log("Médicos formateados:", medicosFormateados);
-        
-        if (medicosFormateados.length > 0) {
-          setDoctoresDisponibles(medicosFormateados);
-          setError(null);
-          setInitialSlotsProcessed(true);
-          setLoading(false);
-          console.log("Datos procesados y guardados exitosamente");
-        } else {
-          setError("No se encontraron médicos disponibles");
-          setLoading(false);
-        }
-      } catch (err) {
-        console.error("Error procesando slots:", err);
-        setError("Error procesando los datos");
+      const medicosFormateados = transformarSlots(memoSlots);
+      if (medicosFormateados.length > 0) {
+        setDoctoresDisponibles(medicosFormateados);
+        setInitialSlotsProcessed(true);
+        setLoading(false);
+      } else {
+        setError("No se encontraron médicos disponibles");
         setLoading(false);
       }
       return;
     }
 
-    // Si no hay slots, esperar con timeout de seguridad
     if (!memoSlots) {
-      console.log("Esperando slots, iniciando timeout de seguridad...");
-      const safetyTimer = setTimeout(() => {
+      const timer = setTimeout(() => {
         if (!initialSlotsProcessed) {
-          console.log("Timeout: No se recibieron slots después de 2 segundos");
           setError("No se encontraron médicos disponibles");
           setLoading(false);
         }
       }, 2000);
-
-      return () => {
-        console.log("Limpiando timer");
-        clearTimeout(safetyTimer);
-      };
+      return () => clearTimeout(timer);
     }
 
-    // Slots vacío
     if (Array.isArray(memoSlots) && memoSlots.length === 0) {
-      console.log("Slots está vacío");
       setError("No se encontraron médicos disponibles");
       setLoading(false);
     }
+    }, [memoSlots, transformarSlots, initialSlotsProcessed]);
 
-    console.log("=== FINALIZANDO SETUP ===");
-  }, [memoSlots, transformarSlots, initialSlotsProcessed]); // Sin doctoresDisponibles.length
+    useEffect(() => {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
+  }, []);
 
   const handleSelectDoctor = (doctor) => {
     setSelectedDoctor(doctor);
@@ -156,16 +149,10 @@ export default function ListaDoctores() {
     setModalExitoOpen(true);
   };
 
-  // Volver con todos los datos
   const handleVolver = () => {
     navigate("/paciente/citas", {
       replace: false,
-      state: {
-        selectedDate: fecha,
-        tipoCita,
-        ubicacion,
-        hora,
-      },
+      state: { selectedDate: fecha, tipoCita, ubicacion, hora },
     });
   };
 
@@ -189,50 +176,81 @@ export default function ListaDoctores() {
         {doctoresDisponibles.map((doctor) => (
           <div
             key={doctor.id}
-            className="flex flex-col sm:flex-row sm:items-center justify-between py-4 gap-4"
+            className="flex flex-col sm:grid sm:grid-cols-[auto_1fr_auto] sm:items-center gap-4 py-4"
           >
-            <div className="flex items-center gap-3">
+            {/* Imagen */}
+            <div className="flex justify-center sm:justify-start">
               <img
                 src={doctor.image}
                 alt={doctor.name}
-                className="w-14 h-14 rounded-full object-cover border border-gray-300"
-                onError={(e) => {
-                  e.target.src = "/default-doctor.jpg";
-                }}
+                className="w-16 h-16 rounded-full object-cover border border-gray-300"
+                onError={(e) => (e.target.src = "/default-doctor.jpg")}
               />
-              <div>
-                <p className="font-semibold">{doctor.name}</p>
-                <p className="text-green-600 text-sm">{doctor.specialty}</p>
-                {doctor.hospital && (
-                  <p className="text-gray-500 text-xs">{doctor.hospital}</p>
-                )}
-                {doctor.slots_disponibles.length > 0 && (
-                  <p className="text-blue-600 text-xs">
-                    Horarios: {doctor.slots_disponibles.join(", ")}
-                  </p>
-                )}
-              </div>
             </div>
-            <button
-              onClick={() => handleSelectDoctor(doctor)}
-              className="px-4 py-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium transition"
-            >
-              Seleccionar
-            </button>
+        
+            {/* Info del doctor */}
+            <div className="text-center sm:text-left">
+              <p className="font-semibold text-lg">{doctor.name}</p>
+              <p className="text-green-600 text-sm">{doctor.specialty}</p>
+              {doctor.hospital && (
+                <p className="text-gray-500 text-xs">{doctor.hospital}</p>
+              )}
+    
+              {/* ⭐ Calificación */}
+              <div className="flex justify-center sm:justify-start items-center mt-1">
+                {[...Array(5)].map((_, i) => (
+                  <span
+                    key={i}
+                    className={`text-sm ${
+                      i < Math.round(doctor.calificacion)
+                        ? "text-yellow-400"
+                        : "text-gray-300"
+                    }`}
+                  >
+                    ★
+                  </span>
+                ))}
+                <span className="text-xs text-gray-500 ml-1">
+                  {doctor.calificacion.toFixed(1)}
+                </span>
+              </div>
+              
+              {/* 🕒 Horarios */}
+              {doctor.slots_disponibles && doctor.slots_disponibles.length > 0 ? (
+                <p className="text-blue-600 text-xs mt-1">
+                  Horarios disponibles: {doctor.slots_disponibles.join(", ")}
+                </p>
+              ) : (
+                <p className="text-gray-400 text-xs mt-1">
+                  No hay horarios disponibles
+                </p>
+              )}
+            </div>
+            
+            {/* Botón Seleccionar */}
+            <div className="flex justify-center sm:justify-end">
+              <button
+                onClick={() => handleSelectDoctor(doctor)}
+                className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium transition w-full sm:w-auto"
+              >
+                Seleccionar
+              </button>
+            </div>
           </div>
         ))}
       </div>
     );
+
   };
 
   if (loading) {
     return (
       <>
         <Breadcrumb items={breadcrumbItems} />
-        <div className="max-w-2xl mx-auto p-4">
-          <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <p className="mt-2 text-gray-600">Cargando médicos...</p>
+        <div className="flex h-[calc(100vh-9rem)] items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-3"></div>
+            <p className="text-gray-600">Cargando médicos...</p>
           </div>
         </div>
       </>
@@ -242,33 +260,35 @@ export default function ListaDoctores() {
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
-      <div className="max-w-2xl mx-auto p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Médicos disponibles</h2>
-          <button
-            onClick={handleVolver}
-            className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition"
-          >
-            Volver
-          </button>
+      <div className="flex h-[calc(100vh-9rem)]">
+        {/* Columna izquierda: lista de doctores */}
+        <div className="w-full md:w-1/2 p-8 overflow-y-auto">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold">Médicos disponibles</h2>
+            <button
+              onClick={handleVolver}
+              className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition"
+            >
+              Volver
+            </button>
+          </div>
+          {renderContent()}
         </div>
 
-        {renderContent()}
-      </div>
+        {selectedDoctor && (
+          <ModalDoctores
+            doctor={selectedDoctor}
+            isOpen={modalDoctorOpen}
+            onClose={() => setModalDoctorOpen(false)}
+            onConfirm={handleAgendarCita}
+          />
+        )}
 
-      {selectedDoctor && (
-        <ModalDoctores
-          doctor={selectedDoctor}
-          isOpen={modalDoctorOpen}
-          onClose={() => setModalDoctorOpen(false)}
-          onConfirm={handleAgendarCita}
+        <SucessModal
+          open={modalExitoOpen}
+          onClose={() => setModalExitoOpen(false)}
         />
-      )}
-
-      <SucessModal
-        open={modalExitoOpen}
-        onClose={() => setModalExitoOpen(false)}
-      />
+      </div>
     </>
   );
 }

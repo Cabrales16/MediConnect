@@ -35,4 +35,5 @@ class Cita(Base, AuditMixin):
     tipo_novedad = relationship("TipoNovedad", back_populates="citas", foreign_keys=[id_info])
 
 
+
     # Despues del "relationship", va el nombre de la clase
