@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 #connection string:
 #representa la base de datos a conectar
-SQLALCHEMY_DATABASE_URL = 'mysql+pymysql://root:admin@localhost:3306/agendamiento_de_citas'
+SQLALCHEMY_DATABASE_URL = 'mysql+pymysql://root:admin@localhost:3315/agendamiento_de_citas'
 
 #crear el objeto de conexion
 conn  = create_engine(SQLALCHEMY_DATABASE_URL)
