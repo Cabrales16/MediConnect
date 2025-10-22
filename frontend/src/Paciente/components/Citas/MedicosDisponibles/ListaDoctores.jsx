@@ -20,13 +20,13 @@ export default function ListaDoctores() {
   const [doctoresDisponibles, setDoctoresDisponibles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [citaData, setCitaData] = useState(null);
   const [initialSlotsProcessed, setInitialSlotsProcessed] = useState(false);
 
   const { slots, fecha, tipoCita, ubicacion, hora } = location.state || {};
   const memoSlots = useMemo(() => slots, [slots]);
 
   const transformarSlots = useMemo(() => {
-
     const formatearHora = (hora) => {
       if (!hora) return "";
       const [h, m] = hora.split(":");
@@ -36,28 +36,10 @@ export default function ListaDoctores() {
       horas = horas % 12 || 12;
       return `${horas}:${minutos.padStart(2, "0")} ${ampm}`;
     };
-  
+
     return (slotsData) => {
       if (!Array.isArray(slotsData)) return [];
-    
- 
-      if (slotsData.length === 1) {
-        const slot = slotsData[0];
-        const horarios = (slot.slots_disponibles || []).map(formatearHora);
-        return [
-          {
-            id: slot.medico || slot.id || 1,
-            name: slot.nombre || "Médico",
-            specialty: slot.especialidad || "Especialidad",
-            image: slot.foto_medico || "/default-doctor.jpg",
-            hospital: slot.hospital || "Hospital",
-            estudios: slot.estudios || "Estudios",
-            calificacion: slot.calificacion || 3.5,
-            slots_disponibles: horarios,
-          },
-        ];
-      }
-    
+
       const medicosMap = new Map();
       slotsData.forEach((slot) => {
         const medicoId = slot.medico || slot.id;
@@ -73,7 +55,7 @@ export default function ListaDoctores() {
             slots_disponibles: [],
           });
         }
-      
+
         if (slot.hora_inicio || slot.hora) {
           medicosMap
             .get(medicoId)
@@ -81,70 +63,43 @@ export default function ListaDoctores() {
         } else if (slot.slots_disponibles?.length > 0) {
           medicosMap
             .get(medicoId)
-            .slots_disponibles.push(
-              ...slot.slots_disponibles.map(formatearHora)
-            );
+            .slots_disponibles.push(...slot.slots_disponibles.map(formatearHora));
         }
       });
-    
+
       return Array.from(medicosMap.values());
     };
   }, []);
 
-
-
-
   useEffect(() => {
-  console.log("📦 Datos de slots recibidos:", memoSlots); // 👈 Agrega esto aquí
-
-  if (initialSlotsProcessed) {
-    setLoading(false);
-    return;
-  }
-
+    if (initialSlotsProcessed) {
+      setLoading(false);
+      return;
+    }
 
     if (Array.isArray(memoSlots) && memoSlots.length > 0) {
       const medicosFormateados = transformarSlots(memoSlots);
       if (medicosFormateados.length > 0) {
         setDoctoresDisponibles(medicosFormateados);
         setInitialSlotsProcessed(true);
-        setLoading(false);
       } else {
         setError("No se encontraron médicos disponibles");
-        setLoading(false);
       }
-      return;
-    }
-
-    if (!memoSlots) {
-      const timer = setTimeout(() => {
-        if (!initialSlotsProcessed) {
-          setError("No se encontraron médicos disponibles");
-          setLoading(false);
-        }
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-
-    if (Array.isArray(memoSlots) && memoSlots.length === 0) {
+      setLoading(false);
+    } else {
       setError("No se encontraron médicos disponibles");
       setLoading(false);
     }
-    }, [memoSlots, transformarSlots, initialSlotsProcessed]);
-
-    useEffect(() => {
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = "";
-      };
-  }, []);
+  }, [memoSlots, transformarSlots, initialSlotsProcessed]);
 
   const handleSelectDoctor = (doctor) => {
     setSelectedDoctor(doctor);
     setModalDoctorOpen(true);
   };
 
-  const handleAgendarCita = () => {
+  const handleConfirmCita = (payload) => {
+    // Guardar los datos de la cita construidos en ModalDoctores
+    setCitaData(payload);
     setModalDoctorOpen(false);
     setModalExitoOpen(true);
   };
@@ -178,7 +133,6 @@ export default function ListaDoctores() {
             key={doctor.id}
             className="flex flex-col sm:grid sm:grid-cols-[auto_1fr_auto] sm:items-center gap-4 py-4"
           >
-            {/* Imagen */}
             <div className="flex justify-center sm:justify-start">
               <img
                 src={doctor.image}
@@ -187,16 +141,14 @@ export default function ListaDoctores() {
                 onError={(e) => (e.target.src = "/default-doctor.jpg")}
               />
             </div>
-        
-            {/* Info del doctor */}
+
             <div className="text-center sm:text-left">
               <p className="font-semibold text-lg">{doctor.name}</p>
               <p className="text-green-600 text-sm">{doctor.specialty}</p>
               {doctor.hospital && (
                 <p className="text-gray-500 text-xs">{doctor.hospital}</p>
               )}
-    
-              {/* ⭐ Calificación */}
+
               <div className="flex justify-center sm:justify-start items-center mt-1">
                 {[...Array(5)].map((_, i) => (
                   <span
@@ -214,9 +166,8 @@ export default function ListaDoctores() {
                   {doctor.calificacion.toFixed(1)}
                 </span>
               </div>
-              
-              {/* 🕒 Horarios */}
-              {doctor.slots_disponibles && doctor.slots_disponibles.length > 0 ? (
+
+              {doctor.slots_disponibles?.length > 0 ? (
                 <p className="text-blue-600 text-xs mt-1">
                   Horarios disponibles: {doctor.slots_disponibles.join(", ")}
                 </p>
@@ -226,8 +177,7 @@ export default function ListaDoctores() {
                 </p>
               )}
             </div>
-            
-            {/* Botón Seleccionar */}
+
             <div className="flex justify-center sm:justify-end">
               <button
                 onClick={() => handleSelectDoctor(doctor)}
@@ -240,7 +190,6 @@ export default function ListaDoctores() {
         ))}
       </div>
     );
-
   };
 
   if (loading) {
@@ -261,7 +210,6 @@ export default function ListaDoctores() {
     <>
       <Breadcrumb items={breadcrumbItems} />
       <div className="flex h-[calc(100vh-9rem)]">
-        {/* Columna izquierda: lista de doctores */}
         <div className="w-full md:w-1/2 p-8 overflow-y-auto">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-semibold">Médicos disponibles</h2>
@@ -280,13 +228,15 @@ export default function ListaDoctores() {
             doctor={selectedDoctor}
             isOpen={modalDoctorOpen}
             onClose={() => setModalDoctorOpen(false)}
-            onConfirm={handleAgendarCita}
+            onConfirm={handleConfirmCita}
+            citaBase={{ fecha, id_hospital: 1 }}
           />
         )}
 
         <SucessModal
           open={modalExitoOpen}
           onClose={() => setModalExitoOpen(false)}
+          citaData={citaData}
         />
       </div>
     </>

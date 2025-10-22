@@ -25,7 +25,7 @@ duracion_especialidades = {
 # ============================================
 def validar_especialidad(db: Session, medico_id: int):
     # Buscar por la primary key de la tabla medico
-    medico = db.query(Medico).filter(Medico.id == medico_id).first()
+    medico = db.query(Medico).filter(Usuario.id_usuario == medico_id).first()
     if not medico:
         raise HTTPException(status_code=404, detail="Médico no encontrado")
     
@@ -48,7 +48,7 @@ def validar_horario(db: Session, id_medico: int, fecha, hora):
     dia_db = traduccion_dias[dia_semana]
 
     # CAMBIO CLAVE: Buscar el médico para obtener su id_usuario
-    medico = db.query(Medico).filter(Medico.id == id_medico).first()
+    medico = db.query(Medico).filter(Usuario.id_usuario == id_medico).first()
     if not medico:
         raise HTTPException(status_code=404, detail="Médico no encontrado")
     
@@ -277,7 +277,7 @@ def obtener_slots_disponibles(
         if slots_libres:
             resultado.append({
                 "medico": medico.id_medico,
-                "nombre": medico.medico.nombre,
+                "nombre": medico.usuario.nombre,
                 "hospital": medico.hospital.nombre if medico.hospital else None, 
                 "especialidad": medico.especialidad,
                 "slots_disponibles": slots_libres
@@ -342,7 +342,7 @@ def obtener_slots_disponibles_rango(
         if slots_en_rango:
             resultado.append({
                 "medico": medico.id_medico,
-                "nombre": medico.medico.nombre,
+                "nombre": medico.usuario.nombre,
                 "hospital": medico.hospital.nombre if medico.hospital else None, 
                 "especialidad": medico.especialidad,
                 "slots_disponibles": slots_en_rango

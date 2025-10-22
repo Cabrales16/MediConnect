@@ -16,7 +16,7 @@ class Cita(Base, AuditMixin):
 
     id_cita = Column(Integer, primary_key=True, autoincrement=True)
     id_paciente = Column(Integer, ForeignKey("Usuario.id_usuario"), nullable=False)
-    id_medico = Column(Integer, ForeignKey("medico.id"), nullable=False)   # << apunta a Medico
+    id_medico = Column(Integer, ForeignKey("Medico.id_medico"), nullable=False)   # << apunta a Medico
     id_medicacion = Column(Integer, ForeignKey("Medicacion.id_medicacion"), nullable=True)
     id_hospital = Column(Integer, ForeignKey("Hospital.id_hospital"), nullable=True)
     id_info = Column(Integer, ForeignKey("Tipo_Novedad.id_info"), nullable=True)

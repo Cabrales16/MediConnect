@@ -3,17 +3,15 @@ import { CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { agendarCita } from "../../../../services/citasService";
 
-export default function ModalExito({ open, onClose, citaData }) {
+export default function SucessModal({ open, onClose, citaData }) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Función para manejar la confirmación
   const handleConfirm = async () => {
     setIsLoading(true);
     try {
-      // Llamar a la API para agendar la cita
+      console.log("✅ Enviando cita al backend:", citaData);
       await agendarCita(citaData);
-      // Redirigir a la vista de citas
       navigate("/paciente/citas");
     } catch (error) {
       console.error("Error al agendar la cita:", error);
@@ -38,14 +36,16 @@ export default function ModalExito({ open, onClose, citaData }) {
 
         <CheckCircle2 className="text-green-500 w-14 h-14 mx-auto" />
         <p className="mt-4 text-lg font-semibold text-gray-800">
-          ¡Cita de control agendada exitosamente!
+          ¡Cita agendada exitosamente!
         </p>
 
         <button
-          onClick={handleConfirm} // Agendar la cita y redirigir
+          onClick={handleConfirm}
           disabled={isLoading}
           className={`mt-6 ${
-            isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+            isLoading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-600 hover:bg-green-700"
           } text-white font-semibold py-2 px-6 rounded-lg transition`}
         >
           {isLoading ? "Agendando..." : "De acuerdo"}

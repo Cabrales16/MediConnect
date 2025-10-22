@@ -18,11 +18,11 @@ class Medico(Base, AuditMixin):
     __tablename__ = "Medico"
 
     # Usamos el mismo id que el usuario
-    id_medico = Column(Integer, ForeignKey("usuario.id_usuario"), primary_key=True)
+    id_medico = Column(Integer, ForeignKey("Usuario.id_usuario"), primary_key=True)
     especialidad = Column(SqlEnum(EspecialidadMedica), nullable=True)
     estudios = Column(String(100), nullable=True)
     calificacion = Column(Float, nullable=True)
-    id_hospital = Column(Integer, ForeignKey("hospital.id_hospital"), nullable=True)
+    id_hospital = Column(Integer, ForeignKey("Hospital.id_hospital"), nullable=True)
 
     # Relaciones
     usuario  = relationship("Usuario", back_populates="medicos", uselist=False)

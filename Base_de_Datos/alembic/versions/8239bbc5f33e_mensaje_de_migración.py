@@ -1,8 +1,8 @@
 """mensaje de migración
 
-Revision ID: d12ebd18725f
+Revision ID: 8239bbc5f33e
 Revises: 
-Create Date: 2025-10-13 21:41:55.557044
+Create Date: 2025-10-18 23:12:37.260282
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'd12ebd18725f'
+revision: str = '8239bbc5f33e'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -128,21 +128,8 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['id_admin'], ['Usuario.id_usuario'], ),
     sa.PrimaryKeyConstraint('id_medicamento')
     )
-    op.create_table('Novedad',
-    sa.Column('id_novedad', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('id_admin', sa.Integer(), nullable=True),
-    sa.Column('titulo', sa.String(length=60), nullable=False),
-    sa.Column('descripcion', sa.String(length=200), nullable=False),
-    sa.Column('src', sa.String(length=200), nullable=False),
-    sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.ForeignKeyConstraint(['id_admin'], ['Usuario.id_usuario'], ),
-    sa.PrimaryKeyConstraint('id_novedad')
-    )
-    op.create_table('medico',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('id_medico', sa.Integer(), nullable=True),
+    op.create_table('Medico',
+    sa.Column('id_medico', sa.Integer(), nullable=False),
     sa.Column('especialidad', sa.Enum('CARDIOLOGIA', 'PEDIATRIA', 'TRAUMATOLOGIA', 'NEUROLOGIA', name='especialidadmedica'), nullable=True),
     sa.Column('estudios', sa.String(length=100), nullable=True),
     sa.Column('calificacion', sa.Float(), nullable=True),
@@ -152,7 +139,19 @@ def upgrade() -> None:
     sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
     sa.ForeignKeyConstraint(['id_hospital'], ['Hospital.id_hospital'], ),
     sa.ForeignKeyConstraint(['id_medico'], ['Usuario.id_usuario'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id_medico')
+    )
+    op.create_table('Novedad',
+    sa.Column('id_novedad', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('id_admin', sa.Integer(), nullable=True),
+    sa.Column('titulo', sa.String(length=60), nullable=False),
+    sa.Column('descripcion', sa.String(length=200), nullable=False),
+    sa.Column('src', sa.String(length=20), nullable=False),
+    sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
+    sa.ForeignKeyConstraint(['id_admin'], ['Usuario.id_usuario'], ),
+    sa.PrimaryKeyConstraint('id_novedad')
     )
     op.create_table('Medicacion',
     sa.Column('id_medicacion', sa.Integer(), autoincrement=True, nullable=False),
@@ -205,7 +204,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['id_hospital'], ['Hospital.id_hospital'], ),
     sa.ForeignKeyConstraint(['id_info'], ['Tipo_Novedad.id_info'], ),
     sa.ForeignKeyConstraint(['id_medicacion'], ['Medicacion.id_medicacion'], ),
-    sa.ForeignKeyConstraint(['id_medico'], ['medico.id'], ),
+    sa.ForeignKeyConstraint(['id_medico'], ['Medico.id_medico'], ),
     sa.ForeignKeyConstraint(['id_paciente'], ['Usuario.id_usuario'], ),
     sa.PrimaryKeyConstraint('id_cita')
     )
@@ -236,8 +235,8 @@ def downgrade() -> None:
     op.drop_table('Cita')
     op.drop_table('Terapia')
     op.drop_table('Medicacion')
-    op.drop_table('medico')
     op.drop_table('Novedad')
+    op.drop_table('Medico')
     op.drop_table('Medicamento')
     op.drop_table('Horario')
     op.drop_table('Familiar')

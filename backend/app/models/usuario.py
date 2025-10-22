@@ -1,9 +1,8 @@
 from app.db.database import Base
-from sqlalchemy import Column, Integer, String, Date, Boolean, DateTime, ForeignKey, Enum as SqlEnum, Float
+from sqlalchemy import Column, Integer, String, Date, Boolean, ForeignKey, DateTime, Enum as SqlEnum
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from enum import Enum as PyEnum
-from datetime import date
 
 # Enumeradores
 class TipoDocumento(PyEnum):
