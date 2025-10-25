@@ -36,7 +36,7 @@ export default function AdminLayout() {
           <Routes>
             <Route path="/" element={<Navigate to="/inicio" replace />} />
             <Route path="inicio" element={<InicioCont />} />
-            <Route path="/inicio/:id" element={<NovedadDetalle />} />
+            <Route path="/novedades/:id" element={<NovedadDetalle />} />
             <Route path="usuarios" element={<GestUsua />} />
             <Route path="opciones" element={<GestOpcioCont />} />
             <Route path="faq" element={<FaqCont />} />

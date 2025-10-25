@@ -10,7 +10,7 @@ class Novedad(Base, AuditMixin):
     id_admin = Column(Integer, ForeignKey("Usuario.id_usuario"))
     titulo = Column(String(60), nullable=False)
     descripcion = Column(String(200), nullable=False)
-    src = Column(String(20), nullable=False)
+    src = Column(String(200), nullable=False)
     
 
     # Relaciones

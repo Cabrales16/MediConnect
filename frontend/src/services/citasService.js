@@ -19,7 +19,14 @@ export const getCitaDetalle = async (id_cita) => {
   return res.data;
 };
 
-
+// Agendar una nueva cita
+export const agendarCita = async (citaData) => {
+  const token = localStorage.getItem("token");
+  const res = await api.post(`/Citas/agendar`, citaData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
 
 // Editar (reagendar) una cita
 export const editarCita = async (cita_id, citaData) => {
@@ -58,12 +65,3 @@ export const filtrarMedicosRango = async (especialidad, fecha, hora_inicio, hora
   });
   return res.data;
 };
-
-// Agendar una cita
-export const agendarCita = async (citaData) => {
-  const token = localStorage.getItem("token");
-  const res = await api.post(`/Citas/agendar/`, citaData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.data;
-}

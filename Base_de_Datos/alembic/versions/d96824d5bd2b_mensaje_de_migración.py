@@ -1,8 +1,8 @@
 """mensaje de migración
 
-Revision ID: 8239bbc5f33e
+Revision ID: d96824d5bd2b
 Revises: 
-Create Date: 2025-10-18 23:12:37.260282
+Create Date: 2025-10-24 18:04:27.694910
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '8239bbc5f33e'
+revision: str = 'd96824d5bd2b'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -146,7 +146,7 @@ def upgrade() -> None:
     sa.Column('id_admin', sa.Integer(), nullable=True),
     sa.Column('titulo', sa.String(length=60), nullable=False),
     sa.Column('descripcion', sa.String(length=200), nullable=False),
-    sa.Column('src', sa.String(length=20), nullable=False),
+    sa.Column('src', sa.String(length=200), nullable=False),
     sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
     sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
