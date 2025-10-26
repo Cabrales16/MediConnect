@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import HoraDetalle from "../../Paciente/components/Citas/HoraDetalle";
 
-// Mock de la imagen para evitar errores en Jest
+
 jest.mock("../../Paciente/components/Citas/CitasIcon/rangoHoraIcon.png", () => "rangoHoraIcon.png");
 
 describe("HoraDetalle", () => {
