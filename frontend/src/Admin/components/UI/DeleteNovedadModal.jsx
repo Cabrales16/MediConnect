@@ -67,21 +67,11 @@ export default function CambiarRolModal({ isOpen, onClose, onConfirm, user }) {
             Cancelar
           </button>
           <button
-<<<<<<< HEAD
             onClick={handleConfirm}
             className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
             disabled={loading}
           >
             {loading ? "Guardando..." : "Guardar"}
-=======
-            onClick={handleConfirmDelete}
-            className={`px-4 py-2 rounded-md bg-red-500 hover:bg-red-600 text-white transition ${
-              loading ? "opacity-70 cursor-not-allowed" : ""
-            }`}
-            disabled={loading}
-          >
-            {loading ? "Eliminando..." : "Eliminar"}
->>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
           </button>
         </div>
       </div>

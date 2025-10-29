@@ -113,7 +113,6 @@ def validar_disponibilidad_medico(db: Session, id_medico: int, fecha, hora, cita
             detail="El médico ya tiene una cita en esa fecha y hora"
         )
 
-<<<<<<< HEAD
 # ============================================
 # CREAR CITA
 # ============================================
@@ -154,9 +153,6 @@ def crear_cita(db: Session, cita_data: CitaCreate):
     db.refresh(nueva_cita)
 
     return nueva_cita
-=======
-
->>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
 
 # ============================================
 # EDITAR CITA
