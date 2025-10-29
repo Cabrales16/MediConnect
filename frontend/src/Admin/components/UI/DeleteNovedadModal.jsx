@@ -1,44 +1,79 @@
 import React, { useState } from "react";
-import { eliminarNovedad } from "../../../services/novedades";
+import { toast } from "react-toastify";
+import { cambiarRolUsuario } from "../../../services/usuarios";
 
-export default function DeleteNovedadModal({ idNovedad, onClose, onDeleted }) {
+export default function CambiarRolModal({ isOpen, onClose, onConfirm, user }) {
+  const [rol, setRol] = useState(user?.rol || "Paciente");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleConfirmDelete = async () => {
+  if (!isOpen || !user) return null; // ✅ evita abrir sin usuario
+
+  const handleConfirm = async () => {
     try {
       setLoading(true);
-      setError("");
-      await eliminarNovedad(idNovedad);
-      if (onDeleted) onDeleted();
+
+      // 🔹 Mapeo de roles a id_rol (según tu base de datos)
+      const rolesMap = {
+        Paciente: 1,
+        Médico: 2,
+        Administrador: 3,
+      };
+
+      // 🔹 Enviamos el campo id_rol (como lo espera tu backend)
+      const nuevoRol = {
+        id_rol: rolesMap[rol] || 1,
+      };
+
+      // ✅ aseguramos que user.id_usuario existe
+      const data = await cambiarRolUsuario(user.id_usuario, nuevoRol);
+
+      toast.success(`Rol cambiado exitosamente a ${rol}`);
+      if (onConfirm) onConfirm(data); // refrescar vista
       onClose();
-    } catch (err) {
-      console.error("Error al eliminar la novedad:", err);
-      setError("No se pudo eliminar la novedad. Inténtalo de nuevo.");
+    } catch (error) {
+      console.error("Error al cambiar el rol:", error);
+      toast.error(
+        error.response?.data?.detail ||
+          "No se pudo cambiar el rol del usuario"
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div className="bg-white/90 p-6 rounded-2xl w-full max-w-md shadow-xl text-center relative">
-        <h3 className="text-xl font-semibold mb-3 text-gray-800">
-          ¿Confirmas eliminar esta novedad?
-        </h3>
-        <p className="mb-5 text-gray-700">Esta acción no se puede deshacer.</p>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+      <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
+        <h2 className="text-lg font-semibold mb-4">
+          Cambiar rol de {user?.nombre}
+        </h2>
 
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+        <select
+          className="w-full border rounded px-3 py-2"
+          value={rol}
+          onChange={(e) => setRol(e.target.value)}
+        >
+          <option value="Paciente">Paciente</option>
+          <option value="Médico">Médico</option>
+          <option value="Administrador">Administrador</option>
+        </select>
 
-        <div className="flex justify-center gap-4">
+        <div className="flex justify-end gap-3 mt-6">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition"
+            className="px-4 py-2 rounded border hover:bg-gray-100"
             disabled={loading}
           >
             Cancelar
           </button>
           <button
+<<<<<<< HEAD
+            onClick={handleConfirm}
+            className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
+            disabled={loading}
+          >
+            {loading ? "Guardando..." : "Guardar"}
+=======
             onClick={handleConfirmDelete}
             className={`px-4 py-2 rounded-md bg-red-500 hover:bg-red-600 text-white transition ${
               loading ? "opacity-70 cursor-not-allowed" : ""
@@ -46,6 +81,7 @@ export default function DeleteNovedadModal({ idNovedad, onClose, onDeleted }) {
             disabled={loading}
           >
             {loading ? "Eliminando..." : "Eliminar"}
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
           </button>
         </div>
       </div>

@@ -25,7 +25,7 @@ duracion_especialidades = {
 # ============================================
 def validar_especialidad(db: Session, medico_id: int):
     # Buscar por la primary key de la tabla medico
-    medico = db.query(Medico).filter(Medico.id == medico_id).first()
+    medico = db.query(Medico).filter(Usuario.id_usuario == medico_id).first()
     if not medico:
         raise HTTPException(status_code=404, detail="Médico no encontrado")
     
@@ -48,7 +48,7 @@ def validar_horario(db: Session, id_medico: int, fecha, hora):
     dia_db = traduccion_dias[dia_semana]
 
     # CAMBIO CLAVE: Buscar el médico para obtener su id_usuario
-    medico = db.query(Medico).filter(Medico.id == id_medico).first()
+    medico = db.query(Medico).filter(Usuario.id_usuario == id_medico).first()
     if not medico:
         raise HTTPException(status_code=404, detail="Médico no encontrado")
     
@@ -113,7 +113,50 @@ def validar_disponibilidad_medico(db: Session, id_medico: int, fecha, hora, cita
             detail="El médico ya tiene una cita en esa fecha y hora"
         )
 
+<<<<<<< HEAD
+# ============================================
+# CREAR CITA
+# ============================================
+#  services/citas_service.py
+def crear_cita(db: Session, cita_data: CitaCreate):
+    paciente = db.query(Usuario).filter(Usuario.id_usuario == cita_data.id_paciente).first()
+    if not paciente:
+        raise HTTPException(status_code=404, detail="Paciente no encontrado")
 
+    medico = db.query(Medico).filter(Medico.id_medico == cita_data.id_medico).first()
+    if not medico:
+        raise HTTPException(status_code=404, detail="Médico no encontrado")
+
+    hospital = db.query(Hospital).filter(Hospital.id_hospital == cita_data.id_hospital).first()
+    if not hospital:
+        raise HTTPException(status_code=404, detail="Hospital no encontrado")
+
+    # Validaciones
+    validar_especialidad(db, medico.id_medico)
+    validar_horario(db, medico.id_medico, cita_data.fecha, cita_data.hora)
+    validar_disponibilidad_paciente(db, cita_data.id_paciente, cita_data.fecha, cita_data.hora)
+    validar_disponibilidad_medico(db, medico.id_medico, cita_data.fecha, cita_data.hora)
+
+    # Crear cita
+    nueva_cita = Cita(
+        id_paciente=cita_data.id_paciente,
+        id_medico=medico.id_medico,
+        id_medicacion=None,
+        id_hospital=cita_data.id_hospital,
+        id_info=1,
+        fecha=cita_data.fecha,
+        hora=cita_data.hora,
+        estado="programada",
+    )
+
+    db.add(nueva_cita)
+    db.commit()
+    db.refresh(nueva_cita)
+
+    return nueva_cita
+=======
+
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
 
 # ============================================
 # EDITAR CITA
@@ -238,7 +281,7 @@ def obtener_slots_disponibles(
         if slots_libres:
             resultado.append({
                 "medico": medico.id_medico,
-                "nombre": medico.medico.nombre,
+                "nombre": medico.usuario.nombre,
                 "hospital": medico.hospital.nombre if medico.hospital else None, 
                 "especialidad": medico.especialidad,
                 "slots_disponibles": slots_libres
@@ -303,7 +346,7 @@ def obtener_slots_disponibles_rango(
         if slots_en_rango:
             resultado.append({
                 "medico": medico.id_medico,
-                "nombre": medico.medico.nombre,
+                "nombre": medico.usuario.nombre,
                 "hospital": medico.hospital.nombre if medico.hospital else None, 
                 "especialidad": medico.especialidad,
                 "slots_disponibles": slots_en_rango

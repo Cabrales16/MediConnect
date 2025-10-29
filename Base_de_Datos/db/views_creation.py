@@ -73,7 +73,7 @@ def crear_vistas():
             med.calificacion AS calificacion_medico
         FROM cita c
         JOIN usuario p ON c.id_paciente = p.id_usuario          -- Paciente
-        JOIN medico med ON c.id_medico = med.id                 -- Medico
+        JOIN medico med ON c.id_medico = med.id_medico                 -- Medico
         JOIN usuario u ON med.id_medico = u.id_usuario;         -- Datos del médico (usuario)
 
         """

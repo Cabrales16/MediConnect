@@ -20,12 +20,28 @@ export default function ListaDoctores() {
   const [doctoresDisponibles, setDoctoresDisponibles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [citaData, setCitaData] = useState(null);
   const [initialSlotsProcessed, setInitialSlotsProcessed] = useState(false);
 
   const { slots, fecha, tipoCita, ubicacion, hora } = location.state || {};
   const memoSlots = useMemo(() => slots, [slots]);
 
   const transformarSlots = useMemo(() => {
+<<<<<<< HEAD
+    const formatearHora = (hora) => {
+      if (!hora) return "";
+      const [h, m] = hora.split(":");
+      let horas = parseInt(h, 10);
+      const minutos = m || "00";
+      const ampm = horas >= 12 ? "PM" : "AM";
+      horas = horas % 12 || 12;
+      return `${horas}:${minutos.padStart(2, "0")} ${ampm}`;
+    };
+
+    return (slotsData) => {
+      if (!Array.isArray(slotsData)) return [];
+
+=======
 
     const formatearHora = (hora) => {
       if (!hora) return "";
@@ -58,6 +74,7 @@ export default function ListaDoctores() {
         ];
       }
     
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
       const medicosMap = new Map();
       slotsData.forEach((slot) => {
         const medicoId = slot.medico || slot.id;
@@ -73,7 +90,11 @@ export default function ListaDoctores() {
             slots_disponibles: [],
           });
         }
+<<<<<<< HEAD
+
+=======
       
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
         if (slot.hora_inicio || slot.hora) {
           medicosMap
             .get(medicoId)
@@ -81,9 +102,13 @@ export default function ListaDoctores() {
         } else if (slot.slots_disponibles?.length > 0) {
           medicosMap
             .get(medicoId)
+<<<<<<< HEAD
+            .slots_disponibles.push(...slot.slots_disponibles.map(formatearHora));
+=======
             .slots_disponibles.push(
               ...slot.slots_disponibles.map(formatearHora)
             );
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
         }
       });
     
@@ -91,6 +116,13 @@ export default function ListaDoctores() {
     };
   }, []);
 
+<<<<<<< HEAD
+  useEffect(() => {
+    if (initialSlotsProcessed) {
+      setLoading(false);
+      return;
+    }
+=======
 
 
 
@@ -102,12 +134,24 @@ export default function ListaDoctores() {
     return;
   }
 
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
 
     if (Array.isArray(memoSlots) && memoSlots.length > 0) {
       const medicosFormateados = transformarSlots(memoSlots);
       if (medicosFormateados.length > 0) {
         setDoctoresDisponibles(medicosFormateados);
         setInitialSlotsProcessed(true);
+<<<<<<< HEAD
+      } else {
+        setError("No se encontraron médicos disponibles");
+      }
+      setLoading(false);
+    } else {
+      setError("No se encontraron médicos disponibles");
+      setLoading(false);
+    }
+  }, [memoSlots, transformarSlots, initialSlotsProcessed]);
+=======
         setLoading(false);
       } else {
         setError("No se encontraron médicos disponibles");
@@ -138,13 +182,16 @@ export default function ListaDoctores() {
         document.body.style.overflow = "";
       };
   }, []);
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
 
   const handleSelectDoctor = (doctor) => {
     setSelectedDoctor(doctor);
     setModalDoctorOpen(true);
   };
 
-  const handleAgendarCita = () => {
+  const handleConfirmCita = (payload) => {
+    // Guardar los datos de la cita construidos en ModalDoctores
+    setCitaData(payload);
     setModalDoctorOpen(false);
     setModalExitoOpen(true);
   };
@@ -178,7 +225,10 @@ export default function ListaDoctores() {
             key={doctor.id}
             className="flex flex-col sm:grid sm:grid-cols-[auto_1fr_auto] sm:items-center gap-4 py-4"
           >
+<<<<<<< HEAD
+=======
             {/* Imagen */}
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
             <div className="flex justify-center sm:justify-start">
               <img
                 src={doctor.image}
@@ -187,16 +237,24 @@ export default function ListaDoctores() {
                 onError={(e) => (e.target.src = "/default-doctor.jpg")}
               />
             </div>
+<<<<<<< HEAD
+
+=======
         
             {/* Info del doctor */}
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
             <div className="text-center sm:text-left">
               <p className="font-semibold text-lg">{doctor.name}</p>
               <p className="text-green-600 text-sm">{doctor.specialty}</p>
               {doctor.hospital && (
                 <p className="text-gray-500 text-xs">{doctor.hospital}</p>
               )}
+<<<<<<< HEAD
+
+=======
     
               {/* ⭐ Calificación */}
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
               <div className="flex justify-center sm:justify-start items-center mt-1">
                 {[...Array(5)].map((_, i) => (
                   <span
@@ -214,9 +272,14 @@ export default function ListaDoctores() {
                   {doctor.calificacion.toFixed(1)}
                 </span>
               </div>
+<<<<<<< HEAD
+
+              {doctor.slots_disponibles?.length > 0 ? (
+=======
               
               {/* 🕒 Horarios */}
               {doctor.slots_disponibles && doctor.slots_disponibles.length > 0 ? (
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
                 <p className="text-blue-600 text-xs mt-1">
                   Horarios disponibles: {doctor.slots_disponibles.join(", ")}
                 </p>
@@ -226,8 +289,12 @@ export default function ListaDoctores() {
                 </p>
               )}
             </div>
+<<<<<<< HEAD
+
+=======
             
             {/* Botón Seleccionar */}
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
             <div className="flex justify-center sm:justify-end">
               <button
                 onClick={() => handleSelectDoctor(doctor)}
@@ -261,7 +328,10 @@ export default function ListaDoctores() {
     <>
       <Breadcrumb items={breadcrumbItems} />
       <div className="flex h-[calc(100vh-9rem)]">
+<<<<<<< HEAD
+=======
         {/* Columna izquierda: lista de doctores */}
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
         <div className="w-full md:w-1/2 p-8 overflow-y-auto">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-semibold">Médicos disponibles</h2>
@@ -280,13 +350,22 @@ export default function ListaDoctores() {
             doctor={selectedDoctor}
             isOpen={modalDoctorOpen}
             onClose={() => setModalDoctorOpen(false)}
+<<<<<<< HEAD
+            onConfirm={handleConfirmCita}
+            citaBase={{ fecha, id_hospital: 1 }}
+=======
             onConfirm={handleAgendarCita}
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
           />
         )}
 
         <SucessModal
           open={modalExitoOpen}
           onClose={() => setModalExitoOpen(false)}
+<<<<<<< HEAD
+          citaData={citaData}
+=======
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
         />
       </div>
     </>

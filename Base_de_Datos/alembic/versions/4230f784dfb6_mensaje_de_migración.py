@@ -1,8 +1,14 @@
 """mensaje de migración
 
+<<<<<<<< HEAD:Base_de_Datos/alembic/versions/d96824d5bd2b_mensaje_de_migración.py
+Revision ID: d96824d5bd2b
+Revises: 
+Create Date: 2025-10-24 18:04:27.694910
+========
 Revision ID: 4230f784dfb6
 Revises: 
 Create Date: 2025-10-14 06:53:34.809247
+>>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165:Base_de_Datos/alembic/versions/4230f784dfb6_mensaje_de_migración.py
 
 """
 from typing import Sequence, Union
@@ -12,7 +18,11 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
+<<<<<<<< HEAD:Base_de_Datos/alembic/versions/d96824d5bd2b_mensaje_de_migración.py
+revision: str = 'd96824d5bd2b'
+========
 revision: str = '4230f784dfb6'
+>>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165:Base_de_Datos/alembic/versions/4230f784dfb6_mensaje_de_migración.py
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -29,19 +39,7 @@ def upgrade() -> None:
     sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
     sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('accion_por', sa.String(length=100), nullable=True),
     sa.PrimaryKeyConstraint('id_hospital')
-    )
-    op.create_table('Medicamento',
-    sa.Column('id_medicamento', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('nombre', sa.String(length=100), nullable=False),
-    sa.Column('presentacion', sa.String(length=100), nullable=False),
-    sa.Column('unidad_medida', sa.String(length=50), nullable=False),
-    sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('accion_por', sa.String(length=100), nullable=True),
-    sa.PrimaryKeyConstraint('id_medicamento')
     )
     op.create_table('Rol',
     sa.Column('id_rol', sa.Integer(), nullable=False),
@@ -81,6 +79,17 @@ def upgrade() -> None:
     )
     op.create_index(op.f('ix_Usuario_correo'), 'Usuario', ['correo'], unique=True)
     op.create_index(op.f('ix_Usuario_num_documento'), 'Usuario', ['num_documento'], unique=True)
+    op.create_table('CrearTerapia',
+    sa.Column('id_terapia', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('id_admin', sa.Integer(), nullable=False),
+    sa.Column('estado', sa.Enum('ACTIVA', 'FINALIZADA', 'CANCELADA', name='estadoterapia'), nullable=False),
+    sa.Column('archivo', sa.String(length=200), nullable=False),
+    sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
+    sa.ForeignKeyConstraint(['id_admin'], ['Usuario.id_usuario'], ),
+    sa.PrimaryKeyConstraint('id_terapia')
+    )
     op.create_table('Error_Tecnico',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('id_usuario', sa.Integer(), nullable=False),
@@ -89,7 +98,6 @@ def upgrade() -> None:
     sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
     sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('accion_por', sa.String(length=100), nullable=True),
     sa.ForeignKeyConstraint(['id_usuario'], ['Usuario.id_usuario'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -102,7 +110,6 @@ def upgrade() -> None:
     sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
     sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('accion_por', sa.String(length=100), nullable=True),
     sa.ForeignKeyConstraint(['id_info'], ['Tipo_Novedad.id_info'], ),
     sa.ForeignKeyConstraint(['id_paciente'], ['Usuario.id_usuario'], ),
     sa.PrimaryKeyConstraint('id_familiar')
@@ -116,9 +123,45 @@ def upgrade() -> None:
     sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
     sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('accion_por', sa.String(length=100), nullable=True),
     sa.ForeignKeyConstraint(['id_medico'], ['Usuario.id_usuario'], ),
     sa.PrimaryKeyConstraint('id_horario')
+    )
+    op.create_table('Medicamento',
+    sa.Column('id_medicamento', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('nombre', sa.String(length=100), nullable=False),
+    sa.Column('presentacion', sa.String(length=100), nullable=False),
+    sa.Column('unidad_medida', sa.String(length=50), nullable=False),
+    sa.Column('id_admin', sa.Integer(), nullable=True),
+    sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
+    sa.ForeignKeyConstraint(['id_admin'], ['Usuario.id_usuario'], ),
+    sa.PrimaryKeyConstraint('id_medicamento')
+    )
+    op.create_table('Medico',
+    sa.Column('id_medico', sa.Integer(), nullable=False),
+    sa.Column('especialidad', sa.Enum('CARDIOLOGIA', 'PEDIATRIA', 'TRAUMATOLOGIA', 'NEUROLOGIA', name='especialidadmedica'), nullable=True),
+    sa.Column('estudios', sa.String(length=100), nullable=True),
+    sa.Column('calificacion', sa.Float(), nullable=True),
+    sa.Column('id_hospital', sa.Integer(), nullable=True),
+    sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
+    sa.ForeignKeyConstraint(['id_hospital'], ['Hospital.id_hospital'], ),
+    sa.ForeignKeyConstraint(['id_medico'], ['Usuario.id_usuario'], ),
+    sa.PrimaryKeyConstraint('id_medico')
+    )
+    op.create_table('Novedad',
+    sa.Column('id_novedad', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('id_admin', sa.Integer(), nullable=True),
+    sa.Column('titulo', sa.String(length=60), nullable=False),
+    sa.Column('descripcion', sa.String(length=200), nullable=False),
+    sa.Column('src', sa.String(length=200), nullable=False),
+    sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
+    sa.ForeignKeyConstraint(['id_admin'], ['Usuario.id_usuario'], ),
+    sa.PrimaryKeyConstraint('id_novedad')
     )
     op.create_table('Medicacion',
     sa.Column('id_medicacion', sa.Integer(), autoincrement=True, nullable=False),
@@ -132,39 +175,35 @@ def upgrade() -> None:
     sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
     sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('accion_por', sa.String(length=100), nullable=True),
     sa.ForeignKeyConstraint(['id_medicamento'], ['Medicamento.id_medicamento'], ),
     sa.ForeignKeyConstraint(['id_medico'], ['Usuario.id_usuario'], ),
     sa.ForeignKeyConstraint(['id_paciente'], ['Usuario.id_usuario'], ),
     sa.PrimaryKeyConstraint('id_medicacion')
     )
+<<<<<<<< HEAD:Base_de_Datos/alembic/versions/d96824d5bd2b_mensaje_de_migración.py
+    op.create_table('Terapia',
+    sa.Column('id_terapia', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('id_CrearTerapia', sa.Integer(), nullable=False),
+    sa.Column('id_medico', sa.Integer(), nullable=False),
+    sa.Column('id_paciente', sa.Integer(), nullable=False),
+    sa.Column('estado', sa.Enum('ACTIVA', 'FINALIZADA', 'CANCELADA', name='estadoterapia'), nullable=False),
+    sa.Column('inicio', sa.Date(), nullable=False),
+    sa.Column('fin', sa.Date(), nullable=False),
+========
     op.create_table('Novedad',
     sa.Column('id_novedad', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('id_admin', sa.Integer(), nullable=True),
     sa.Column('titulo', sa.String(length=60), nullable=False),
     sa.Column('descripcion', sa.String(length=200), nullable=False),
     sa.Column('src', sa.String(length=200), nullable=False),
+>>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165:Base_de_Datos/alembic/versions/4230f784dfb6_mensaje_de_migración.py
     sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
     sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('accion_por', sa.String(length=100), nullable=True),
-    sa.ForeignKeyConstraint(['id_admin'], ['Usuario.id_usuario'], ),
-    sa.PrimaryKeyConstraint('id_novedad')
-    )
-    op.create_table('medico',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('id_medico', sa.Integer(), nullable=True),
-    sa.Column('especialidad', sa.Enum('CARDIOLOGIA', 'PEDIATRIA', 'TRAUMATOLOGIA', 'NEUROLOGIA', name='especialidadmedica'), nullable=True),
-    sa.Column('estudios', sa.String(length=100), nullable=True),
-    sa.Column('calificacion', sa.Float(), nullable=True),
-    sa.Column('id_hospital', sa.Integer(), nullable=True),
-    sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('accion_por', sa.String(length=100), nullable=True),
-    sa.ForeignKeyConstraint(['id_hospital'], ['Hospital.id_hospital'], ),
+    sa.ForeignKeyConstraint(['id_CrearTerapia'], ['CrearTerapia.id_terapia'], ),
     sa.ForeignKeyConstraint(['id_medico'], ['Usuario.id_usuario'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.ForeignKeyConstraint(['id_paciente'], ['Usuario.id_usuario'], ),
+    sa.PrimaryKeyConstraint('id_terapia')
     )
     op.create_table('Cita',
     sa.Column('id_cita', sa.Integer(), autoincrement=True, nullable=False),
@@ -181,14 +220,15 @@ def upgrade() -> None:
     sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
     sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('accion_por', sa.String(length=100), nullable=True),
     sa.ForeignKeyConstraint(['id_hospital'], ['Hospital.id_hospital'], ),
     sa.ForeignKeyConstraint(['id_info'], ['Tipo_Novedad.id_info'], ),
     sa.ForeignKeyConstraint(['id_medicacion'], ['Medicacion.id_medicacion'], ),
-    sa.ForeignKeyConstraint(['id_medico'], ['medico.id'], ),
+    sa.ForeignKeyConstraint(['id_medico'], ['Medico.id_medico'], ),
     sa.ForeignKeyConstraint(['id_paciente'], ['Usuario.id_usuario'], ),
     sa.PrimaryKeyConstraint('id_cita')
     )
+<<<<<<<< HEAD:Base_de_Datos/alembic/versions/d96824d5bd2b_mensaje_de_migración.py
+========
     op.create_table('Info_Novedad',
     sa.Column('id_info', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('id_admin', sa.Integer(), nullable=True),
@@ -204,6 +244,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['id_novedad'], ['Novedad.id_novedad'], ),
     sa.PrimaryKeyConstraint('id_info')
     )
+>>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165:Base_de_Datos/alembic/versions/4230f784dfb6_mensaje_de_migración.py
     op.create_table('Indicaciones',
     sa.Column('id_indicacion', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('id_paciente', sa.Integer(), nullable=False),
@@ -216,7 +257,6 @@ def upgrade() -> None:
     sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
     sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('accion_por', sa.String(length=100), nullable=True),
     sa.ForeignKeyConstraint(['id_cita'], ['Cita.id_cita'], ),
     sa.ForeignKeyConstraint(['id_medico'], ['Usuario.id_usuario'], ),
     sa.ForeignKeyConstraint(['id_paciente'], ['Usuario.id_usuario'], ),
@@ -229,19 +269,20 @@ def downgrade() -> None:
     """Downgrade schema."""
     # ### commands auto generated by Alembic - please adjust! ###
     op.drop_table('Indicaciones')
-    op.drop_table('Info_Novedad')
     op.drop_table('Cita')
-    op.drop_table('medico')
-    op.drop_table('Novedad')
+    op.drop_table('Terapia')
     op.drop_table('Medicacion')
+    op.drop_table('Novedad')
+    op.drop_table('Medico')
+    op.drop_table('Medicamento')
     op.drop_table('Horario')
     op.drop_table('Familiar')
     op.drop_table('Error_Tecnico')
+    op.drop_table('CrearTerapia')
     op.drop_index(op.f('ix_Usuario_num_documento'), table_name='Usuario')
     op.drop_index(op.f('ix_Usuario_correo'), table_name='Usuario')
     op.drop_table('Usuario')
     op.drop_table('Tipo_Novedad')
     op.drop_table('Rol')
-    op.drop_table('Medicamento')
     op.drop_table('Hospital')
     # ### end Alembic commands ###

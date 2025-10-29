@@ -3,6 +3,17 @@ import { CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { agendarCita } from "../../../../services/citasService";
 
+<<<<<<< HEAD
+export default function SucessModal({ open, onClose, citaData }) {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleConfirm = async () => {
+    setIsLoading(true);
+    try {
+      console.log("✅ Enviando cita al backend:", citaData);
+      await agendarCita(citaData);
+=======
 export default function ModalExito({ open, onClose, citaData }) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -14,6 +25,7 @@ export default function ModalExito({ open, onClose, citaData }) {
       // Llamar a la API para agendar la cita
       await agendarCita(citaData);
       // Redirigir a la vista de citas
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
       navigate("/paciente/citas");
     } catch (error) {
       console.error("Error al agendar la cita:", error);
@@ -38,14 +50,23 @@ export default function ModalExito({ open, onClose, citaData }) {
 
         <CheckCircle2 className="text-green-500 w-14 h-14 mx-auto" />
         <p className="mt-4 text-lg font-semibold text-gray-800">
-          ¡Cita de control agendada exitosamente!
+          ¡Cita agendada exitosamente!
         </p>
 
         <button
+<<<<<<< HEAD
+          onClick={handleConfirm}
+          disabled={isLoading}
+          className={`mt-6 ${
+            isLoading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-600 hover:bg-green-700"
+=======
           onClick={handleConfirm} // Agendar la cita y redirigir
           disabled={isLoading}
           className={`mt-6 ${
             isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
           } text-white font-semibold py-2 px-6 rounded-lg transition`}
         >
           {isLoading ? "Agendando..." : "De acuerdo"}
