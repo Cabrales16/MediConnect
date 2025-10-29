@@ -1,9 +1,6 @@
 import React from "react";
-import useLockBodyScroll from "../../../hooks/useLockBodyScroll";
 
 export default function ConfirmModal({ title, description, onCancel, onConfirm }) {
-  // Bloquea scroll mientras el modal esté montado
-  useLockBodyScroll(true);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">

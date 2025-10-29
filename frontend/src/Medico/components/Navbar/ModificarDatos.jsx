@@ -1,17 +1,16 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import agendarIcon from "./NavbarIcons/agendarIcon.png";
-import ModifcarDatosModal from "../UI/ModificarDatosModal.jsx";
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import agendarIcon from './NavbarIcons/agendarIcon.png'
+import ModifcarDatosModal from '../UI/ModificarDatosModal'
 
 export default function ModificarDatos() {
-  const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false)
+  const navigate = useNavigate()
 
   const handleConfirm = () => {
-    setIsOpen(false);
-    navigate("/medico/inicio", {
-    });
-  };
+    setIsOpen(false)
+    navigate('/medico/inicio', {})
+  }
 
   return (
     <>
@@ -23,7 +22,9 @@ export default function ModificarDatos() {
         <img src={agendarIcon} alt="Cita rápida" className="w-6 h-6" />
 
         {/* Texto solo visible en md+ */}
-        <span className="hidden md:inline whitespace-nowrap">Modificar datos</span>
+        <span className="hidden md:inline whitespace-nowrap">
+          Modificar datos
+        </span>
       </button>
 
       <ModifcarDatosModal
@@ -33,5 +34,5 @@ export default function ModificarDatos() {
         navigate={navigate}
       />
     </>
-  );
+  )
 }
