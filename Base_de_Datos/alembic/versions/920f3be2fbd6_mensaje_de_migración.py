@@ -1,14 +1,8 @@
 """mensaje de migración
 
-<<<<<<<< HEAD:Base_de_Datos/alembic/versions/d96824d5bd2b_mensaje_de_migración.py
-Revision ID: d96824d5bd2b
+Revision ID: 920f3be2fbd6
 Revises: 
-Create Date: 2025-10-24 18:04:27.694910
-========
-Revision ID: 4230f784dfb6
-Revises: 
-Create Date: 2025-10-14 06:53:34.809247
->>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165:Base_de_Datos/alembic/versions/4230f784dfb6_mensaje_de_migración.py
+Create Date: 2025-10-29 07:35:01.975407
 
 """
 from typing import Sequence, Union
@@ -18,11 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<<< HEAD:Base_de_Datos/alembic/versions/d96824d5bd2b_mensaje_de_migración.py
-revision: str = 'd96824d5bd2b'
-========
-revision: str = '4230f784dfb6'
->>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165:Base_de_Datos/alembic/versions/4230f784dfb6_mensaje_de_migración.py
+revision: str = '920f3be2fbd6'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -180,7 +170,6 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['id_paciente'], ['Usuario.id_usuario'], ),
     sa.PrimaryKeyConstraint('id_medicacion')
     )
-<<<<<<<< HEAD:Base_de_Datos/alembic/versions/d96824d5bd2b_mensaje_de_migración.py
     op.create_table('Terapia',
     sa.Column('id_terapia', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('id_CrearTerapia', sa.Integer(), nullable=False),
@@ -189,14 +178,6 @@ def upgrade() -> None:
     sa.Column('estado', sa.Enum('ACTIVA', 'FINALIZADA', 'CANCELADA', name='estadoterapia'), nullable=False),
     sa.Column('inicio', sa.Date(), nullable=False),
     sa.Column('fin', sa.Date(), nullable=False),
-========
-    op.create_table('Novedad',
-    sa.Column('id_novedad', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('id_admin', sa.Integer(), nullable=True),
-    sa.Column('titulo', sa.String(length=60), nullable=False),
-    sa.Column('descripcion', sa.String(length=200), nullable=False),
-    sa.Column('src', sa.String(length=200), nullable=False),
->>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165:Base_de_Datos/alembic/versions/4230f784dfb6_mensaje_de_migración.py
     sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
     sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
@@ -227,24 +208,6 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['id_paciente'], ['Usuario.id_usuario'], ),
     sa.PrimaryKeyConstraint('id_cita')
     )
-<<<<<<<< HEAD:Base_de_Datos/alembic/versions/d96824d5bd2b_mensaje_de_migración.py
-========
-    op.create_table('Info_Novedad',
-    sa.Column('id_info', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('id_admin', sa.Integer(), nullable=True),
-    sa.Column('id_novedad', sa.Integer(), nullable=True),
-    sa.Column('titulo', sa.String(length=60), nullable=False),
-    sa.Column('descripcion', sa.Text(), nullable=False),
-    sa.Column('src', sa.String(length=200), nullable=False),
-    sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('actualizado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('eliminado_en', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('accion_por', sa.String(length=100), nullable=True),
-    sa.ForeignKeyConstraint(['id_admin'], ['Usuario.id_usuario'], ),
-    sa.ForeignKeyConstraint(['id_novedad'], ['Novedad.id_novedad'], ),
-    sa.PrimaryKeyConstraint('id_info')
-    )
->>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165:Base_de_Datos/alembic/versions/4230f784dfb6_mensaje_de_migración.py
     op.create_table('Indicaciones',
     sa.Column('id_indicacion', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('id_paciente', sa.Integer(), nullable=False),
