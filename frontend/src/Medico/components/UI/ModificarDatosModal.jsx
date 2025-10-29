@@ -8,8 +8,6 @@ export default function ModificarDatosModal({ isOpen, onClose, onConfirm }) {
   const [estudios, setEstudios] = useState("");
   const [hospital, setHospital] = useState("");
 
-  // Bloquea scroll del fondo
-  useLockBodyScroll(isOpen);
   if (!isOpen) return null;
 
   // Obtén el id del usuario (guardado al iniciar sesión)

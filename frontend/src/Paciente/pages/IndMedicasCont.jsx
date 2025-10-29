@@ -1,30 +1,53 @@
-import React, { useState, useEffect } from "react";
-import Breadcrumb from "../components/UI/Breadcrumb";
+import React, { useState, useEffect } from 'react'
+import Breadcrumb from '../components/UI/Breadcrumb'
 /* Datos iniciales */
 const initialMeds = [
-  { id: 1, nombre: "Ibuprofeno", dosis: "200mg", frecuencia: "Cada 6 horas", duracion: "7 días", instrucciones: "Tomar con alimentos" },
-  { id: 2, nombre: "Amoxicilina", dosis: "500mg", frecuencia: "Cada 8 horas", duracion: "10 días", instrucciones: "Tomar con el estómago vacío" },
-];
+  {
+    id: 1,
+    nombre_del_medicamento: 'Ibuprofeno',
+    nombre_medico: '200mg',
+    dosis: 'Cada 6 horas',
+    estado: 'activo',
+    fecha_inicio: '10-08-2025',
+    fecha_fin: '20-08-2025',
+  },
+  {
+    id: 2,
+    nombre_del_medicamento: 'Amoxicilina',
+    nombre_medico: '500mg',
+    dosis: 'Cada 8 horas',
+    estado: 'activo',
+    fecha_inicio: '25-10-2025',
+    fecha_fin: '10-11-2025',
+  },
+]
 
 const initialTerapias = [
-  { id: 1, tipo: "Fisioterapia", frecuencia: "2 veces por semana", duracion: "4 semanas", objetivos: "Mejorar la movilidad" },
-];
+  {
+    id: 1,
+    nombre_medico: 'Fisioterapia',
+    estado: '2 veces por semana',
+    fecha_inicio: '4 semanas',
+    fecha_fin: 'Mejorar la movilidad',
+    PDF: 'terapia_fisioterapia.pdf',
+  },
+]
 
 export default function IndMedicasCont() {
   const breadcrumbItems = [
-    { label: "Inicio", href: "/paciente/inicio" },
-    { label: "Ind. médicas" },
-  ];
+    { label: 'Inicio', href: '/paciente/inicio' },
+    { label: 'Ind. médicas' },
+  ]
 
-  const [medicamentos] = useState(initialMeds);
-  const [terapiaList] = useState(initialTerapias);
+  const [medicamentos] = useState(initialMeds)
+  const [terapiaList] = useState(initialTerapias)
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden'
     return () => {
-      document.body.style.overflow = "";
-    };
-  }, []);
+      document.body.style.overflow = ''
+    }
+  }, [])
 
   return (
     <>
@@ -32,7 +55,10 @@ export default function IndMedicasCont() {
       <div className="overflow-y-auto h-[calc(100vh-9rem)]">
         <div className="p-8">
           <h2 className="text-2xl font-semibold mb-4">Indicaciones médicas</h2>
-          <p className="text-sm text-gray-600 mb-6">Aquí se muestran procedimientos relacionados contigo (medicamentos, terapias).</p>
+          <p className="text-sm text-gray-600 mb-6">
+            Aquí se muestran procedimientos relacionados contigo (medicamentos,
+            terapias).
+          </p>
 
           {/* Medicamentos */}
           <div className="mb-8">
@@ -45,27 +71,46 @@ export default function IndMedicasCont() {
                 <table className="min-w-full">
                   <thead>
                     <tr>
-                      <th className="px-6 py-3 text-left text-black">Nombre del medicamento</th>
-                      <th className="px-6 py-3 text-left text-black">Dosis</th>
-                      <th className="px-6 py-3 text-left text-black">Frecuencia</th>
-                      <th className="px-6 py-3 text-left text-black">Duración</th>
-                      <th className="px-6 py-3 text-left text-black">Instrucciones</th>
+                      <th className="px-6 py-3 text-left text-black">
+                        Nombre del medicamento
+                      </th>
+                      <th className="px-6 py-3 text-left text-black">Nombre medico</th>
+                      <th className="px-6 py-3 text-left text-black">
+                        Dosis
+                      </th>
+                      <th className="px-6 py-3 text-left text-black">
+                        Estado
+                      </th>
+                      <th className="px-6 py-3 text-left text-black">
+                        Fecha inicio
+                      </th>
+                      <th className="px-6 py-3 text-left text-black">Fecha fin</th>
                     </tr>
                   </thead>
                   <tbody>
                     {medicamentos.map((m) => (
                       <tr key={m.id} className="border-t border-gray-300">
-                        <td className="px-6 py-4 text-black">{m.nombre}</td>
+                        <td className="px-6 py-4 text-black">{m.nombre_del_medicamento}</td>
+                        <td className="px-6 py-4 text-green-700">{m.nombre_medico}</td>
                         <td className="px-6 py-4 text-green-700">{m.dosis}</td>
-                        <td className="px-6 py-4 text-green-700">{m.frecuencia}</td>
-                        <td className="px-6 py-4 text-green-700">{m.duracion}</td>
-                        <td className="px-6 py-4 text-green-700">{m.instrucciones}</td>
+                        <td className="px-6 py-4 text-green-700">
+                          {m.estado}
+                        </td>
+                        <td className="px-6 py-4 text-green-700">
+                          {m.fecha_inicio}
+                        </td>
+                        <td className="px-6 py-4 text-green-700">
+                          {m.fecha_fin}
+                        </td>
                       </tr>
                     ))}
 
                     {medicamentos.length === 0 && (
                       <tr>
-                        <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                        <td
+                          colSpan={6}
+                          className="px-6 py-8 text-center text-gray-500"
+                        >
                           No hay medicamentos.
                         </td>
                       </tr>
@@ -87,25 +132,38 @@ export default function IndMedicasCont() {
                 <table className="min-w-full">
                   <thead>
                     <tr>
-                      <th className="px-6 py-3 text-left text-black">Tipo de terapia</th>
-                      <th className="px-6 py-3 text-left text-black">Frecuencia</th>
-                      <th className="px-6 py-3 text-left text-black">Duración</th>
-                      <th className="px-6 py-3 text-left text-black">Objetivos</th>
+                      <th className="px-6 py-3 text-left text-black">
+                        Nombre medico
+                      </th>
+                      <th className="px-6 py-3 text-left text-black">Estado</th>
+                      <th className="px-6 py-3 text-left text-black">Fecha inicio</th>
+                      <th className="px-6 py-3 text-left text-black">Fecha fin</th>
+                      <th className="px-6 py-3 text-left text-black">PDF</th>
                     </tr>
                   </thead>
                   <tbody>
                     {terapiaList.map((t) => (
                       <tr key={t.id} className="border-t border-gray-300">
-                        <td className="px-6 py-4 text-black">{t.tipo}</td>
-                        <td className="px-6 py-4 text-green-700">{t.frecuencia}</td>
-                        <td className="px-6 py-4 text-green-700">{t.duracion}</td>
-                        <td className="px-6 py-4 text-green-700">{t.objetivos}</td>
+                        <td className="px-6 py-4 text-black">{t.nombre_medico}</td>
+                        <td className="px-6 py-4 text-green-700">
+                          {t.estado}
+                        </td>
+                        <td className="px-6 py-4 text-green-700">
+                          {t.fecha_inicio}
+                        </td>
+                        <td className="px-6 py-4 text-green-700">
+                          {t.fecha_fin}
+                        </td>
+                          <td className="px-6 py-4 text-black">{t.PDF}</td>
                       </tr>
                     ))}
 
                     {terapiaList.length === 0 && (
                       <tr>
-                        <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                        <td
+                          colSpan={5}
+                          className="px-6 py-8 text-center text-gray-500"
+                        >
                           No hay terapias.
                         </td>
                       </tr>
@@ -118,5 +176,5 @@ export default function IndMedicasCont() {
         </div>
       </div>
     </>
-  );
+  )
 }
