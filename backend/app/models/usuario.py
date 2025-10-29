@@ -1,10 +1,8 @@
 from app.db.database import Base
-from sqlalchemy import Column, Integer, String, Date, Boolean, DateTime, ForeignKey, Enum as SqlEnum, Float
+from sqlalchemy import Column, Integer, String, Date, Boolean, ForeignKey, DateTime, Enum as SqlEnum
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from enum import Enum as PyEnum
-from datetime import date
-
 
 # Enumeradores
 class TipoDocumento(PyEnum):
@@ -31,6 +29,7 @@ class EspecialidadMedica(PyEnum):
     NEUROLOGIA = "Neurología" 
     # ... otros omitidos por brevedad
 
+# Modelo Usuario
 class Usuario(Base):
     __tablename__ = "Usuario"
 
@@ -52,7 +51,7 @@ class Usuario(Base):
     intentos_fallidos = Column(Integer, default=0)
     bloqueado_hasta = Column(DateTime, nullable=True)
     confirmado = Column(Boolean, default=False)
-    token_confirmacion = Column(String, nullable=True, unique=True)
+    token_confirmacion = Column(String(255), nullable=True, unique=True)
     token_expira = Column(DateTime, nullable=True)
 
     
@@ -67,6 +66,9 @@ class Usuario(Base):
     medicamento_medico = relationship("Medicacion", back_populates="medico", foreign_keys="[Medicacion.id_medico]")
     horarios = relationship("Horario", back_populates="medico")
     errores_tecnicos = relationship("ErrorTecnico", back_populates="usuario")
-    medicos = relationship("Medico", back_populates="medico")
+    medicos = relationship("Medico", back_populates="usuario")
     novedades = relationship("Novedad", back_populates="admin")
-    info_novedades = relationship("Info_Novedad", back_populates="admin")
+    medicamentos = relationship("Medicamento", back_populates="admin")
+    terapias = relationship("CrearTerapia", back_populates="adminT")
+    medico_terapia = relationship("Terapia", back_populates="medico", foreign_keys="[Terapia.id_medico]")
+    paciente_terapia = relationship("Terapia", back_populates="paciente", foreign_keys="[Terapia.id_paciente]")

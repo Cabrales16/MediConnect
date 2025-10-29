@@ -11,5 +11,7 @@ class Medicamento(Base, AuditMixin):
     nombre = Column(String(100), nullable=False)
     presentacion = Column(String(100), nullable=False)
     unidad_medida = Column(String(50), nullable=False)
+    id_admin = Column(Integer, ForeignKey("Usuario.id_usuario"))
 
     medicaciones = relationship("Medicacion", back_populates="medicamento")
+    admin = relationship("Usuario", back_populates="medicamentos")

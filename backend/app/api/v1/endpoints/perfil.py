@@ -32,4 +32,3 @@ def actualizar_estado_usuario(id_usuario: int, nuevo_estado: EstadoUsuarioRespon
 
 
 
-

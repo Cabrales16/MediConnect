@@ -210,9 +210,9 @@ def agregar_familiares():
 
 def agregar_medicamentos():
     medicamentos = [
-        Medicamento(nombre="Paracetamol", presentacion="Tabletas", unidad_medida="500mg"),
-        Medicamento(nombre="Ibuprofeno", presentacion="Jarabe", unidad_medida="200mg/5ml"),
-        Medicamento(nombre="Amoxicilina", presentacion="Cápsulas", unidad_medida="250mg"),
+        Medicamento(nombre="Paracetamol", presentacion="Tabletas", unidad_medida="500mg", id_admin=8),
+        Medicamento(nombre="Ibuprofeno", presentacion="Jarabe", unidad_medida="200mg/5ml", id_admin=8),
+        Medicamento(nombre="Amoxicilina", presentacion="Cápsulas", unidad_medida="250mg", id_admin=8),
     ]
     session.add_all(medicamentos)
     session.commit()
