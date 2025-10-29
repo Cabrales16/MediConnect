@@ -11,8 +11,8 @@ export default function PlanillaTable({ mode = "por", porTomar = [], tomadas = [
         return "Programada";
       case "CANCELADA":
         return "Cancelada";
-      case "TOMADA":
-        return "Tomada";
+      case "COMPLETADA":
+        return "Completada";
       default:
         return estado;
     }

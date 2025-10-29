@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 
+<<<<<<< HEAD
 export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, citaBase }) {
+=======
+export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm }) {
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
   const [selectedSlot, setSelectedSlot] = useState("");
 
   useEffect(() => {
@@ -11,6 +15,7 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
 
   if (!isOpen || !doctor) return null;
 
+<<<<<<< HEAD
   // 🔁 Convierte "8:30 AM" → "08:30:00"
   const convertirHora24 = (hora12) => {
     if (!hora12) return null;
@@ -22,11 +27,14 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
     return `${String(h).padStart(2, "0")}:${minutos}:00`;
   };
 
+=======
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
   const handleConfirm = () => {
     if (!selectedSlot) {
       alert("Por favor, selecciona un horario");
       return;
     }
+<<<<<<< HEAD
 
     // 🧠 Obtener id_paciente del localStorage
     const id_paciente = localStorage.getItem("id_usuario");
@@ -43,6 +51,9 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
     console.log("📤 Enviando cita:", citaPayload);
 
     onConfirm(citaPayload);
+=======
+    onConfirm(selectedSlot);
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
   };
 
   return (
@@ -56,7 +67,11 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
           &times;
         </button>
 
+<<<<<<< HEAD
         {/* Info del doctor */}
+=======
+        {/* Info */}
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
         <div className="flex items-center gap-4">
           <img
             src={doctor.image || "/default-doctor.jpg"}
@@ -67,13 +82,18 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
           <div>
             <h3 className="text-lg font-bold text-gray-800">{doctor.name}</h3>
             <p className="text-green-600 font-medium">{doctor.specialty}</p>
+<<<<<<< HEAD
             {doctor.hospital && (
               <p className="text-gray-500 text-sm">{doctor.hospital}</p>
             )}
+=======
+            {doctor.hospital && <p className="text-gray-500 text-sm">{doctor.hospital}</p>}
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
           </div>
         </div>
 
         {doctor.estudios && <p className="mt-3 italic text-gray-600">{doctor.estudios}</p>}
+<<<<<<< HEAD
 
         {/* Calificación */}
         {doctor.calificacion && (
@@ -94,6 +114,22 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
             <p className="text-sm font-semibold text-gray-800 mb-2">
               Horarios disponibles:
             </p>
+=======
+        {doctor.calificacion && (
+          <div className="mt-2 flex items-center gap-2">
+            <span className="text-yellow-500 text-lg">
+              {"⭐".repeat(Math.floor(doctor.calificacion))}
+              {"☆".repeat(5 - Math.floor(doctor.calificacion))}
+            </span>
+            <span className="text-gray-700 text-sm">({doctor.calificacion.toFixed(1)}/5)</span>
+          </div>
+        )}
+
+        {/* Horarios */}
+        {doctor.slots_disponibles && doctor.slots_disponibles.length > 0 && (
+          <div className="mt-4">
+            <p className="text-sm font-semibold text-gray-800 mb-2">Horarios disponibles:</p>
+>>>>>>> 11c2d8c2e39bc4a4188bcde5d3b2d44e1b9bc165
             <div className="flex flex-wrap gap-2">
               {doctor.slots_disponibles.map((hora, index) => (
                 <button

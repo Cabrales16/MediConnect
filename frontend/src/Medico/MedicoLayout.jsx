@@ -33,6 +33,9 @@ export default function MedicoLayout() {
           aria-hidden={sidebarOpen ? "true" : "false"}
         >
           <Routes>
+            {/* Ruta exacta para /paciente */}
+            <Route index element={<InicioCont />} />
+            
             <Route path="/" element={<Navigate to="inicio" replace />} />
             <Route path="inicio" element={<InicioCont />} />
             <Route path="/inicio/:id" element={<NovedadDetalle />} />

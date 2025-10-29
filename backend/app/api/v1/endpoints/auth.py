@@ -6,7 +6,7 @@ from app.schemas.usuario import ForgotPasswordRequest, ResetPasswordRequest
 from app.services.auth_service import register_user, login_user
 from app.services.auth_service import enviar_correo_recuperacion, restablecer_contrasena, confirmar_usuario_service
 from app.core.sanitizer import sanitize_dict, sanitize_text
-router = APIRouter(prefix="/auth", tags=["Autenticación"])
+router =   APIRouter(prefix="/auth", tags=["Autenticación"])
 
 
 @router.post("/register", response_model=Token)

@@ -65,7 +65,7 @@ def confirmar_usuario_service(token: str, db: Session):
     usuario.token_confirmacion = None
     usuario.token_expira = None
 
-    db.add(usuario)   # <-- esto asegura que SQLAlchemy lo marque como modificado
+    db.add(usuario)   #esto asegura que SQLAlchemy lo marque como modificado
     db.commit()
     db.refresh(usuario)
 
@@ -96,6 +96,13 @@ def login_user(credentials, db: Session):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Tu cuenta no está activa."
+        )
+    
+    # 🚫 Nueva validación: usuario suspendido
+    if hasattr(user, "estado") and user.estado.value.lower() == "suspendido":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Tu cuenta está suspendida. Comunícate con el administrador."
         )
 
     # Validar bloqueo temporal

@@ -47,6 +47,7 @@ export default function PlanillaCont() {
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
+      <div className="text-2xl font-semibold pl-8 pt-8">Planilla</div>
       <div className="pb-30 overflow-y-auto sm:overflow-y-visible h-[100vh]">
         <div className="p-8">
         {/* Tabs */}

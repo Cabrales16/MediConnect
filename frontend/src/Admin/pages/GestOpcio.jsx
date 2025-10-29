@@ -105,10 +105,8 @@ export default function GestOpcioCont() {
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
-      <div className="pb-30 overflow-y-auto sm:overflow-y-visible h-[100vh]">
-        <h2 className="text-2xl font-semibold mb-4">
-          Gestión de Opciones de Usuario
-        </h2>
+      <div className="p-8 overflow-y-auto h-[calc(100vh-9rem)]">
+        <h2 className="text-2xl font-semibold mb-4">Gestión de Opciones de Usuario</h2>
         <p className="text-sm text-gray-600 mb-6">
           Aquí se muestran procedimientos relacionados contigo (medicamentos y terapias).
         </p>

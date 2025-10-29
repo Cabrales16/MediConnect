@@ -31,17 +31,7 @@ def obtener_cita_detalle(id_cita: int, db: Session = Depends(get_db)):
     """
     return obtener_cita(db, id_cita)
 
-# OBTENER CITAS
 
-@router.post("/agendar", response_model=CitaResponseA)
-def agendar_cita(cita: CitaCreate, db: Session = Depends(get_db)):
-    """
-    Agendar una nueva cita.
-    - Valida que el paciente no tenga otra cita en la misma fecha y hora.
-    - Valida que el médico no tenga otra cita en la misma fecha y hora.
-    - Valida especialidad y horario del médico.
-    """
-    return citas_service.crear_cita(db, cita)
 
 
 # EDITAR CITA
@@ -91,3 +81,7 @@ def slots_disponibles_rango(
     )
 
 
+
+@router.post("/agendar", response_model=CitaCreate)
+def crear_cita(cita: CitaCreate, db: Session = Depends(get_db)):
+    return citas_service.agendar_cita(db=db, cita=cita)

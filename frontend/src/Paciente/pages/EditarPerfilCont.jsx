@@ -75,7 +75,7 @@ export default function EditarPerfilCont() {
     <>
       <Breadcrumb items={breadcrumbItems} />
 
-      <div className="pb-30 overflow-y-auto sm:overflow-y-visible h-[100vh]">
+      <div className="overflow-y-auto h-[calc(100vh-9rem)]">
         <div className="p-8">
           <h2 className="text-2xl font-semibold mb-2">Editar perfil</h2>
           <p className="text-sm text-gray-600 mb-6">
