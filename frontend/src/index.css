@@ -1,0 +1,8 @@
+@import "tailwindcss"; 
+ 
+/* (Opcional) Personaliza tokens con v4: 
+@theme { 
+  --color-brand: #4f46e5; 
+  --spacing-xxs: 0.25rem; 
+} 
+*/
