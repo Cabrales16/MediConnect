@@ -40,7 +40,7 @@ export default function GestUsua() {
     <>
       <Breadcrumb items={breadcrumbItems} />
 
-      <div className="pb-30 overflow-y-auto sm:overflow-y-visible h-[100vh]">
+      <div className="p-8 overflow-y-auto h-[calc(100vh-9rem)]">
         <h2 className="text-2xl font-semibold mb-6">Gestión de Usuarios</h2>
 
         {/* Tabs */}

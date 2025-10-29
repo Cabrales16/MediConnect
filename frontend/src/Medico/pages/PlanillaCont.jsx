@@ -132,8 +132,8 @@ export default function PlanillaCont() {
           </button>
         </div>
 
-        {/* Main layout: table (left) and details panel (right) */}
-        <div className="flex gap-8">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Tabla (izquierda) */}
           <div className="flex-1">
             <div className="bg-white rounded-2xl shadow-md p-4">
               <PlanillaTable
@@ -145,8 +145,8 @@ export default function PlanillaCont() {
             </div>
           </div>
 
-          {/* Panel derecho: si se seleccionó una cita */}
-          <div className="w-1/2">
+          {/* Panel derecho */}
+          <div className="w-full md:w-1/2 mt-4 md:mt-0">
             {selectedCita ? (
               <CitaDetails
                 cita={selectedCita}
@@ -154,7 +154,7 @@ export default function PlanillaCont() {
                 onClose={() => setSelectedCita(null)}
               />
             ) : (
-              <div className="h-full rounded-2xl border border-dashed border-gray-200 flex items-center justify-center text-gray-400">
+              <div className="h-full rounded-2xl border border-dashed border-gray-200 flex items-center justify-center text-gray-400 p-4">
                 Selecciona "Ver detalles" en una cita para ver más información
               </div>
             )}

@@ -108,6 +108,7 @@ export default function GestNovedCont() {
     }
   };
 
+
   useEffect(() => {
     document.body.style.overflow =
       isAddModalOpen || isEditModalOpen || isDeleteModalOpen ? "hidden" : "";
