@@ -1,37 +1,44 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import agendarIcon from "./NavbarIcons/agendarIcon.png";
-import ModifcarDatosModal from "../UI/ModificarDatosModal.jsx";
+import ModificarDatosModal from "../UI/ModificarDatosModal";
 
 export default function ModificarDatos() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleConfirm = () => {
+    // Cierra el modal y redirige al home del médico
     setIsOpen(false);
-    navigate("/medico/inicio", {
-    });
+    navigate("/medico/inicio");
   };
 
   return (
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-3 py-2 rounded-md bg-green-500 text-white font-medium shadow-sm hover:bg-green-600 transition"
+        className="flex items-center gap-2 px-3 py-2 rounded-md bg-green-500 text-white font-medium shadow-sm hover:bg-green-600"
       >
-        {/* Icono siempre visible */}
-        <img src={agendarIcon} alt="Cita rápida" className="w-6 h-6" />
+        {/* Icono visible siempre */}
+        <img
+          src={agendarIcon}
+          alt="Modificar datos"
+          className="w-6 h-6"
+        />
 
-        {/* Texto solo visible en md+ */}
-        <span className="hidden md:inline whitespace-nowrap">Modificar datos</span>
+        {/* Texto visible solo en pantallas medianas o mayores */}
+        <span className="hidden md:inline whitespace-nowrap">
+          Modificar datos
+        </span>
       </button>
 
-      <ModifcarDatosModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        onConfirm={handleConfirm}
-        navigate={navigate}
-      />
+      {isOpen && (
+        <ModificarDatosModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          onConfirm={handleConfirm}
+        />
+      )}
     </>
   );
 }
