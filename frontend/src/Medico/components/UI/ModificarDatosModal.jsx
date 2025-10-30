@@ -1,45 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import { completarPerfilMedico } from '../../../services/medico'
 
-import { toast } from "react-toastify";
-import { completarPerfilMedico } from "../../../services/medico";
-
-export default function ModificarDatosModal({ isOpen, onClose, onConfirm }) {
-  const [especialidad, setEspecialidad] = useState("");
-  const [estudios, setEstudios] = useState("");
-  const [hospital, setHospital] = useState("");
-
-  if (!isOpen) return null;
+export default function ModificarDatosModal({ onClose, onConfirm }) {
+  const [especialidad, setEspecialidad] = useState('')
+  const [estudios, setEstudios] = useState('')
+  const [hospital, setHospital] = useState('')
 
   // Obtén el id del usuario (guardado al iniciar sesión)
-  const idAdmin = localStorage.getItem("id_usuario");
+  const idAdmin = localStorage.getItem('id_usuario')
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose?.()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [onClose])
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!especialidad || !estudios || !hospital) {
-      toast.error("Por favor, completa todos los campos antes de confirmar.");
-      return;
+      toast.error('Por favor, completa todos los campos antes de confirmar.')
+      return
     }
 
     const formData = {
       especialidad,
       estudios,
       id_hospital: Number(hospital),
-    };
+    }
 
     try {
-      await completarPerfilMedico(idAdmin, formData);
-      toast.success("Perfil de médico completado con éxito.");
-      onConfirm?.(); // opcional
-      onClose?.();
+      await completarPerfilMedico(idAdmin, formData)
+      toast.success('Perfil de médico completado con éxito.')
+      onConfirm?.()
+      onClose?.()
     } catch (error) {
-      console.error("Error al completar el perfil del médico:", error);
-      toast.error("No se pudo completar el perfil. Revisa la consola.");
+      console.error('Error al completar el perfil del médico:', error)
+      toast.error('No se pudo completar el perfil. Revisa la consola.')
     }
-  };
+  }
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <div
+      className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+      onClick={(e) => {
+        // cerrar si haces click en el overlay (fuera del contenido)
+        if (e.target === e.currentTarget) onClose?.()
+      }}
+    >
       <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-lg overflow-y-auto max-h-[90vh]">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           ¡Ahora eres un Médico!
@@ -49,7 +60,6 @@ export default function ModificarDatosModal({ isOpen, onClose, onConfirm }) {
         </p>
 
         <form onSubmit={handleSubmit}>
-          {/* Especialidad */}
           <label className="block mb-2 font-medium">Especialidad</label>
           <select
             value={especialidad}
@@ -73,7 +83,6 @@ export default function ModificarDatosModal({ isOpen, onClose, onConfirm }) {
             <option value="MedicinaFamiliar">Medicina Familiar</option>
           </select>
 
-          {/* Estudios */}
           <label className="block mb-2 font-medium">Estudios</label>
           <input
             type="text"
@@ -83,7 +92,6 @@ export default function ModificarDatosModal({ isOpen, onClose, onConfirm }) {
             className="w-full border rounded-lg p-2 mb-4"
           />
 
-          {/* Hospital */}
           <label className="block mb-2 font-medium">Hospital</label>
           <select
             value={hospital}
@@ -100,7 +108,6 @@ export default function ModificarDatosModal({ isOpen, onClose, onConfirm }) {
             <option value="5">Clínica del Country</option>
           </select>
 
-          {/* Botones */}
           <div className="flex justify-end gap-3 mt-4">
             <button
               type="button"
@@ -119,5 +126,5 @@ export default function ModificarDatosModal({ isOpen, onClose, onConfirm }) {
         </form>
       </div>
     </div>
-  );
+  )
 }
