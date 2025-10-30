@@ -11,6 +11,7 @@ export default function InicioCont() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
+  // Cargar novedades desde el servicio
   useEffect(() => {
     const fetchNovedades = async () => {
       try {
@@ -35,13 +36,6 @@ export default function InicioCont() {
       setCurrentPage(page);
     }
   };
-
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, []);
 
   if (loading) {
     return <div className="p-8">Cargando novedades...</div>;
