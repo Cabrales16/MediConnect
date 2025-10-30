@@ -16,29 +16,36 @@ export default function MedicoLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      {/* Navbar: le pasamos toggle para abrir/cerrar en móvil */}
+    <div className="min-h-screen flex flex-col bg-white">
+      {/* Navbar con botón hamburguesa */}
       <header className="w-full">
-        <Navbar onToggleSidebar={() => setSidebarOpen((s) => !s)} />
+        <Navbar onToggleSidebar={() => setSidebarOpen((prev) => !prev)} />
       </header>
 
-      <div className="flex flex-1">
-        {/* Sidebar: en móvil será overlay basado en sidebarOpen */}
+      <div className="flex flex-1 relative">
+        {/* Sidebar */}
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-        {/* Main area */}
+        {/* Fondo oscuro cuando el sidebar está abierto en móvil */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-40 z-30 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          ></div>
+        )}
+
+        {/* Contenido principal */}
         <main
-          className="flex-1 p-4 md:p-6 overflow-auto"
-          // cuando el sidebar overlay está abierto en móvil, podría evitar interacción con main
+          className={`flex-1 p-4 md:p-6 overflow-auto transition-all duration-200 ${
+            sidebarOpen ? "pointer-events-none md:pointer-events-auto" : ""
+          }`}
           aria-hidden={sidebarOpen ? "true" : "false"}
         >
           <Routes>
-            {/* Ruta exacta para /paciente */}
             <Route index element={<InicioCont />} />
-            
             <Route path="/" element={<Navigate to="inicio" replace />} />
             <Route path="inicio" element={<InicioCont />} />
-            <Route path="/inicio/:id" element={<NovedadDetalle />} />
+            <Route path="inicio/:id" element={<NovedadDetalle />} />
             <Route path="planilla" element={<PlanillaCont />} />
             <Route path="faq" element={<FaqCont />} />
             <Route path="configuracion" element={<ConfigCont />} />
@@ -48,6 +55,8 @@ export default function MedicoLayout() {
           </Routes>
         </main>
       </div>
+
+      {/* Notificaciones */}
       <ToastContainer position="bottom-left" autoClose={3000} />
     </div>
   );
