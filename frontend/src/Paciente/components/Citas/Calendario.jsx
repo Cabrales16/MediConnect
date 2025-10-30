@@ -28,6 +28,8 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
       days.push(dayjs(d));
     }
 
+    const today = dayjs();
+
     return (
       <div className="w-80 pt-5">
         <h3 className="text-center font-semibold mb-3 text-xl capitalize">
@@ -43,6 +45,8 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
             const isCurrentMonth = d.month() === month.month() && d.year() === month.year();
             const isSelected =
               normalizedSelected && normalizedSelected.isSame(d, "day") && isCurrentMonth;
+            const isPastDay = d.isBefore(today, "day");
+
             return (
               <button
                 key={d.format("YYYY-MM-DD")}
@@ -50,11 +54,13 @@ export default function Calendario({ selectedDate, setSelectedDate }) {
                   isSelected
                     ? "bg-green-500 text-white"
                     : isCurrentMonth
-                    ? "hover:bg-green-100"
+                    ? isPastDay
+                      ? "text-gray-400 cursor-not-allowed"
+                      : "hover:bg-green-100"
                     : "text-gray-400"
                 }`}
-                onClick={() => setSelectedDate(d)}
-                disabled={!isCurrentMonth}
+                onClick={() => !isPastDay && setSelectedDate(d)}
+                disabled={!isCurrentMonth || isPastDay}
               >
                 {d.date()}
               </button>
