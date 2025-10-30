@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import ActionModal from "../UI/ActionModal";
-import { FaNotesMedical } from 'react-icons/fa';
-import { FaSuitcaseMedical } from 'react-icons/fa6';
-import { RiPsychotherapyFill } from 'react-icons/ri';
+import { FaExclamationTriangle } from 'react-icons/fa';
+import { CgPill } from 'react-icons/cg';
+import { FaHeadSideVirus } from 'react-icons/fa';
+import { MdNoteAlt } from 'react-icons/md';
 import { FaCalendarCheck } from 'react-icons/fa';
 
 export default function CitaDetails({ cita, mode = "por", onClose }) {
@@ -52,27 +53,33 @@ export default function CitaDetails({ cita, mode = "por", onClose }) {
               <div className="flex flex-wrap gap-2 mt-4">
                 <button
                   onClick={() => handleAction("nota")}
-                  className="px-4 py-2 bg-green-500 text-white hover:bg-green-600 rounded flex items-center justify-center"
+                  className="px-3 py-3 bg-green-500 text-white hover:bg-green-600 rounded flex items-center justify-center"
                 >
-                  <FaNotesMedical />
+                  <FaExclamationTriangle />
                 </button>
                 <button
                   onClick={() => handleAction("medicamento")}
-                  className="px-4 py-2 bg-green-500 text-white hover:bg-green-600 rounded flex items-center justify-center"
+                  className="px-3 py-3 bg-green-500 text-white hover:bg-green-600 rounded flex items-center justify-center"
                 >
-                  <FaSuitcaseMedical />
+                  <CgPill />
                 </button>
                 <button
                   onClick={() => handleAction("terapia")}
-                  className="px-4 py-2 bg-green-500 text-white hover:bg-green-600 rounded flex items-center justify-center"
+                  className="px-3 py-2 bg-green-500 text-white hover:bg-green-600 rounded flex items-center justify-center"
                 >
-                  <RiPsychotherapyFill />
+                  <FaHeadSideVirus />
+                </button>
+                <button
+                  onClick={() => handleAction("indicacion")}
+                  className="px-3 py-3 bg-green-500 text-white hover:bg-green-600 rounded flex items-center justify-center"
+                >
+                  <MdNoteAlt />
                 </button>
                 <button
                   onClick={() => handleAction("finalizar")}
-                  className="px-4 py-2 bg-green-500 text-white hover:bg-green-600 rounded flex items-center justify-center"
+                  className="px-14 py-3 bg-green-500 text-white hover:bg-green-600 rounded flex items-center justify-center"
                 >
-                  <FaCalendarCheck />
+                  <FaCalendarCheck />Finalizar
                 </button>
               </div>
             )}
