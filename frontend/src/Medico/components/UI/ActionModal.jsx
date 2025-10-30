@@ -6,9 +6,11 @@ export default function ActionModal({ type, onClose, onSubmit }) {
   const [presentacion, setPresentacion] = useState('')
   const [unidad, setUnidad] = useState('')
   const [terapia, setTerapia] = useState('')
+  const [fechaInicio, setFechaInicio] = useState('')
+  const [fechaFin, setFechaFin] = useState('')
 
   const handleSubmit = () => {
-    onSubmit({ nota, medicamento, presentacion, unidad, terapia })
+    onSubmit({ nota, medicamento, presentacion, unidad, terapia, fechaInicio, fechaFin })
     onClose()
   }
 
@@ -20,6 +22,7 @@ export default function ActionModal({ type, onClose, onSubmit }) {
           {type === 'medicamento' && 'Añadir Medicamento'}
           {type === 'terapia' && 'Añadir Terapia'}
           {type === 'finalizar' && 'Finalizar Cita'}
+           {type === 'indicacion' && 'Añadir Indicacion'}
         </h3>
 
         {type === 'nota' && (
@@ -27,7 +30,7 @@ export default function ActionModal({ type, onClose, onSubmit }) {
             value={nota}
             onChange={(e) => setNota(e.target.value)}
             className="w-full border rounded p-2"
-            placeholder="Escribe la nota del médico"
+            placeholder="Escribe la emergencia"
           />
         )}
 
@@ -42,6 +45,7 @@ export default function ActionModal({ type, onClose, onSubmit }) {
               <option value="Ibuprofeno">Ibuprofeno</option>
               <option value="Paracetamol">Paracetamol</option>
             </select>
+
             <select
               value={presentacion}
               onChange={(e) => setPresentacion(e.target.value)}
@@ -51,6 +55,7 @@ export default function ActionModal({ type, onClose, onSubmit }) {
               <option value="Pastilla">Pastilla</option>
               <option value="Jarabe">Jarabe</option>
             </select>
+
             <select
               value={unidad}
               onChange={(e) => setUnidad(e.target.value)}
@@ -61,22 +66,31 @@ export default function ActionModal({ type, onClose, onSubmit }) {
               <option value="ml">ml</option>
             </select>
 
-             <select
-              value={unidad}
-              onChange={(e) => setUnidad(e.target.value)}
-              className="w-full mb-2 border rounded p-2"
-            >
-              <option value="">Selecciona fecha inicio</option>
-            </select>
-             <select
-              value={unidad}
-              onChange={(e) => setUnidad(e.target.value)}
-              className="w-full mb-2 border rounded p-2"
-            >
-              <option value="">Selecciona fecha fin</option>
-            </select>
+            {/*  Campo para la fecha fin */}
+            <div className="mb-2">
+              <label className="block text-sm font-medium mb-1">
+                Selecciona fecha inicio
+              </label>
+              <input
+                type="date"
+                value={fechaInicio}
+                onChange={(e) => setFechaInicio(e.target.value)}
+                className="w-full border rounded p-2"
+              />
+            </div>
 
-            
+            {/* Campo para la fecha fin */}
+            <div className="mb-2">
+              <label className="block text-sm font-medium mb-1">
+                Selecciona fecha fin
+              </label>
+              <input
+                type="date"
+                value={fechaFin}
+                onChange={(e) => setFechaFin(e.target.value)}
+                className="w-full border rounded p-2"
+              />
+            </div>
           </>
         )}
 
@@ -91,7 +105,42 @@ export default function ActionModal({ type, onClose, onSubmit }) {
               <option value="Fisioterapia">Fisioterapia</option>
               <option value="Terapia ocupacional">Terapia ocupacional</option>
             </select>
+
+             {/*  Campo para la fecha fin */}
+            <div className="mb-2">
+              <label className="block text-sm font-medium mb-1">
+                Selecciona fecha inicio
+              </label>
+              <input
+                type="date"
+                value={fechaInicio}
+                onChange={(e) => setFechaInicio(e.target.value)}
+                className="w-full border rounded p-2"
+              />
+            </div>
+
+            {/* Campo para la fecha fin */}
+            <div className="mb-2">
+              <label className="block text-sm font-medium mb-1">
+                Selecciona fecha fin
+              </label>
+              <input
+                type="date"
+                value={fechaFin}
+                onChange={(e) => setFechaFin(e.target.value)}
+                className="w-full border rounded p-2"
+              />
+            </div>
           </>
+        )}
+
+        {type === 'indicacion' && (
+          <textarea
+            value={nota}
+            onChange={(e) => setNota(e.target.value)}
+            className="w-full border rounded p-2"
+            placeholder="Escribe la indicacion para el paciente"
+          />
         )}
 
         {type === 'finalizar' && <p>¿Seguro que deseas finalizar la cita?</p>}
