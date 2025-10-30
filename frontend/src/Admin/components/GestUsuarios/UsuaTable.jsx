@@ -1,7 +1,22 @@
 import React from "react";
 
-export default function UsuaTable({ mode = "pacientes", pacientes = [], medicos = [], onViewDetails }) {
-  const rows = mode === "pacientes" ? pacientes : medicos;
+export default function UsuaTable({
+  mode = "pacientes",
+  pacientes = [],
+  medicos = [],
+  usuarios = [],
+  onViewDetails,
+}) {
+  let rows = [];
+
+  // 🔹 Selección de lista según el modo
+  if (mode === "pacientes") {
+    rows = pacientes;
+  } else if (mode === "medicos") {
+    rows = medicos;
+  } else {
+    rows = usuarios; // ✅ Mostrar todos
+  }
 
   return (
     <div className="overflow-auto">
@@ -10,18 +25,21 @@ export default function UsuaTable({ mode = "pacientes", pacientes = [], medicos 
           <tr className="text-left border-b border-gray-300">
             <th className="px-6 py-3 font-semibold text-gray-700">Nombre</th>
             <th className="px-6 py-3 font-semibold text-gray-700">Apellidos</th>
-            <th className="px-6 py-3 font-semibold text-gray-700">Tipo de doc.</th>
-            <th className="px-6 py-3 font-semibold text-gray-700">N° de doc.</th>
+            <th className="px-6 py-3 font-semibold text-gray-700">Correo</th>
+            <th className="px-6 py-3 font-semibold text-gray-700">Teléfono</th>
             <th className="px-6 py-3 font-semibold text-gray-700">Acción</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.id} className="border-t border-gray-200 hover:bg-green-50 transition">
+            <tr
+              key={r.id_usuario}
+              className="border-t border-gray-200 hover:bg-green-50 transition"
+            >
               <td className="px-6 py-3">{r.nombre}</td>
               <td className="px-6 py-3">{r.apellido}</td>
-              <td className="px-6 py-3">{r.tipo_documento}</td>
-              <td className="px-6 py-3">{r.num_documento}</td>
+              <td className="px-6 py-3">{r.correo}</td>
+              <td className="px-6 py-3">{r.telefono}</td>
               <td className="px-6 py-3">
                 <button
                   className="text-green-600 hover:underline"
@@ -32,6 +50,7 @@ export default function UsuaTable({ mode = "pacientes", pacientes = [], medicos 
               </td>
             </tr>
           ))}
+
           {rows.length === 0 && (
             <tr>
               <td colSpan={5} className="px-6 py-8 text-center text-gray-400">
