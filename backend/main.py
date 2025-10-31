@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api.v1.endpoints import auth, horarios, historial, error, perfil, familiar,  perfilUsua, citas, novedad, medico, medicamentos
+from app.api.v1.endpoints import auth, horarios, historial, error, perfil, familiar,  perfilUsua, citas, novedad, medico, medicamentos, terapia
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
@@ -15,6 +15,7 @@ app.include_router(citas.router)
 app.include_router(novedad.router)
 app.include_router(medico.router)
 app.include_router(medicamentos.router)
+app.include_router(terapia.router)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 #habilitado para permitir que el frontend (que corre en otro puerto, normalmente 5173) pueda acceder.
