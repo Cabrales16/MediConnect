@@ -16,7 +16,6 @@ import ListaDoctores from "./components/Citas/MedicosDisponibles/ListaDoctores"
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Componente para manejar rutas no encontradas
 function NotFound() {
   return (
     <div className="text-center py-12">
@@ -38,23 +37,18 @@ export default function PacienteLayout() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
 
-      {/* Navbar: le pasamos toggle para abrir/cerrar en móvil */}
       <header className="w-full">
         <Navbar onToggleSidebar={() => setSidebarOpen((s) => !s)} />
       </header>
 
       <div className="flex flex-1">
-        {/* Sidebar: en móvil será overlay basado en sidebarOpen */}
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-        {/* Main area */}
         <main
           className="flex-1 p-4 md:p-6 overflow-auto"
-          // cuando el sidebar overlay está abierto en móvil, podría evitar interacción con main
           aria-hidden={sidebarOpen ? "true" : "false"}
         >
           <Routes>
-            {/* Ruta exacta para /paciente */}
             <Route index element={<InicioCont />} />
             
             {/* Rutas específicas */}
@@ -70,7 +64,6 @@ export default function PacienteLayout() {
             <Route path="perfil" element={<PerfilCont />} />
             <Route path="perfil/editar" element={<EditarPerfilCont />} />
             
-            {/* Página 404 sin Navigate para evitar bucles */}
             <Route path="*" element={<NotFound />} />
           </Routes>        
         </main>

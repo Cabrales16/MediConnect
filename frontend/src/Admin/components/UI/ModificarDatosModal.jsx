@@ -19,7 +19,6 @@ export default function ModificarDatosModal({ isOpen, onClose, onConfirm, user }
         return;
       }
 
-      // ✅ Usa el ID correcto según venga del backend
       const userId = user.id_usuario || user.id;
 
       const nuevosDatos = { nombre, apellido, correo };

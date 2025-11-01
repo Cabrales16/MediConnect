@@ -11,7 +11,6 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
 
   if (!isOpen || !doctor) return null;
 
-  // 🔁 Convierte "8:30 AM" → "08:30:00"
   const convertirHora24 = (hora12) => {
     if (!hora12) return null;
     const [hora, minutosAMPM] = hora12.split(":");
@@ -28,10 +27,8 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
       return;
     }
 
-    // 🧠 Obtener id_paciente del localStorage
     const id_paciente = localStorage.getItem("id_usuario");
 
-    // 🧩 Construir payload completo
     const citaPayload = {
       id_paciente: parseInt(id_paciente, 10),
       id_medico: doctor.id || doctor.medico,
@@ -56,7 +53,6 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
           &times;
         </button>
 
-        {/* Info del doctor */}
         <div className="flex items-center gap-4">
           <img
             src={doctor.image || "/default-doctor.jpg"}
@@ -112,7 +108,6 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
           </div>
         )}
 
-        {/* Botón confirmar */}
         <button
           onClick={handleConfirm}
           className="mt-6 w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition"

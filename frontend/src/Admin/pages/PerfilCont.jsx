@@ -57,7 +57,6 @@ export default function PerfilCont() {
         </p>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-300 p-6 max-w-2xl">
-          {/* Header con avatar + botón editar */}
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center gap-4">
               <img

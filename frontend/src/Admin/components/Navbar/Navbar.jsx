@@ -32,11 +32,9 @@ export default function Navbar({ onToggleSidebar }) {
               </svg>
             </button>
 
-            {/* En móvil solo mostramos el logo, sin texto */}
             <Logo showText={false} />
           </div>
 
-          {/* Desktop */}
           <div className="hidden md:flex items-center gap-3">
             <FaqButton />
             <NotificationsButton />
@@ -44,7 +42,6 @@ export default function Navbar({ onToggleSidebar }) {
             <ProfileButton />
           </div>
 
-          {/* Móvil: todos los iconos (solo íconos, sin texto) */}
           <div className="md:hidden flex items-center gap-3">
             <FaqButton />
             <NotificationsButton />
