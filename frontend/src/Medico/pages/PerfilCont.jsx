@@ -9,7 +9,6 @@ export default function PerfilCont() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Evitar scroll
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {

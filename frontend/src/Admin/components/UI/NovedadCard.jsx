@@ -4,7 +4,6 @@ import editarIcon from "../GestNovedades/GestNovedadesImages/editarIcon.png";
 import eliminarIcon from "../GestNovedades/GestNovedadesImages/eliminarIcon.png";
 
 export default function NovedadCard({ item, onEdit, onDelete }) {
-  // Si la imagen viene vacía o sin ruta completa, usa la del servidor
   const imagenSrc =
     item.src?.startsWith("http")
       ? item.src

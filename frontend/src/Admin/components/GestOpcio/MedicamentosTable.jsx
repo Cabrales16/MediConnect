@@ -30,7 +30,7 @@ export default function MedicamentosTable({ data, onAdd, onEdit, onDelete }) {
             </thead>
             <tbody>
               {data.map((m) => {
-                const id = m.id_medicamento ?? m.id; // 👈 fallback por si backend devuelve "id"
+                const id = m.id_medicamento ?? m.id;
                 return (
                   <tr key={id} className="border-t border-gray-300">
                     <td className="px-6 py-4">{m.nombre}</td>
@@ -46,7 +46,7 @@ export default function MedicamentosTable({ data, onAdd, onEdit, onDelete }) {
                           <img src={editarIcon} alt="Editar" className="h-5" />
                         </button>
                         <button
-                          onClick={() => onDelete(id)} // 👈 aseguramos que reciba el ID correcto
+                          onClick={() => onDelete(id)}
                           className="bg-red-500 hover:bg-red-600 text-white p-2 rounded"
                           title="Eliminar medicamento"
                         >

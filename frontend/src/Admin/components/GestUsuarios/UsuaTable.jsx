@@ -5,17 +5,22 @@ export default function UsuaTable({
   pacientes = [],
   medicos = [],
   usuarios = [],
+  data = null,
   onViewDetails,
 }) {
+
   let rows = [];
 
-  // 🔹 Selección de lista según el modo
-  if (mode === "pacientes") {
-    rows = pacientes;
-  } else if (mode === "medicos") {
-    rows = medicos;
+  if (Array.isArray(data)) {
+    rows = data;
   } else {
-    rows = usuarios; // ✅ Mostrar todos
+    if (mode === "pacientes") {
+      rows = pacientes;
+    } else if (mode === "medicos") {
+      rows = medicos;
+    } else {
+      rows = usuarios;
+    }
   }
 
   return (
@@ -33,7 +38,7 @@ export default function UsuaTable({
         <tbody>
           {rows.map((r) => (
             <tr
-              key={r.id_usuario}
+              key={r.id_usuario ?? r.id ?? `${r.correo ?? r.nombre}-${Math.random()}`}
               className="border-t border-gray-200 hover:bg-green-50 transition"
             >
               <td className="px-6 py-3">{r.nombre}</td>
@@ -43,7 +48,7 @@ export default function UsuaTable({
               <td className="px-6 py-3">
                 <button
                   className="text-green-600 hover:underline"
-                  onClick={() => onViewDetails(r)}
+                  onClick={() => onViewDetails && onViewDetails(r)}
                 >
                   Ver más
                 </button>

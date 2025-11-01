@@ -13,14 +13,12 @@ export default function PlanillaCont() {
     { label: "Planilla" },
   ];
 
-  // ESTADOS
   const [porTomar, setPorTomar] = useState([]);
   const [tomadas, setTomadas] = useState([]);
   const [tab, setTab] = useState("por");
   const [selectedCita, setSelectedCita] = useState(null);
   const [modal, setModal] = useState(null);
 
-  // ✅ Cargar citas del backend
   useEffect(() => {
     const fetchHistorial = async () => {
       try {
@@ -50,7 +48,6 @@ export default function PlanillaCont() {
       <div className="text-2xl font-semibold pl-8 pt-8">Planilla</div>
       <div className="pb-30 overflow-y-auto sm:overflow-y-visible h-[100vh]">
         <div className="p-8">
-        {/* Tabs */}
         <div className="flex items-center gap-6 mb-6">
           <button
             onClick={() => {
@@ -80,9 +77,7 @@ export default function PlanillaCont() {
           </button>
         </div>
 
-        {/* Main */}
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Tabla */}
           <div className="w-full md:w-1/2">
             <div className="bg-white rounded-2xl border border-gray-400 shadow-sm p-4">
               <PlanillaTable
@@ -127,7 +122,7 @@ export default function PlanillaCont() {
           onCancel={() => setModal(null)}
           onConfirm={async () => {
             try {
-              await cancelarCita(selectedCita.id_cita); // ✅ Llamada al backend
+              await cancelarCita(selectedCita.id_cita);
               const citaCancelada = {
                 ...selectedCita,
                 estado_cita: "CANCELADA",
@@ -146,7 +141,6 @@ export default function PlanillaCont() {
         />
       )}
 
-      {/* Modal Modificar */}
       {modal === "modificar" && selectedCita && (
         <ModificarCitaModal
           cita={selectedCita}

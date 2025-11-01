@@ -68,10 +68,8 @@ export default function NotificationsButton() {
 
       {open && (
         <>
-          {/* Desktop: dropdown a la derecha */}
           <div className="hidden md:block absolute right-0 mt-2 w-80 z-50">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              {/* Header */}
               <div className="flex items-center justify-between px-4 py-3">
                 <h3 className="text-sm font-semibold">Notificaciones</h3>
                 <button
@@ -83,7 +81,6 @@ export default function NotificationsButton() {
                 </button>
               </div>
 
-              {/* Lista */}
               <ul className="max-h-64 overflow-auto">
                 {notifications.length === 0 ? (
                   <li className="p-4 text-sm text-gray-500">
@@ -121,7 +118,6 @@ export default function NotificationsButton() {
                 )}
               </ul>
 
-              {/* Footer */}
               <div className="p-4 flex justify-center">
                 <button
                   onClick={handleClearAll}
@@ -138,10 +134,8 @@ export default function NotificationsButton() {
             </div>
           </div>
 
-          {/* Móvil: modal centrado */}
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 md:hidden">
             <div className="bg-white w-11/12 max-w-sm rounded-xl shadow-lg overflow-hidden">
-              {/* Header */}
               <div className="flex items-center justify-between px-4 py-3 border-b">
                 <h3 className="text-sm font-semibold">Notificaciones</h3>
                 <button
@@ -153,7 +147,6 @@ export default function NotificationsButton() {
                 </button>
               </div>
 
-              {/* Lista */}
               <ul className="max-h-80 overflow-auto">
                 {notifications.length === 0 ? (
                   <li className="p-4 text-sm text-gray-500">
@@ -191,7 +184,6 @@ export default function NotificationsButton() {
                 )}
               </ul>
 
-              {/* Footer */}
               <div className="p-4 flex justify-center border-t">
                 <button
                   onClick={handleClearAll}

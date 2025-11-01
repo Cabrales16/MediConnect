@@ -15,17 +15,13 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Landing pública */}
         <Route path="/home" element={<Home />} />
         <Route index element={<Navigate to="/home" replace />} />
-        {/* Login */}
         <Route path="/login" element={<Login />} />
         <Route path="/login/recuperar" element={<RecuperarContrasena />} />
         <Route path="/restablecer/:token" element={<RestablecerContrasena />} />
         <Route path="/register" element={<Register />} />
         <Route path="/bienvenida/:token" element={<BienvenidaCorreo />} />
-        {/* Rutas protegidas / app del paciente */}
-        {/* PacienteLayout ya NO debe incluir BrowserRouter */}
         
         <Route path="/paciente/*" element={<PrivateRoute rol="Paciente"> <PacienteLayout /> </PrivateRoute>} />
         <Route path="/medico/*" element={<PrivateRoute rol="Médico"> <MedicoLayout /> </PrivateRoute>} />
