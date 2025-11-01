@@ -33,7 +33,6 @@ export default function GestOpcioCont() {
     setEditItem(null);
   };
 
-  // ✅ Cargar medicamentos desde backend
   useEffect(() => {
     const fetchMedicamentos = async () => {
       try {
@@ -46,7 +45,6 @@ export default function GestOpcioCont() {
     fetchMedicamentos();
   }, []);
 
-  // ✅ Guardar (crear o editar medicamento)
   const handleSave = async (data) => {
     try {
       if (modalType === "meds") {
@@ -59,7 +57,6 @@ export default function GestOpcioCont() {
             )
           );
         } else {
-          // Crear
           const nuevo = await crearMedicamento(data);
           setMedicamentos((prev) => [...prev, nuevo]);
         }
@@ -81,7 +78,6 @@ export default function GestOpcioCont() {
     }
   };
 
-  // ✅ Eliminar medicamento
   const handleDelete = async (type, id_medicamento) => {
     if (!id_medicamento) {
       console.error("❌ No se recibió un id_medicamento válido");

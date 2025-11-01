@@ -18,14 +18,12 @@ export default function ModificarDatos() {
         onClick={() => setIsOpen(true)}
         className="flex items-center gap-2 px-3 py-2 rounded-md bg-green-500 text-white font-medium shadow-sm hover:bg-green-600"
       >
-        {/* Icono visible siempre */}
         <img
           src={agendarIcon}
           alt="Modificar datos"
           className="w-6 h-6"
         />
 
-        {/* Texto solo visible en md+ */}
         <span className="hidden md:inline whitespace-nowrap">
           Modificar datos
         </span>

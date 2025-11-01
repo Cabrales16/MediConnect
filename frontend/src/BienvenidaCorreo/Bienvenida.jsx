@@ -7,7 +7,6 @@ import Medico from "./BienvenidaCorreoImages/medico.jpg";
 export default function BienvenidoMediconnect() {
   const { token } = useParams();
   const [estado, setEstado] = useState("cargando"); 
-  // estados: cargando | confirmado | error
 
   useEffect(() => {
     const confirmar = async () => {
@@ -29,14 +28,12 @@ export default function BienvenidoMediconnect() {
 
         <img src={Logo} alt="Mediconnect Logo" className="mx-auto w-28 mb-4" />
 
-        {/* Estado cargando */}
         {estado === "cargando" && (
           <h1 className="text-xl font-bold text-gray-600">
             Confirmando tu cuenta...
           </h1>
         )}
 
-        {/* Estado confirmado */}
         {estado === "confirmado" && (
           <>
             <h1 className="text-3xl font-extrabold text-gray-800 mb-3">

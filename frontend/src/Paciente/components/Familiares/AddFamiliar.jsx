@@ -3,11 +3,11 @@ import React, { useState } from "react";
 export default function AddFamilia({ onCancel, onAdd }) {
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
-  const [idInfo, setIdInfo] = useState(1); // 👈 usar id_info
+  const [idInfo, setIdInfo] = useState(1);
 
   const submit = (e) => {
     e.preventDefault();
-    onAdd({ nombre, correo, id_info: parseInt(idInfo) }); // 👈 enviar id_info
+    onAdd({ nombre, correo, id_info: parseInt(idInfo) });
   };
 
   return (

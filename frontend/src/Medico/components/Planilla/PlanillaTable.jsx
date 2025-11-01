@@ -1,10 +1,8 @@
-// src/components/Planilla/PlanillaTable.jsx
 import React from "react";
 
 export default function PlanillaTable({ mode = "por", porTomar = [], tomadas = [], onViewDetails }) {
   const rows = mode === "por" ? porTomar : tomadas;
 
-  // Mapear estado de BD → UI
   const formatEstado = (estado) => {
     switch (estado) {
       case "PROGRAMADA":

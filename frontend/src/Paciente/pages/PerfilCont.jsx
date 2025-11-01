@@ -57,7 +57,6 @@ export default function PerfilCont() {
           </p>
 
           <div className="bg-white rounded-2xl shadow-sm border border-gray-300 p-6 max-w-2xl">
-            {/* Header con avatar + botón editar */}
             <div className="flex items-start justify-between mb-6">
               <div className="flex items-center gap-4">
                 <img
@@ -82,7 +81,6 @@ export default function PerfilCont() {
               </button>
             </div>
 
-            {/* Información de contacto */}
             <h4 className="text-base font-semibold mb-3">Información de contacto</h4>
 
             <div className="space-y-3 text-sm">
