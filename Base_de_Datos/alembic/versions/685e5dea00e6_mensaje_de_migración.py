@@ -1,8 +1,8 @@
 """mensaje de migración
 
-Revision ID: 920f3be2fbd6
+Revision ID: 685e5dea00e6
 Revises: 
-Create Date: 2025-10-29 07:35:01.975407
+Create Date: 2025-10-31 14:41:36.221667
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '920f3be2fbd6'
+revision: str = '685e5dea00e6'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -72,6 +72,7 @@ def upgrade() -> None:
     op.create_table('CrearTerapia',
     sa.Column('id_terapia', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('id_admin', sa.Integer(), nullable=False),
+    sa.Column('nombre', sa.String(length=100), nullable=False),
     sa.Column('estado', sa.Enum('ACTIVA', 'FINALIZADA', 'CANCELADA', name='estadoterapia'), nullable=False),
     sa.Column('archivo', sa.String(length=200), nullable=False),
     sa.Column('creado_en', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),

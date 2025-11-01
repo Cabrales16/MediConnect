@@ -10,6 +10,14 @@ import {
   eliminarMedicamento,
 } from "../../services/medicamentos";
 
+// 🔹 Servicios reales de terapias
+import {
+  getTerapias,
+  addTerapia,
+  updateTerapia,
+  deleteTerapia,
+} from "../../services/terapia";
+
 export default function GestOpcioCont() {
   const breadcrumbItems = [
     { label: "Inicio", href: "/admin/inicio" },
@@ -33,7 +41,7 @@ export default function GestOpcioCont() {
     setEditItem(null);
   };
 
-  // ✅ Cargar medicamentos desde backend
+  // ✅ Cargar medicamentos
   useEffect(() => {
     const fetchMedicamentos = async () => {
       try {
@@ -46,12 +54,25 @@ export default function GestOpcioCont() {
     fetchMedicamentos();
   }, []);
 
-  // ✅ Guardar (crear o editar medicamento)
+  // ✅ Cargar terapias
+  useEffect(() => {
+    const fetchTerapias = async () => {
+      try {
+        const data = await getTerapias();
+        setTerapiaList(data);
+      } catch (error) {
+        console.error("Error cargando terapias:", error);
+      }
+    };
+    fetchTerapias();
+  }, []);
+
+  // ✅ Crear o Editar (manteniendo archivo anterior si no se cambia)
   const handleSave = async (data) => {
     try {
       if (modalType === "meds") {
+        // --- Medicamentos ---
         if (editItem && editItem.id_medicamento) {
-          // Editar
           const updated = await editarMedicamento(editItem.id_medicamento, data);
           setMedicamentos((prev) =>
             prev.map((m) =>
@@ -59,46 +80,57 @@ export default function GestOpcioCont() {
             )
           );
         } else {
-          // Crear
           const nuevo = await crearMedicamento(data);
           setMedicamentos((prev) => [...prev, nuevo]);
         }
       } else {
-        if (editItem) {
+        // --- Terapias ---
+        const formData = new FormData();
+        formData.append("nombre", data.nombre);
+
+        const idAdmin = parseInt(localStorage.getItem("id_usuario")) || 1;
+        formData.append("id_admin", idAdmin);
+
+        // ✅ Mantener el archivo anterior si no se selecciona uno nuevo
+        if (data.file) {
+          formData.append("file", data.file);
+        } else if (editItem?.archivo) {
+          formData.append("archivo_actual", editItem.archivo);
+        }
+
+        if (data.estado) formData.append("estado", data.estado);
+
+        if (editItem && editItem.id_terapia) {
+          const updated = await updateTerapia(editItem.id_terapia, formData);
           setTerapiaList((prev) =>
             prev.map((t) =>
-              t.id === editItem.id ? { ...data, id: editItem.id } : t
+              t.id_terapia === editItem.id_terapia ? updated : t
             )
           );
         } else {
-          setTerapiaList((prev) => [...prev, { ...data, id: Date.now() }]);
+          const nueva = await addTerapia(formData);
+          setTerapiaList((prev) => [...prev, nueva]);
         }
       }
     } catch (error) {
-      console.error("❌ Error guardando medicamento:", error);
+      console.error("❌ Error guardando datos:", error);
     } finally {
       closeModal();
     }
   };
 
-  // ✅ Eliminar medicamento
-  const handleDelete = async (type, id_medicamento) => {
-    if (!id_medicamento) {
-      console.error("❌ No se recibió un id_medicamento válido");
-      return;
-    }
-
+  // ✅ Eliminar
+  const handleDelete = async (type, id) => {
     try {
       if (type === "meds") {
-        await eliminarMedicamento(id_medicamento);
-        setMedicamentos((prev) =>
-          prev.filter((m) => m.id_medicamento !== id_medicamento)
-        );
+        await eliminarMedicamento(id);
+        setMedicamentos((prev) => prev.filter((m) => m.id_medicamento !== id));
       } else {
-        setTerapiaList((prev) => prev.filter((t) => t.id !== id_medicamento));
+        await deleteTerapia(id);
+        setTerapiaList((prev) => prev.filter((t) => t.id_terapia !== id));
       }
     } catch (error) {
-      console.error("Error eliminando medicamento:", error);
+      console.error("Error eliminando elemento:", error);
     }
   };
 
@@ -115,7 +147,7 @@ export default function GestOpcioCont() {
           data={medicamentos}
           onAdd={() => openModal("meds")}
           onEdit={(m) => openModal("meds", m)}
-          onDelete={(id_medicamento) => handleDelete("meds", id_medicamento)}
+          onDelete={(id) => handleDelete("meds", id)}
         />
 
         <TerapiasTable
