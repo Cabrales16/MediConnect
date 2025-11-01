@@ -1,4 +1,3 @@
-// src/data/novedades.js
 import VacunasImage from "../Paciente/components/Inicio/InicioImages/vacunas.png";
 import SaludMentalImage from "../Paciente/components/Inicio/InicioImages/saludmental.jpg";
 import PediatriaImage from "../Paciente/components/Inicio/InicioImages/pediatria.jpeg";

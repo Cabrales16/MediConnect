@@ -24,9 +24,7 @@ export default function CitaDetails({ cita, mode = "por", onClose, onModificar, 
           </button>
         </div>
 
-        {/* CONTENT */}
         <div className="flex gap-6 flex-1">
-          {/* LEFT: Info */}
           <div className="w-1/2 pr-4">
             <div className="mb-4">
               <h4 className="text-sm font-semibold text-gray-700">Paciente</h4>
@@ -57,7 +55,6 @@ export default function CitaDetails({ cita, mode = "por", onClose, onModificar, 
             </div>
           </div>
 
-          {/* RIGHT */}
           <div className="w-1/2 pl-4">
             {mode === "por" ? (
               <div className="h-full border rounded-lg overflow-hidden">

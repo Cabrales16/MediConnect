@@ -6,25 +6,22 @@ export default function CambiarRolModal({ isOpen, onClose, onConfirm, user }) {
   const [rol, setRol] = useState(user?.rol || "Paciente");
   const [loading, setLoading] = useState(false);
 
-  if (!isOpen || !user) return null; // ✅ evita abrir sin usuario
+  if (!isOpen || !user) return null;
 
   const handleConfirm = async () => {
     try {
       setLoading(true);
 
-      // 🔹 Mapeo de roles a id_rol (según tu base de datos)
       const rolesMap = {
         Paciente: 1,
         Médico: 2,
         Administrador: 3,
       };
 
-      // 🔹 Enviamos el campo id_rol (como lo espera tu backend)
       const nuevoRol = {
         id_rol: rolesMap[rol] || 1,
       };
 
-      // ✅ aseguramos que user.id_usuario existe
       const data = await cambiarRolUsuario(user.id_usuario, nuevoRol);
 
       toast.success(`Rol cambiado exitosamente a ${rol}`);

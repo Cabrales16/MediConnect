@@ -1,17 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaFilter } from "react-icons/fa";
 
-/**
- * Componente reutilizable para filtrar usuarios por tipo.
- * Props:
- * - filtro (string): valor actual ("todos" | "pacientes" | "medicos")
- * - setFiltro (function): actualiza el filtro seleccionado
- */
 export default function FiltroUsuarios({ filtro, setFiltro }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const menuRef = useRef(null);
 
-  // Cerrar el menú si se hace clic fuera
   useEffect(() => {
     const handleClickFuera = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {

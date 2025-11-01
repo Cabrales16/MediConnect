@@ -97,7 +97,6 @@ export default function ListaDoctores() {
   };
 
   const handleConfirmCita = (payload) => {
-    // Guardar los datos de la cita construidos en ModalDoctores
     setCitaData(payload);
     setModalDoctorOpen(false);
     setModalExitoOpen(true);

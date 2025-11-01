@@ -7,7 +7,6 @@ export default function ModificarDatosModal({ onClose, onConfirm }) {
   const [estudios, setEstudios] = useState('')
   const [hospital, setHospital] = useState('')
 
-  // Obtén el id del usuario (guardado al iniciar sesión)
   const idAdmin = localStorage.getItem('id_usuario')
 
   useEffect(() => {
@@ -47,7 +46,6 @@ export default function ModificarDatosModal({ onClose, onConfirm }) {
     <div
       className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
       onClick={(e) => {
-        // cerrar si haces click en el overlay (fuera del contenido)
         if (e.target === e.currentTarget) onClose?.()
       }}
     >

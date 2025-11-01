@@ -36,7 +36,6 @@ export default function ProfileButtonPaciente() {
         <img src={perfilIcon} alt="perfil" className="w-10 h-10 rounded-full" />
       </button>
 
-      {/* Dropdown */}
       {open && (
         <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-lg p-2 border border-gray-200 z-50">
           <Link

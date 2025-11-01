@@ -25,11 +25,9 @@ describe("PacienteLayout", () => {
       </MemoryRouter>
     );
 
-    // Navbar y Sidebar deben aparecer, se supone xd
     expect(screen.getByTestId("navbar")).toBeInTheDocument();
     expect(screen.getByTestId("sidebar")).toBeInTheDocument();
 
-    // Pag principal
     expect(screen.getByTestId("inicio-page")).toBeInTheDocument();
   });
 

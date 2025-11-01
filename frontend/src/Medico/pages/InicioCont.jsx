@@ -11,7 +11,6 @@ export default function InicioCont() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
-  // Cargar novedades desde el servicio
   useEffect(() => {
     const fetchNovedades = async () => {
       try {

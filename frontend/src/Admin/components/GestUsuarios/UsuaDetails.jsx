@@ -165,7 +165,6 @@ export default function UsuaDetails({ user, onClose }) {
           isOpen={openModal === 'cambiarRol'}
           onClose={() => setOpenModal(null)}
           onConfirm={() => {
-            // Simplemente cierra y muestra un log, o refresca manualmente en GestUsua
             console.log('Rol actualizado correctamente')
             setOpenModal(null)
           }}
