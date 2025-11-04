@@ -117,7 +117,7 @@ export default function EditarPerfilCont() {
       <div className="p-8 overflow-y-auto h-[calc(100vh-9rem)]">
         <h2 className="text-2xl font-semibold mb-2">Editar perfil</h2>
         <p className="text-sm text-gray-600 mb-6">
-          Modificar la información de contacto.
+          Modificar la información de contacto
         </p>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-300 p-6 max-w-2xl">
