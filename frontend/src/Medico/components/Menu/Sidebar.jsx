@@ -11,7 +11,7 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
 
   useEffect(() => {
     onClose();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [location.pathname]);
 
   const menuItems = [
@@ -22,7 +22,7 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
 
   const usuario = {
     nombre: "Sofía Segura",
-    rol: "Médico",
+    rol: "Médica",
   };
 
   return (
@@ -59,7 +59,7 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
 
             <div className="flex items-center gap-3 p-4 border-b">
               <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
-                SS
+                Sos
               </div>
               <div>
                 <p className="font-medium text-gray-800">{usuario.nombre}</p>
@@ -67,7 +67,7 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
               </div>
             </div>
 
-
+              
             <nav className="flex-1 overflow-auto">
               {menuItems.map((item) => (
                 <Link key={item.name} to={item.path}>
