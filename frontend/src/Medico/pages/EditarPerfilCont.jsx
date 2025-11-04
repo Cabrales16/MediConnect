@@ -19,7 +19,11 @@ export default function EditarPerfilCont() {
     telefono: "",
     direccion: "",
     correo: "",
+    horaInicio: "",
+    horaFin: "",
   });
+
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchPerfil = async () => {
@@ -30,6 +34,8 @@ export default function EditarPerfilCont() {
           telefono: data.telefono || "",
           direccion: data.direccion || "",
           correo: data.correo || "",
+          horaInicio: data.hora_inicio || "",
+          horaFin: data.hora_fin || "",
         });
       } catch (error) {
         console.error("❌ Error cargando perfil:", error);
@@ -39,13 +45,51 @@ export default function EditarPerfilCont() {
     fetchPerfil();
   }, [id_usuario]);
 
+  const horarios = [
+    "07:00 AM", "07:30 AM", "08:00 AM", "08:30 AM", "09:00 AM",
+    "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
+    "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM",
+    "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM",
+    "05:00 PM", "05:30 PM", "06:00 PM", "06:30 PM", "07:00 PM",
+  ];
+
+  const calcularDiferenciaHoras = (inicio, fin) => {
+    const parseHora = (h) => {
+      const [time, meridiem] = h.split(" ");
+      let [hour, minute] = time.split(":").map(Number);
+      if (meridiem === "PM" && hour !== 12) hour += 12;
+      if (meridiem === "AM" && hour === 12) hour = 0;
+      return hour + minute / 60;
+    };
+    return parseHora(fin) - parseHora(inicio);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const updated = { ...formData, [name]: value };
+    setFormData(updated);
+
+    // Validar rango mínimo de 5 horas
+    if (updated.horaInicio && updated.horaFin) {
+      const diff = calcularDiferenciaHoras(updated.horaInicio, updated.horaFin);
+      if (diff < 5) setError("El rango mínimo debe ser de 5 horas.");
+      else setError("");
+    }
+  };
+
   const handleSave = async () => {
+    if (error) {
+      toast.error("Corrige los errores antes de guardar");
+      return;
+    }
     try {
       await updatePerfil(id_usuario, {
         tipo_documento: formData.tipoDocumento,
         telefono: formData.telefono,
         direccion: formData.direccion,
         correo: formData.correo,
+        hora_inicio: formData.horaInicio,
+        hora_fin: formData.horaFin,
       });
       toast.success("Perfil actualizado correctamente");
       navigate("/medico/perfil");
@@ -59,16 +103,9 @@ export default function EditarPerfilCont() {
     navigate("/medico/perfil");
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
   useEffect(() => {
-    // Block scrol
     document.body.style.overflow = "hidden";
     return () => {
-      // Unblock scroll on cleanup
       document.body.style.overflow = "";
     };
   }, []);
@@ -85,12 +122,15 @@ export default function EditarPerfilCont() {
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-300 p-6 max-w-2xl">
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Tipo de documento</label>
+            <label className="block text-sm font-medium mb-1">
+              Tipo de documento
+            </label>
             <select
               name="tipoDocumento"
               value={formData.tipoDocumento}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2"
+              className="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-500 cursor-not-allowed"
+              disabled
             >
               <option value="TI">Tarjeta de Identidad</option>
               <option value="CC">Cédula de Ciudadanía</option>
@@ -126,7 +166,9 @@ export default function EditarPerfilCont() {
 
           {/* Correo electrónico */}
           <div className="mb-6">
-            <label className="block text-sm font-medium mb-1">Correo electrónico</label>
+            <label className="block text-sm font-medium mb-1">
+              Correo electrónico
+            </label>
             <input
               type="email"
               name="correo"
@@ -134,6 +176,42 @@ export default function EditarPerfilCont() {
               onChange={handleChange}
               className="w-full border rounded-lg px-3 py-2"
             />
+          </div>
+
+          {/* Horarios */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium mb-2">
+              Horario de atención
+            </label>
+            <div className="flex space-x-3">
+              <select
+                name="horaInicio"
+                value={formData.horaInicio}
+                onChange={handleChange}
+                className="w-1/2 border rounded-lg px-3 py-2"
+              >
+                <option value="">Desde ( 7:00 AM)</option>
+                {horarios.map((h) => (
+                  <option key={h} value={h}>
+                    {h}
+                  </option>
+                ))}
+              </select>
+              <select
+                name="horaFin"
+                value={formData.horaFin}
+                onChange={handleChange}
+                className="w-1/2 border rounded-lg px-3 py-2"
+              >
+                <option value="">Hasta (7:00 PM)</option>
+                {horarios.map((h) => (
+                  <option key={h} value={h}>
+                    {h}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
           </div>
 
           {/* Botones */}
