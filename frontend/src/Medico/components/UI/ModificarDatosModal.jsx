@@ -6,6 +6,9 @@ export default function ModificarDatosModal({ onClose, onConfirm }) {
   const [especialidad, setEspecialidad] = useState('')
   const [estudios, setEstudios] = useState('')
   const [hospital, setHospital] = useState('')
+  const [horaInicio, setHoraInicio] = useState('')
+  const [horaFin, setHoraFin] = useState('')
+  const [error, setError] = useState('')
 
   const idAdmin = localStorage.getItem('id_usuario')
 
@@ -17,11 +20,49 @@ export default function ModificarDatosModal({ onClose, onConfirm }) {
     return () => document.removeEventListener('keydown', onKey)
   }, [onClose])
 
+  const horarios = [
+    '07:00 AM', '07:30 AM', '08:00 AM', '08:30 AM', '09:00 AM',
+    '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
+    '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM', '02:00 PM',
+    '02:30 PM', '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM',
+    '05:00 PM', '05:30 PM', '06:00 PM', '06:30 PM', '07:00 PM',
+  ]
+
+  const calcularDiferenciaHoras = (inicio, fin) => {
+    const parseHora = (h) => {
+      const [time, meridiem] = h.split(' ')
+      let [hour, minute] = time.split(':').map(Number)
+      if (meridiem === 'PM' && hour !== 12) hour += 12
+      if (meridiem === 'AM' && hour === 12) hour = 0
+      return hour + minute / 60
+    }
+    return parseHora(fin) - parseHora(inicio)
+  }
+
+  const handleHorariosChange = (name, value) => {
+    if (name === 'horaInicio') setHoraInicio(value)
+    else setHoraFin(value)
+
+    const inicio = name === 'horaInicio' ? value : horaInicio
+    const fin = name === 'horaFin' ? value : horaFin
+
+    if (inicio && fin) {
+      const diff = calcularDiferenciaHoras(inicio, fin)
+      if (diff < 5) setError('El rango mínimo debe ser de 5 horas.')
+      else setError('')
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!especialidad || !estudios || !hospital) {
+    if (!especialidad || !estudios || !hospital || !horaInicio || !horaFin) {
       toast.error('Por favor, completa todos los campos antes de confirmar.')
+      return
+    }
+
+    if (error) {
+      toast.error('Corrige los errores antes de continuar.')
       return
     }
 
@@ -29,6 +70,8 @@ export default function ModificarDatosModal({ onClose, onConfirm }) {
       especialidad,
       estudios,
       id_hospital: Number(hospital),
+      hora_inicio: horaInicio,
+      hora_fin: horaFin,
     }
 
     try {
@@ -105,6 +148,37 @@ export default function ModificarDatosModal({ onClose, onConfirm }) {
             <option value="4">Hospital San Ignacio</option>
             <option value="5">Clínica del Country</option>
           </select>
+
+          {/* Horarios */}
+          <label className="block mb-2 font-medium">Horarios</label>
+          <div className="flex space-x-3 mb-4">
+            <select
+              value={horaInicio}
+              onChange={(e) => handleHorariosChange('horaInicio', e.target.value)}
+              className="w-1/2 border rounded-lg p-2"
+            >
+              <option value="">Desde (7:00 AM)</option>
+              {horarios.map((h) => (
+                <option key={h} value={h}>
+                  {h}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={horaFin}
+              onChange={(e) => handleHorariosChange('horaFin', e.target.value)}
+              className="w-1/2 border rounded-lg p-2"
+            >
+              <option value="">Hasta (7:00 PM)</option>
+              {horarios.map((h) => (
+                <option key={h} value={h}>
+                  {h}
+                </option>
+              ))}
+            </select>
+          </div>
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
           <div className="flex justify-end gap-3 mt-4">
             <button
