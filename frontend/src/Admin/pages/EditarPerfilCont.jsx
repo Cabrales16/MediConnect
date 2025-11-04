@@ -88,7 +88,8 @@ export default function EditarPerfilCont() {
               name="tipoDocumento"
               value={formData.tipoDocumento}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2"
+              className="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-500 cursor-not-allowed"
+              disabled
             >
               <option value="TI">Tarjeta de Identidad</option>
               <option value="CC">Cédula de Ciudadanía</option>

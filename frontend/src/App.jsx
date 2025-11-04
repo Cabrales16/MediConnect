@@ -26,6 +26,7 @@ export default function App() {
         <Route path="/paciente/*" element={<PrivateRoute rol="Paciente"> <PacienteLayout /> </PrivateRoute>} />
         <Route path="/medico/*" element={<PrivateRoute rol="Médico"> <MedicoLayout /> </PrivateRoute>} />
         <Route path="/admin/*" element={<PrivateRoute rol="Administrador"> <AdminLayout /> </PrivateRoute>} />
+        
       </Routes>
     </BrowserRouter>
   );
