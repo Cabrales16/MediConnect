@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import { toast } from "react-toastify";
 import {
@@ -16,6 +17,7 @@ import agregarIcon from "../components/GestNovedades/GestNovedadesImages/agregar
 
 export default function GestNovedCont() {
   const breadcrumbItems = [{ label: "Gest. de Novedades", href: "/admin/inicio" }];
+  const navigate = useNavigate();
 
   const [novedades, setNovedades] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -108,7 +110,6 @@ export default function GestNovedCont() {
     }
   };
 
-
   useEffect(() => {
     document.body.style.overflow =
       isAddModalOpen || isEditModalOpen || isDeleteModalOpen ? "hidden" : "";
@@ -117,6 +118,33 @@ export default function GestNovedCont() {
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
+
+   
+      <div className="bg-green-500 text-white p-6 rounded-lg shadow-md mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
+        <div>
+          <h2 className="text-lg font-semibold">
+            Bienvenida, <span className="font-bold">Sofia Segura.</span>
+          </h2>
+          <p className="text-sm opacity-90">
+            Gestiona los usuarios y las opciones de usuario.
+          </p>
+        </div>
+
+        <div className="flex gap-3 mt-4 md:mt-0">
+          <button
+            onClick={() => navigate("/admin/gestion-usuarios")}
+            className="bg-white text-green-600 font-medium px-4 py-2 rounded-md hover:bg-green-100 transition-all"
+          >
+            Gestión de Usuarios
+          </button>
+          <button
+            onClick={() => navigate("/admin/opciones-usuario")}
+            className="bg-white text-green-600 font-medium px-4 py-2 rounded-md hover:bg-green-100 transition-all"
+          >
+            Gestión de Opciones de Usuario
+          </button>
+        </div>
+      </div>
 
       <div className="p-8 overflow-y-auto h-[calc(100vh-9rem)]">
         <div className="flex justify-between items-center mb-6">
@@ -130,7 +158,6 @@ export default function GestNovedCont() {
           </button>
         </div>
 
-        {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {currentNovedades.map((item) => (
             <NovedadCard

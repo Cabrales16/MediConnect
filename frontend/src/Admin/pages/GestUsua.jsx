@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import UsuaTable from "../components/GestUsuarios/UsuaTable";
 import UsuaDetails from "../components/GestUsuarios/UsuaDetails";
@@ -6,6 +7,7 @@ import FiltroUsuarios from "../components/GestUsuarios/FiltroUsuarios";
 import BarraBusqueda from "../components/GestUsuarios/BarraBusqueda";
 
 export default function GestUsua() {
+  const navigate = useNavigate();
   const breadcrumbItems = [
     { label: "Inicio", href: "/admin/inicio" },
     { label: "Gest. de Usuarios" },
@@ -104,7 +106,23 @@ export default function GestUsua() {
       <Breadcrumb items={breadcrumbItems} />
 
       <div className="p-8 overflow-y-auto h-[calc(100vh-9rem)]">
-        <h2 className="text-2xl font-semibold mb-6">Gestión de Usuarios</h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold">Gestión de Usuarios</h2>
+          <div className="flex gap-3">
+            <button
+              onClick={() => navigate("/admin/gestion-usuarios")}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            >
+              Gestión de Usuarios
+            </button>
+            <button
+              onClick={() => navigate("/admin/gestion-opciones")}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+            >
+              Gestión de Opciones
+            </button>
+          </div>
+        </div>
 
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           <FiltroUsuarios filtro={filtro} setFiltro={setFiltro} />
