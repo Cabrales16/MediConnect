@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Sidebar from "./components/Menu/SideBar";
 import InicioCont from "./pages/InicioCont";
@@ -14,15 +14,17 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function MedicoLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      {/* NAVBAR SUPERIOR */}
       <header className="w-full">
         <Navbar onToggleSidebar={() => setSidebarOpen((prev) => !prev)} />
       </header>
 
       <div className="flex flex-1 relative">
-        {/* Sidebar */}
+        {/* SIDEBAR */}
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
         {sidebarOpen && (
@@ -32,12 +34,14 @@ export default function MedicoLayout() {
           ></div>
         )}
 
+        {/* CONTENIDO PRINCIPAL */}
         <main
           className={`flex-1 p-4 md:p-6 overflow-auto transition-all duration-200 ${
             sidebarOpen ? "pointer-events-none md:pointer-events-auto" : ""
           }`}
           aria-hidden={sidebarOpen ? "true" : "false"}
         >
+          {/* RUTAS */}
           <Routes>
             <Route index element={<InicioCont />} />
             <Route path="/" element={<Navigate to="inicio" replace />} />
