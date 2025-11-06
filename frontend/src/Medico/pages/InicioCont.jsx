@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import { getNovedades } from "../../services/novedades";
 
 export default function InicioCont() {
   const breadcrumbItems = [{ label: "Inicio", href: "/medico/inicio" }];
+  const navigate = useNavigate();
 
   const [novedades, setNovedades] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,7 +43,34 @@ export default function InicioCont() {
 
   return (
     <>
+   
+      <div className="bg-green-500 text-white p-5 flex justify-between items-center shadow-md rounded-md mx-8 mt-6">
+        <div>
+          <h2 className="text-lg font-semibold">Bienvenida, Sofía Segura.</h2>
+          <p className="text-sm text-white/90">
+            Gestiona las novedades y tus opciones disponibles.
+          </p>
+        </div>
+        <div className="flex gap-3">
+
+          <button
+            onClick={() => navigate("/medico/planilla")}
+            className="bg-white text-green-600 font-medium px-4 py-2 rounded-md hover:bg-green-100 transition-all"
+          >
+            Planilla
+          </button>
+          <button
+            onClick={() => navigate("/medico/perfil")}
+            className="bg-white text-green-600 font-medium px-4 py-2 rounded-md hover:bg-green-100 transition-all"
+          >
+            Ver Perfil
+          </button>
+        </div>
+      </div>
+
+     
       <Breadcrumb items={breadcrumbItems} />
+
 
       <div className="p-8 overflow-y-auto h-[calc(100vh-9rem)]">
         <h2 className="text-2xl font-semibold mb-6">¿Qué hay de nuevo?</h2>

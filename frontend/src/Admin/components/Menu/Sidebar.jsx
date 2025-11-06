@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import MenuItem from "./MenuItem";
 
-//Iconos
-import gestNovedadesIcon from "./MenuIcons/gestNovedadesIcon.png"
-import gestUsuariosIcon from "./MenuIcons/gestUsuariosIcon.png"
-import gestOpcionesIcon from "./MenuIcons/gestOpcionesIcon.png"
-import logo from "./MenuIcons/logo.png"
+// Iconos
+import gestNovedadesIcon from "./MenuIcons/gestNovedadesIcon.png";
+import gestUsuariosIcon from "./MenuIcons/gestUsuariosIcon.png";
+import gestOpcionesIcon from "./MenuIcons/gestOpcionesIcon.png";
+import logo from "./MenuIcons/logo.png";
 
 export default function Sidebar({ open = false, onClose = () => {} }) {
   const [expanded, setExpanded] = useState(false);
@@ -25,31 +25,35 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
 
   return (
     <>
+
       <div
-        className={`fixed inset-0 z-40 md:hidden transition-opacity ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        className={`fixed inset-0 z-40 md:hidden transition-opacity ${
+          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
         aria-hidden={!open}
       >
-        <div
-          className="absolute inset-0 bg-black/40"
-          onClick={onClose}
-        />
+        <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
         <aside
-          className={`absolute left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-200 shadow-lg transform transition-transform ${open ? "translate-x-0" : "-translate-x-full"}`}
+          className={`absolute left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-200 shadow-lg transform transition-transform ${
+            open ? "translate-x-0" : "-translate-x-full"
+          }`}
         >
           <div className="h-full flex flex-col">
             <div className="p-4 border-b">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <img src={logo} alt="logo" className="w-8 h-8"/>
+                  <img src={logo} alt="logo" className="w-8 h-8" />
                   <span className="font-semibold">MediConnect</span>
                 </div>
-                <button onClick={onClose} className="p-1 rounded hover:bg-gray-100">✕</button>
+                <button onClick={onClose} className="p-1 rounded hover:bg-gray-100">
+                  ✕
+                </button>
               </div>
             </div>
 
             <nav className="flex-1 overflow-auto">
-              {menuItems.map(item => (
+              {menuItems.map((item) => (
                 <Link key={item.name} to={item.path}>
                   <MenuItem
                     name={item.name}
@@ -64,11 +68,28 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
         </aside>
       </div>
 
+     
       <aside
-        className={`hidden md:flex md:flex-col md:h-screen bg-white border-r border-gray-300 shadow-sm ${expanded ? "w-54" : "w-16"}`}
+        className={`hidden md:flex md:flex-col md:h-screen bg-white border-r border-gray-300 shadow-sm ${
+          expanded ? "w-54" : "w-16"
+        }`}
         onMouseEnter={() => setExpanded(true)}
         onMouseLeave={() => setExpanded(false)}
       >
+     
+        <div className="flex items-center gap-3 p-3 border-b">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold">
+            SS
+          </div>
+          {expanded && (
+            <div>
+              <p className="font-semibold text-gray-800">Sofía Segura</p>
+              <p className="text-gray-500 text-sm">Administrador</p>
+            </div>
+          )}
+        </div>
+
+
         {menuItems.map((item) => (
           <Link key={item.name} to={item.path}>
             <MenuItem

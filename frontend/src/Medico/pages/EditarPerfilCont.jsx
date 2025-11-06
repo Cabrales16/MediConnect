@@ -16,6 +16,7 @@ export default function EditarPerfilCont() {
 
   const [formData, setFormData] = useState({
     tipoDocumento: "",
+    numeroDocumento: "",
     telefono: "",
     direccion: "",
     correo: "",
@@ -31,6 +32,7 @@ export default function EditarPerfilCont() {
         const data = await getPerfil(id_usuario);
         setFormData({
           tipoDocumento: data.tipo_documento || "",
+          numeroDocumento: data.num_documento || "",
           telefono: data.telefono || "",
           direccion: data.direccion || "",
           correo: data.correo || "",
@@ -85,6 +87,7 @@ export default function EditarPerfilCont() {
     try {
       await updatePerfil(id_usuario, {
         tipo_documento: formData.tipoDocumento,
+        num_documento: formData.numeroDocumento,
         telefono: formData.telefono,
         direccion: formData.direccion,
         correo: formData.correo,
@@ -117,7 +120,7 @@ export default function EditarPerfilCont() {
       <div className="p-8 overflow-y-auto h-[calc(100vh-9rem)]">
         <h2 className="text-2xl font-semibold mb-2">Editar perfil</h2>
         <p className="text-sm text-gray-600 mb-6">
-          Modificar la información de contacto
+          Modificar la información de contacto.
         </p>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-300 p-6 max-w-2xl">
@@ -138,6 +141,19 @@ export default function EditarPerfilCont() {
               <option value="PAS">Pasaporte</option>
               <option value="CE">Pasaporte</option>
             </select>
+          </div>
+          
+          {/* Numero de documento */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-1">Numero de documento</label>
+            <input
+              type="text"
+              name="numeroDocumento"
+              value={formData.numeroDocumento}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-500 cursor-not-allowed"
+              disabled
+            />
           </div>
 
           {/* Teléfono */}
