@@ -49,6 +49,31 @@ export default function InicioCont() {
     <>
       <Breadcrumb items={breadcrumbItems} />
 
+
+      <div className="bg-green-500 text-white p-4 rounded-md flex justify-between items-center w-[95%] mx-auto mt-4 shadow-sm">
+        <div>
+          <h2 className="font-semibold text-lg">Bienvenida, Sofía Segura.</h2>
+          <p className="text-sm text-white/90">
+            Gestiona las novedades y tus opciones disponibles.
+          </p>
+        </div>
+        <div className="flex gap-2">
+      
+          <Link
+            to="/paciente/citas"
+            className="bg-white text-green-600 font-medium px-4 py-1.5 rounded-md hover:bg-green-100 transition"
+          >
+            Citas
+          </Link>
+          <Link
+            to="/paciente/indicaciones"
+            className="bg-white text-green-600 font-medium px-4 py-1.5 rounded-md hover:bg-green-100 transition"
+          >
+            Ind. médicas
+          </Link>
+        </div>
+      </div>
+
       <div className="p-8 overflow-y-auto h-[calc(100vh-9rem)]">
         <h2 className="text-2xl font-semibold mb-6">¿Qué hay de nuevo?</h2>
 
