@@ -353,81 +353,89 @@ def obtener_slots_disponibles_rango(
 
 
 def agendar_cita(db: Session, cita: CitaCreate):
-    # 1. Verificar si el paciente ya tiene una cita en esa fecha y hora
+    print("📥 Datos recibidos:", cita.dict())
+
+    # 1. Verificar si el paciente ya tiene cita en esa fecha y hora
     cita_existente = db.query(Cita).filter(
         Cita.id_paciente == cita.id_paciente,
         Cita.fecha == cita.fecha,
         Cita.hora == cita.hora,
-        Cita.estado != EstadoCita.CANCELADA.value  # Excluye citas canceladas
+        Cita.estado != EstadoCita.CANCELADA.value
     ).first()
-
     if cita_existente:
+        print("❌ El paciente ya tiene una cita")
         raise HTTPException(status_code=400, detail="El paciente ya tiene una cita en esa fecha y hora")
 
-    # 2. Verificar si el médico está disponible en la fecha y hora solicitada
+    # 2. Verificar si el médico está ocupado en esa fecha y hora
     cita_ocupada = db.query(Cita).filter(
         Cita.id_medico == cita.id_medico,
         Cita.fecha == cita.fecha,
         Cita.hora == cita.hora,
-        Cita.estado != EstadoCita.CANCELADA.value  # Excluye citas canceladas
+        Cita.estado != EstadoCita.CANCELADA.value
     ).first()
-
     if cita_ocupada:
+        print("❌ El médico ya tiene una cita")
         raise HTTPException(status_code=400, detail="El médico ya tiene una cita en esa fecha y hora")
 
-    # 3. Verificar si el médico trabaja en la fecha seleccionada
+    # 3. Traducir el día de la semana al español (para coincidencia con BD)
+    dias_traduccion = {
+        "Monday": "Lunes",
+        "Tuesday": "Martes",
+        "Wednesday": "Miércoles",
+        "Thursday": "Jueves",
+        "Friday": "Viernes",
+        "Saturday": "Sábado",
+        "Sunday": "Domingo"
+    }
+    dia_ingles = cita.fecha.strftime("%A")
+    dia_es = dias_traduccion.get(dia_ingles, dia_ingles)
+
+    print(f"🕐 Buscando horario del médico {cita.id_medico} para el día {dia_es}")
+
+    # 4. Verificar si el médico tiene horario ese día
     horario = db.query(Horario).filter(
         Horario.id_medico == cita.id_medico,
-        Horario.dia == cita.fecha.strftime("%A")  # Traducir la fecha a día de la semana
+        Horario.dia == dia_es
     ).first()
 
     if not horario:
-        raise HTTPException(status_code=400, detail="El médico no tiene horario configurado para el día seleccionado")
+        print("❌ El médico no tiene horario ese día")
+        raise HTTPException(status_code=400, detail=f"El médico no tiene horario configurado para el día {dia_es}")
 
-    # 4. Verificar si la hora solicitada está dentro del horario del médico
+    print(f"🕒 Horario encontrado: {horario.hora_inicio} - {horario.hora_fin}")
+
+    # 5. Verificar si la hora está dentro del horario
     if not (horario.hora_inicio <= cita.hora <= horario.hora_fin):
-        raise HTTPException(status_code=400, detail=f"La hora solicitada está fuera del horario laboral del médico ({horario.hora_inicio} - {horario.hora_fin})")
+        print("❌ Hora fuera del rango permitido")
+        raise HTTPException(
+            status_code=400,
+            detail=f"La hora solicitada está fuera del horario laboral ({horario.hora_inicio} - {horario.hora_fin})"
+        )
 
-    # 5. Verificar si el paciente existe en la base de datos
-    paciente = db.query(Usuario).filter(Usuario.id == cita.id_paciente).first()
-
+    # 6. Verificar si el paciente existe
+    paciente = db.query(Usuario).filter(Usuario.id_usuario == cita.id_paciente).first()
     if not paciente:
+        print("❌ Paciente no encontrado")
         raise HTTPException(status_code=404, detail="Paciente no encontrado")
 
-    # 6. Verificar si el hospital existe en la base de datos (opcional)
-    if cita.id_hospital:
-        hospital = db.query(Hospital).filter(Hospital.id_hospital == cita.id_hospital).first()
-        if not hospital:
-            raise HTTPException(status_code=404, detail="Hospital no encontrado")
+    print("✅ Paciente verificado:", paciente.nombre)
 
-    # 7. Verificar si el medicamento existe en la base de datos (opcional)
-    if cita.id_medicacion:
-        medicacion = db.query(Medicamento).filter(Medicamento.id_medicamento == cita.id_medicacion).first()
-        if not medicacion:
-            raise HTTPException(status_code=404, detail="Medicamento no encontrado")
-
-    # 8. Verificar si la información adicional (tipo novedad) existe en la base de datos (opcional)
-    if cita.id_info:
-        info = db.query(TipoNovedad).filter(TipoNovedad.id_info == cita.id_info).first()
-        if not info:
-            raise HTTPException(status_code=404, detail="Información adicional no encontrada")
-
-    # 9. Crear la cita
+    # 7. Crear la cita
     nueva_cita = Cita(
         id_paciente=cita.id_paciente,
         id_medico=cita.id_medico,
-        id_medicacion=cita.id_medicacion,
         id_hospital=cita.id_hospital,
-        id_info=cita.id_info,
         fecha=cita.fecha,
         hora=cita.hora,
-        estado=EstadoCita.Programada.value  # La cita estará pendiente por defecto
+        estado=EstadoCita.PROGRAMADA.value
     )
 
-    # 10. Guardar la cita en la base de datos
+    # 8. Guardar en base de datos
     db.add(nueva_cita)
     db.commit()
-
-    # 11. Devolver la cita creada
     db.refresh(nueva_cita)
+
+    print("✅ Cita creada correctamente con ID:", nueva_cita.id_cita)
     return nueva_cita
+
+

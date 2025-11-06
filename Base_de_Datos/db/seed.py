@@ -226,13 +226,27 @@ def agregar_medicaciones():
 
     if paciente and medico and paracetamol and ibuprofeno:
         medicaciones = [
-            Medicacion(id_paciente=paciente.id_usuario, id_medico=medico.id_usuario,
-                       fecha=date(2025, 6, 1), hora=time(10, 0), estado=EstadoMedicacion.ACTIVA,
-                       id_medicamento=paracetamol.id_medicamento, dosis="1 tableta cada 8 horas"),
-            Medicacion(id_paciente=paciente.id_usuario, id_medico=medico.id_usuario,
-                       fecha=date(2025, 6, 2), hora=time(14, 0), estado=EstadoMedicacion.ACTIVA,
-                       id_medicamento=ibuprofeno.id_medicamento, dosis="5 ml cada 6 horas")
-        ]
+                Medicacion(
+                    id_paciente=paciente.id_usuario,
+                    id_medico=medico.id_usuario,
+                    id_medicamento=paracetamol.id_medicamento,
+                    estado=EstadoMedicacion.ACTIVA,
+                    fecha_inicio=date(2025, 6, 1),
+                    fecha_fin=date(2025, 6, 7),
+                    hora=time(10, 0),
+                    dosis="1 tableta cada 8 horas"
+                ),
+                Medicacion(
+                    id_paciente=paciente.id_usuario,
+                    id_medico=medico.id_usuario,
+                    id_medicamento=ibuprofeno.id_medicamento,
+                    estado=EstadoMedicacion.ACTIVA,
+                    fecha_inicio=date(2025, 6, 2),
+                    fecha_fin=date(2025, 6, 5),
+                    hora=time(14, 0),
+                    dosis="5 ml cada 6 horas"
+                ),
+            ]
         session.add_all(medicaciones)
         session.commit()
         logger.info("Medicaciones agregadas exitosamente.")
