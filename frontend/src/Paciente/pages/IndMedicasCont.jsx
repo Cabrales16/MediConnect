@@ -3,12 +3,13 @@ import Breadcrumb from "../components/UI/Breadcrumb";
 import FiltroIndicaciones from "../components/IndMedicas/FiltroIndicaciones";
 
 /* Datos iniciales */
+/* Datos iniciales */
 const initialMeds = [
   {
     id: 1,
     nombre_del_medicamento: "Ibuprofeno",
-    nombre_medico: "200mg",
-    dosis: "Cada 6 horas",
+    nombre_medico: "Dr. Juan Torres",
+    dosis: "200mg cada 6 horas",
     estado: "activo",
     fecha_inicio: "10-08-2025",
     fecha_fin: "20-08-2025",
@@ -16,11 +17,47 @@ const initialMeds = [
   {
     id: 2,
     nombre_del_medicamento: "Amoxicilina",
-    nombre_medico: "500mg",
-    dosis: "Cada 8 horas",
+    nombre_medico: "Dra. Laura Gómez",
+    dosis: "500mg cada 8 horas",
     estado: "activo",
     fecha_inicio: "25-10-2025",
     fecha_fin: "10-11-2025",
+  },
+  {
+    id: 3,
+    nombre_del_medicamento: "Paracetamol",
+    nombre_medico: "Dr. Carlos Martínez",
+    dosis: "1 tableta cada 8 horas",
+    estado: "activo",
+    fecha_inicio: "15-09-2025",
+    fecha_fin: "25-09-2025",
+  },
+  {
+    id: 4,
+    nombre_del_medicamento: "Losartán",
+    nombre_medico: "Dra. Daniela Patiño",
+    dosis: "50mg cada 12 horas",
+    estado: "finalizado",
+    fecha_inicio: "01-06-2025",
+    fecha_fin: "15-06-2025",
+  },
+  {
+    id: 5,
+    nombre_del_medicamento: "Omeprazol",
+    nombre_medico: "Dr. Fernando Ruiz",
+    dosis: "20mg en ayunas",
+    estado: "activo",
+    fecha_inicio: "28-10-2025",
+    fecha_fin: "15-11-2025",
+  },
+  {
+    id: 6,
+    nombre_del_medicamento: "Cetirizina",
+    nombre_medico: "Dra. Sofía Herrera",
+    dosis: "10mg una vez al día",
+    estado: "activo",
+    fecha_inicio: "05-11-2025",
+    fecha_fin: "19-11-2025",
   },
 ];
 
@@ -29,9 +66,41 @@ const initialTerapias = [
     id: 1,
     nombre_medico: "Fisioterapia",
     estado: "2 veces por semana",
-    fecha_inicio: "4 semanas",
-    fecha_fin: "Mejorar la movilidad",
+    fecha_inicio: "10-10-2025",
+    fecha_fin: "10-11-2025",
     PDF: "terapia_fisioterapia.pdf",
+  },
+  {
+    id: 2,
+    nombre_medico: "Terapia respiratoria",
+    estado: "3 sesiones semanales",
+    fecha_inicio: "01-09-2025",
+    fecha_fin: "30-09-2025",
+    PDF: "terapia_respiratoria.pdf",
+  },
+  {
+    id: 3,
+    nombre_medico: "Terapia ocupacional",
+    estado: "2 veces por semana",
+    fecha_inicio: "05-08-2025",
+    fecha_fin: "05-09-2025",
+    PDF: "terapia_ocupacional.pdf",
+  },
+  {
+    id: 4,
+    nombre_medico: "Rehabilitación post-operatoria",
+    estado: "5 sesiones programadas",
+    fecha_inicio: "12-10-2025",
+    fecha_fin: "25-10-2025",
+    PDF: "rehabilitacion_postoperatoria.pdf",
+  },
+  {
+    id: 5,
+    nombre_medico: "Terapia psicológica",
+    estado: "1 sesión semanal",
+    fecha_inicio: "01-11-2025",
+    fecha_fin: "15-12-2025",
+    PDF: "terapia_psicologica.pdf",
   },
 ];
 
@@ -44,9 +113,40 @@ const initialIndicaciones = [
   {
     id: 2,
     titulo: "Alimentación",
-    descripcion: "Seguir una dieta blanda y evitar comidas grasosas o picantes.",
+    descripcion: "Seguir una dieta blanda, evitar comidas grasosas, picantes o muy frías.",
+  },
+  {
+    id: 3,
+    titulo: "Hidratación",
+    descripcion: "Beber al menos 2 litros de agua diarios para mantener una buena recuperación.",
+  },
+  {
+    id: 4,
+    titulo: "Ejercicio",
+    descripcion: "Realizar caminatas suaves de 20 minutos al día una vez terminada la fiebre.",
+  },
+  {
+    id: 5,
+    titulo: "Control médico",
+    descripcion: "Asistir al control programado dentro de 10 días o antes si hay molestias.",
+  },
+  {
+    id: 6,
+    titulo: "Medicamentos",
+    descripcion: "Tomar los medicamentos indicados en los horarios exactos, no suspender sin autorización.",
+  },
+  {
+    id: 7,
+    titulo: "Cuidado de herida",
+    descripcion: "Mantener la zona limpia y seca, cambiar los apósitos cada 24 horas.",
+  },
+  {
+    id: 8,
+    titulo: "Postura",
+    descripcion: "Evitar permanecer mucho tiempo en la misma posición, especialmente sentado.",
   },
 ];
+
 
 export default function IndMedicasCont() {
   const breadcrumbItems = [
@@ -188,7 +288,7 @@ export default function IndMedicasCont() {
                     <tbody>
                       {indicaciones.map((i) => (
                         <tr key={i.id} className="border-t border-gray-300">
-                          <td className="px-6 py-4 text-black font-medium">{i.titulo}</td>
+                          <td className="px-6 py-4 text-black">{i.titulo}</td>
                           <td className="px-6 py-4 text-green-700">{i.descripcion}</td>
                         </tr>
                       ))}
