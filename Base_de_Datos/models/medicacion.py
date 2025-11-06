@@ -13,15 +13,14 @@ class EstadoMedicacion(PyEnum):
 
 class Medicacion(Base, AuditMixin):
     __tablename__ = "Medicacion"
-
     id_medicacion = Column(Integer, primary_key=True, autoincrement=True)
     id_paciente = Column(Integer, ForeignKey("Usuario.id_usuario"), nullable=False)
     id_medico = Column(Integer, ForeignKey("Usuario.id_usuario"), nullable=False)
     id_medicamento = Column(Integer, ForeignKey("Medicamento.id_medicamento"), nullable=False)  # Corregido el nombre de tabla y columna
     estado = Column(SqlEnum(EstadoMedicacion), nullable=False, default=EstadoMedicacion.PENDIENTE)
-    fecha = Column(Date, nullable=False)
+    fecha_inicio = Column(Date, nullable=False)
+    fecha_fin = Column(Date, nullable=True)
     hora = Column(Time, nullable=False)
-    
     dosis = Column(String(250), nullable=False)
     
     # Relaciones

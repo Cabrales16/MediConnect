@@ -53,7 +53,9 @@ class CitaBase(BaseModel):
 class CitaCreate(BaseModel):
     id_paciente: int
     id_medico: int
-    id_hospital: int
+    id_hospital: Optional[int] = None
+    id_medicacion: Optional[int] = None
+    id_info: Optional[int] = None
     fecha: date
     hora: time
 
