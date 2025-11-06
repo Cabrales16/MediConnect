@@ -1,15 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import cancelarIcon from "../Planilla/PlanillaIcons/cancelarIcon.png";
 import editarIcon from "../Planilla/PlanillaIcons/editarIcon.png";
 import { useNavigate } from "react-router-dom";
+import { Star } from "lucide-react";
 
 export default function CitaDetails({ cita, mode = "por", onClose, onModificar, onCancelar }) {
   const mapsQuery = encodeURIComponent(cita.direccion || "Bogotá");
   const mapsSrc = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
   const navigate = useNavigate();
 
+  // --- Estado para modal y calificación ---
+  const [showModal, setShowModal] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  const [comentario, setComentario] = useState("");
+  const [enviado, setEnviado] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (rating === 0) return alert("Por favor selecciona una calificación.");
+    console.log({
+      medico: `${cita.nombre_medico} ${cita.apellido_medico}`,
+      calificacion: rating,
+      comentario,
+    });
+    setEnviado(true);
+    setTimeout(() => {
+      setShowModal(false);
+      setEnviado(false);
+      setRating(0);
+      setComentario("");
+    }, 1500);
+  };
+
   return (
-    <div className="bg-white rounded-2xl border border-gray-400 shadow-md overflow-hidden h-full">
+    <div className="bg-white rounded-2xl border border-gray-400 shadow-md overflow-hidden h-full relative">
       <div className="p-6 flex flex-col h-full">
         {/* HEADER */}
         <div className="flex items-start justify-between mb-4">
@@ -53,6 +78,16 @@ export default function CitaDetails({ cita, mode = "por", onClose, onModificar, 
                 {cita.estado_cita}
               </span>
             </div>
+
+            {/* BOTÓN CALIFICAR */}
+            {cita.estado_cita === "COMPLETADA" && (
+              <button
+                onClick={() => setShowModal(true)}
+                className="mt-3 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+              >
+                Calificar médico
+              </button>
+            )}
           </div>
 
           <div className="w-1/2 pl-4">
@@ -99,8 +134,68 @@ export default function CitaDetails({ cita, mode = "por", onClose, onModificar, 
             </button>
           </div>
         )}
-
       </div>
+
+      {/* MODAL DE CALIFICACIÓN */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-xl w-96 p-6 relative animate-fade-in">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 text-xl"
+            >
+              ✕
+            </button>
+
+            <h2 className="text-lg font-bold text-center mb-2 text-gray-800">
+              Calificar al médico
+            </h2>
+            <p className="text-center text-gray-500 mb-4">
+              {cita.nombre_medico} {cita.apellido_medico}
+            </p>
+
+            {!enviado ? (
+              <form onSubmit={handleSubmit} className="flex flex-col items-center space-y-3">
+                <div className="flex space-x-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      size={32}
+                      onClick={() => setRating(star)}
+                      onMouseEnter={() => setHover(star)}
+                      onMouseLeave={() => setHover(0)}
+                      className={`cursor-pointer ${
+                        star <= (hover || rating)
+                          ? "text-yellow-400 fill-yellow-400"
+                          : "text-gray-300"
+                      } transition-colors duration-150`}
+                    />
+                  ))}
+                </div>
+
+                <textarea
+                  placeholder="Escribe un comentario (opcional)"
+                  value={comentario}
+                  onChange={(e) => setComentario(e.target.value)}
+                  className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:ring-green-300"
+                  rows="3"
+                />
+
+                <button
+                  type="submit"
+                  className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg shadow"
+                >
+                  Enviar calificación
+                </button>
+              </form>
+            ) : (
+              <p className="text-green-600 text-center font-semibold mt-4">
+                ¡Gracias por tu calificación!
+              </p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
