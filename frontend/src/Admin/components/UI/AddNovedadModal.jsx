@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { crearNovedad } from "../../../services/novedades";
+import { toast } from "react-toastify";
 
 export default function AddNovedadModal({ onClose, onSuccess }) {
   const [titulo, setTitulo] = useState("");
@@ -23,7 +24,7 @@ export default function AddNovedadModal({ onClose, onSuccess }) {
     e.preventDefault();
 
     if (!titulo || !descripcion) {
-      alert("Por favor completa todos los campos obligatorios.");
+      toast.error("Por favor completa todos los campos obligatorios.")
       return;
     }
 
@@ -44,8 +45,6 @@ export default function AddNovedadModal({ onClose, onSuccess }) {
 
       // ✅ Llamada al servicio centralizado
       await crearNovedad(formData);
-
-      alert("✅ Novedad creada correctamente");
       onSuccess?.();
       onClose();
     } catch (error) {

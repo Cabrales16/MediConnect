@@ -38,16 +38,18 @@ export default function PlanillaCont() {
   }, []);
 
   useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = originalOverflow;
     };
   }, []);
 
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
-      <div className="text-2xl font-semibold pl-8 pt-8">Planilla</div>
+      <div className="pb-30 overflow-y-auto sm:overflow-y-visible h-[100vh]">
+              <div className="text-2xl font-semibold pl-8 pt-8">Planilla</div>
       <div className="pb-30 overflow-y-auto sm:overflow-y-visible h-[100vh]">
         <div className="p-8">
         {/* Tabs */}
@@ -162,6 +164,7 @@ export default function PlanillaCont() {
           }}
         />
       )}
+      </div>
       </div>
     </>
   );

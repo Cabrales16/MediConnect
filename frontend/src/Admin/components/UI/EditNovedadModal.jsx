@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { actualizarNovedad } from "../../../services/novedades";
+import { toast } from "react-toastify";
 
 export default function EditNovedadModal({ novedad, onClose, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -46,12 +47,12 @@ export default function EditNovedadModal({ novedad, onClose, onSuccess }) {
       }
 
       await actualizarNovedad(formData.id_novedad, form);
-      alert("✅ Novedad actualizada correctamente");
+      toast.done("Novedad actualizada correctamente")
       onSuccess();
       onClose();
     } catch (error) {
       console.error("Error al actualizar novedad:", error);
-      alert("❌ Error al actualizar novedad");
+      toast.error("Error al actualizar novedad")
     } finally {
       setLoading(false);
     }
