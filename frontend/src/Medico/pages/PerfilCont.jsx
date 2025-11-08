@@ -8,7 +8,9 @@ export default function PerfilCont() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [imgOk, setImgOk] = useState(true); // ✅ control del estado del avatar
 
+  // 🔹 Bloquear scroll del navegador
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -45,6 +47,23 @@ export default function PerfilCont() {
   if (loading) return <p className="p-8">Cargando perfil...</p>;
   if (!user) return <p className="p-8">No se pudo cargar el perfil.</p>;
 
+  // ✅ Obtener iniciales del nombre y apellido
+  const getInitials = (nombre, apellido) => {
+    const n = (nombre || "").trim();
+    const a = (apellido || "").trim();
+    if (!n && !a) return "U";
+    return `${n.charAt(0).toUpperCase() || ""}${a.charAt(0).toUpperCase() || ""}`;
+  };
+
+  // ✅ Verificar si el avatar del usuario es válido
+  const hasValidAvatar = !!(
+    user?.avatar &&
+    typeof user.avatar === "string" &&
+    user.avatar.trim() !== "" &&
+    !user.avatar.includes("placeholder") &&
+    /^(https?:\/\/|data:image)/i.test(user.avatar.trim())
+  );
+
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
@@ -59,11 +78,20 @@ export default function PerfilCont() {
           {/* Header con avatar + botón editar */}
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center gap-4">
-              <img
-                src={user.avatar || "https://via.placeholder.com/150"}
-                alt="Avatar"
-                className="w-16 h-16 rounded-full"
-              />
+              {/* ✅ Avatar funcional con fallback a iniciales */}
+              {hasValidAvatar && imgOk ? (
+                <img
+                  src={user.avatar}
+                  alt="Avatar"
+                  className="w-16 h-16 rounded-full object-cover shadow-md ring-2 ring-white"
+                  onError={() => setImgOk(false)} // si la imagen falla, cambia a iniciales
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-lg shadow-md ring-2 ring-white">
+                  {getInitials(user.nombre, user.apellido)}
+                </div>
+              )}
+
               <div>
                 <h3 className="text-lg font-semibold">{user.nombre}</h3>
                 <p className="text-sm text-gray-600">{user.correo}</p>
@@ -75,14 +103,16 @@ export default function PerfilCont() {
 
             <button
               onClick={() => navigate("/medico/perfil/editar")}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition flex items-center justify-center"
             >
-              <img src={editarIcon} alt="" className="w-5" />
+              <img src={editarIcon} alt="Editar" className="w-5" />
             </button>
           </div>
 
           {/* Información de contacto */}
-          <h4 className="text-base font-semibold mb-3">Información de contacto</h4>
+          <h4 className="text-base font-semibold mb-3">
+            Información de contacto
+          </h4>
 
           <div className="space-y-3 text-sm">
             <p>
@@ -106,6 +136,16 @@ export default function PerfilCont() {
               {user.correo}
             </p>
           </div>
+
+          {/* Si tiene horario definido */}
+          {user.hora_inicio && user.hora_fin && (
+            <div className="mt-6 text-sm">
+              <p>
+                <span className="font-medium">Horario de atención: </span>
+                {user.hora_inicio} — {user.hora_fin}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </>

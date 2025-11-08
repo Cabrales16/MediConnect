@@ -24,6 +24,14 @@ export default function PlanillaTable({
     }
   };
 
+  const getEstadoClasses = (estado) => {
+    if (estado === "CANCELADA") {
+      return "bg-red-100 text-red-700";
+    }
+
+    return "bg-green-100 text-green-700";
+  };
+
   return (
     <div>
       <div className="overflow-auto">
@@ -54,13 +62,9 @@ export default function PlanillaTable({
                   <td className="px-6 py-2 text-green-700">{r.hora}</td>
                   <td className="px-6 py-2 w-1/5">
                     <span
-                      className={`px-2 py-1 rounded-lg text-sm font-medium ${
-                        r.estado_cita === "PROGRAMADA"
-                          ? "bg-green-100 text-green-700"
-                          : r.estado_cita === "CANCELADA"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-blue-100 text-blue-700"
-                      }`}
+                      className={`px-3 py-1 rounded-lg text-sm font-medium ${getEstadoClasses(
+                        r.estado_cita
+                      )}`}
                     >
                       {formatEstado(r.estado_cita)}
                     </span>

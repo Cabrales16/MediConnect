@@ -1,14 +1,8 @@
 """mensaje de migración
 
-<<<<<<<< HEAD:Base_de_Datos/alembic/versions/e0f26a565d66_mensaje_de_migración.py
-Revision ID: e0f26a565d66
+Revision ID: 6e8c52ea4710
 Revises: 
-Create Date: 2025-11-08 08:25:01.862517
-========
-Revision ID: 96df0ecc5950
-Revises: 
-Create Date: 2025-11-06 07:18:02.517597
->>>>>>>> 828a772616fb6b94d3f855007afc36420ceec16b:Base_de_Datos/alembic/versions/96df0ecc5950_mensaje_de_migración.py
+Create Date: 2025-11-08 16:24:22.803756
 
 """
 from typing import Sequence, Union
@@ -18,11 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-<<<<<<<< HEAD:Base_de_Datos/alembic/versions/e0f26a565d66_mensaje_de_migración.py
-revision: str = 'e0f26a565d66'
-========
-revision: str = '96df0ecc5950'
->>>>>>>> 828a772616fb6b94d3f855007afc36420ceec16b:Base_de_Datos/alembic/versions/96df0ecc5950_mensaje_de_migración.py
+revision: str = '6e8c52ea4710'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

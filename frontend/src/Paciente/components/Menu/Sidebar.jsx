@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import MenuItem from "./MenuItem";
+import { getPerfil } from "../../../services/perfilService";
 
+// Iconos del menú
 import inicioIcon from "./MenuIcons/inicioIcon.png";
 import agendamientoIcon from "./MenuIcons/agendamientoIcon.png";
 import planillaIcon from "./MenuIcons/planillaIcon.png";
@@ -10,10 +12,23 @@ import indicacionesIcon from "./MenuIcons/indicacionesIcon.png";
 
 export default function Sidebar({ open = false, onClose = () => {} }) {
   const [expanded, setExpanded] = useState(false);
+  const [perfil, setPerfil] = useState(null);
   const location = useLocation();
 
+  const id_usuario = localStorage.getItem("id_usuario");
+
+
   useEffect(() => {
-  }, [location.pathname]);
+    const fetchPerfil = async () => {
+      try {
+        const data = await getPerfil(id_usuario);
+        setPerfil(data);
+      } catch (error) {
+        console.error("❌ Error cargando datos del perfil en Sidebar:", error);
+      }
+    };
+    if (id_usuario) fetchPerfil();
+  }, [id_usuario]);
 
   const menuItems = [
     { name: "Inicio", path: "/paciente/inicio", icon: inicioIcon },
@@ -25,31 +40,37 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
 
   return (
     <>
+      {/* Sidebar móvil */}
       <div
-        className={`fixed inset-0 z-40 md:hidden transition-opacity ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        className={`fixed inset-0 z-40 md:hidden transition-opacity ${
+          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
         aria-hidden={!open}
       >
-        <div
-          className="absolute inset-0 bg-black/40"
-          onClick={onClose}
-        />
+        <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
         <aside
-          className={`absolute left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-200 shadow-lg transform transition-transform ${open ? "translate-x-0" : "-translate-x-full"}`}
+          className={`absolute left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-200 shadow-lg transform transition-transform ${
+            open ? "translate-x-0" : "-translate-x-full"
+          }`}
         >
           <div className="h-full flex flex-col">
-            <div className="p-4 border-b">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <img src={inicioIcon} alt="logo" className="w-8 h-8"/>
-                  <span className="font-semibold">MediConnect</span>
-                </div>
-                <button onClick={onClose} className="p-1 rounded hover:bg-gray-100">✕</button>
+            {/* Encabezado móvil verde */}
+            <div className="p-4 border-b flex items-center justify-between bg-green-600 text-white">
+              <div className="flex items-center gap-2">
+                <img src={inicioIcon} alt="logo" className="w-8 h-8" />
+                <span className="font-semibold">MediConnect</span>
               </div>
+              <button
+                onClick={onClose}
+                className="p-1 rounded hover:bg-white/20 text-white"
+              >
+                ✕
+              </button>
             </div>
 
             <nav className="flex-1 overflow-auto">
-              {menuItems.map(item => (
+              {menuItems.map((item) => (
                 <Link key={item.name} to={item.path}>
                   <MenuItem
                     name={item.name}
@@ -64,21 +85,55 @@ export default function Sidebar({ open = false, onClose = () => {} }) {
         </aside>
       </div>
 
+      {/* Sidebar escritorio */}
       <aside
-        className={`hidden md:flex md:flex-col md:h-screen bg-white border-r border-gray-300 shadow-sm ${expanded ? "w-48" : "w-16"}`}
+        className={`hidden md:flex md:flex-col md:h-screen bg-white border-r border-gray-300 shadow-sm transition-all duration-200 ${
+          expanded ? "w-56" : "w-16"
+        }`}
         onMouseEnter={() => setExpanded(true)}
         onMouseLeave={() => setExpanded(false)}
       >
-        {menuItems.map((item) => (
-          <Link key={item.name} to={item.path}>
-            <MenuItem
-              name={item.name}
-              icon={item.icon}
-              expanded={expanded}
-              active={location.pathname === item.path}
-            />
-          </Link>
-        ))}
+        {/* Encabezado verde con perfil */}
+        <div className="flex items-center gap-3 p-3 border-b bg-green-500 text-white">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-green-600 font-bold shadow-md">
+            {perfil
+              ? perfil.nombre?.charAt(0).toUpperCase() +
+                (perfil.apellido?.charAt(0).toUpperCase() || "")
+              : "?"}
+          </div>
+
+          {expanded && perfil && (
+            <div>
+              <p className="font-semibold">
+                {perfil.nombre} {perfil.apellido}
+              </p>
+              <p className="text-white/80 text-sm capitalize">
+                {perfil.rol || "Paciente"}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Menú */}
+        <nav className="flex-1 bg-white">
+          {menuItems.map((item) => (
+            <Link key={item.name} to={item.path}>
+              <MenuItem
+                name={item.name}
+                icon={item.icon}
+                expanded={expanded}
+                active={location.pathname === item.path}
+              />
+            </Link>
+          ))}
+        </nav>
+
+        {/* Footer con correo */}
+        {expanded && perfil && (
+          <div className="p-3 text-xs text-gray-500 border-t bg-gray-50">
+            <p className="truncate">{perfil.correo}</p>
+          </div>
+        )}
       </aside>
     </>
   );

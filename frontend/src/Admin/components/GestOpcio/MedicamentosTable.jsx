@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
+import PaginacionOpcio from "./PaginacionOpcio";
 import agregarIcon from "./GestOpcioIcons/agregarIcon.png";
 import editarIcon from "./GestOpcioIcons/editarIcon.png";
 import eliminarIcon from "./GestOpcioIcons/eliminarIcon.png";
 
 export default function MedicamentosTable({ data, onAdd, onEdit, onDelete }) {
+  const [paginaActual, setPaginaActual] = useState(1);
+  const itemsPorPagina = 6;
+
+  const totalItems = data.length;
+  const totalPaginas = Math.ceil(totalItems / itemsPorPagina);
+  const indexInicio = (paginaActual - 1) * itemsPorPagina;
+  const datosPaginados = data.slice(indexInicio, indexInicio + itemsPorPagina);
+
   return (
-    <div className="mb-8">
+    <div className="mb-10">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-lg font-semibold">Medicamentos</h3>
         <button
@@ -24,15 +33,14 @@ export default function MedicamentosTable({ data, onAdd, onEdit, onDelete }) {
               <tr>
                 <th className="px-6 py-3 text-left text-black">Nombre</th>
                 <th className="px-6 py-3 text-left text-black">Presentación</th>
-                <th className="px-6 py-3 text-left text-black">Unidad de Medida</th>
+                <th className="px-6 py-3 text-left text-black">Unidad</th>
                 <th className="px-6 py-3 text-center text-black w-[160px]">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {data.map((m) => {
-                const id = m.id_medicamento ?? m.id;
-                return (
-                  <tr key={id} className="border-t border-gray-300">
+              {datosPaginados.length > 0 ? (
+                datosPaginados.map((m) => (
+                  <tr key={m.id_medicamento} className="border-t border-gray-300">
                     <td className="px-6 py-4">{m.nombre}</td>
                     <td className="px-6 py-4">{m.presentacion}</td>
                     <td className="px-6 py-4">{m.unidad_medida}</td>
@@ -41,24 +49,20 @@ export default function MedicamentosTable({ data, onAdd, onEdit, onDelete }) {
                         <button
                           onClick={() => onEdit(m)}
                           className="bg-green-500 hover:bg-green-600 text-white p-2 rounded"
-                          title="Editar medicamento"
                         >
                           <img src={editarIcon} alt="Editar" className="h-5" />
                         </button>
                         <button
-                          onClick={() => onDelete(id)}
+                          onClick={() => onDelete(m.id_medicamento)}
                           className="bg-red-500 hover:bg-red-600 text-white p-2 rounded"
-                          title="Eliminar medicamento"
                         >
                           <img src={eliminarIcon} alt="Eliminar" className="h-5" />
                         </button>
                       </div>
                     </td>
                   </tr>
-                );
-              })}
-
-              {data.length === 0 && (
+                ))
+              ) : (
                 <tr>
                   <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
                     No hay medicamentos registrados.
@@ -68,6 +72,13 @@ export default function MedicamentosTable({ data, onAdd, onEdit, onDelete }) {
             </tbody>
           </table>
         </div>
+
+        <PaginacionOpcio
+          totalItems={totalItems}
+          itemsPorPagina={itemsPorPagina}
+          paginaActual={paginaActual}
+          onPageChange={setPaginaActual}
+        />
       </div>
     </div>
   );
