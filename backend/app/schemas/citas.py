@@ -75,3 +75,15 @@ class CitaUpdate(BaseModel):
     estado: EstadoCita
     id_hospital: int
 
+class CitasMedico(BaseModel):
+    id_cita: int
+    id_paciente: int
+    tipo_cita: str
+    fecha: date
+    hora: time
+    estado: EstadoCita
+    paciente_nombre: str
+    paciente_apellido: str
+
+    class Config:
+        orm_mode = True

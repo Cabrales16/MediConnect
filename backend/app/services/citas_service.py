@@ -9,6 +9,10 @@ from app.schemas.citas import CitaCreate, CitaUpdate, EstadoCita
 from app.models.hospitales import Hospital
 from app.models.medicamento import Medicamento
 from app.models.tipo_Novedad import TipoNovedad
+from app.services.email_service import enviar_email
+from app.core.config import settings
+from app.models.tipo_Novedad import TipoNovedad
+from app.models.familiar import Familiar
 
 # ============================================
 # DURACIÓN SEGÚN ESPECIALIDAD
@@ -354,7 +358,6 @@ def obtener_slots_disponibles_rango(
 
 def agendar_cita(db: Session, cita: CitaCreate):
     print("📥 Datos recibidos:", cita.dict())
-
     # 1. Verificar si el paciente ya tiene cita en esa fecha y hora
     cita_existente = db.query(Cita).filter(
         Cita.id_paciente == cita.id_paciente,
@@ -365,7 +368,6 @@ def agendar_cita(db: Session, cita: CitaCreate):
     if cita_existente:
         print("❌ El paciente ya tiene una cita")
         raise HTTPException(status_code=400, detail="El paciente ya tiene una cita en esa fecha y hora")
-
     # 2. Verificar si el médico está ocupado en esa fecha y hora
     cita_ocupada = db.query(Cita).filter(
         Cita.id_medico == cita.id_medico,
@@ -376,7 +378,6 @@ def agendar_cita(db: Session, cita: CitaCreate):
     if cita_ocupada:
         print("❌ El médico ya tiene una cita")
         raise HTTPException(status_code=400, detail="El médico ya tiene una cita en esa fecha y hora")
-
     # 3. Traducir el día de la semana al español (para coincidencia con BD)
     dias_traduccion = {
         "Monday": "Lunes",
@@ -389,21 +390,16 @@ def agendar_cita(db: Session, cita: CitaCreate):
     }
     dia_ingles = cita.fecha.strftime("%A")
     dia_es = dias_traduccion.get(dia_ingles, dia_ingles)
-
     print(f"🕐 Buscando horario del médico {cita.id_medico} para el día {dia_es}")
-
     # 4. Verificar si el médico tiene horario ese día
     horario = db.query(Horario).filter(
         Horario.id_medico == cita.id_medico,
         Horario.dia == dia_es
     ).first()
-
     if not horario:
         print("❌ El médico no tiene horario ese día")
         raise HTTPException(status_code=400, detail=f"El médico no tiene horario configurado para el día {dia_es}")
-
     print(f"🕒 Horario encontrado: {horario.hora_inicio} - {horario.hora_fin}")
-
     # 5. Verificar si la hora está dentro del horario
     if not (horario.hora_inicio <= cita.hora <= horario.hora_fin):
         print("❌ Hora fuera del rango permitido")
@@ -411,14 +407,35 @@ def agendar_cita(db: Session, cita: CitaCreate):
             status_code=400,
             detail=f"La hora solicitada está fuera del horario laboral ({horario.hora_inicio} - {horario.hora_fin})"
         )
-
     # 6. Verificar si el paciente existe
     paciente = db.query(Usuario).filter(Usuario.id_usuario == cita.id_paciente).first()
     if not paciente:
         print("❌ Paciente no encontrado")
         raise HTTPException(status_code=404, detail="Paciente no encontrado")
-
     print("✅ Paciente verificado:", paciente.nombre)
+
+    # Verificar y obtener médico (asumiendo que médico es un Usuario)
+    medico = db.query(Usuario).filter(Usuario.id_usuario == cita.id_medico).first()
+    if not medico:
+        print("❌ Médico no encontrado")
+        raise HTTPException(status_code=404, detail="Médico no encontrado")
+    print("✅ Médico verificado:", medico.nombre, medico.apellido)
+
+    # Obtener especialidad del médico (asumiendo modelo Medico)
+    medico_info = db.query(Medico).filter(Medico.id_medico == cita.id_medico).first()
+    if not medico_info:
+        print("❌ Información del médico no encontrada")
+        raise HTTPException(status_code=404, detail="Información del médico no encontrada")
+    especialidad = medico_info.especialidad
+    print("✅ Especialidad:", especialidad)
+
+    # Verificar y obtener hospital
+    hospital = db.query(Hospital).filter(Hospital.id_hospital == cita.id_hospital).first()
+    if not hospital:
+        print("❌ Hospital no encontrado")
+        raise HTTPException(status_code=404, detail="Hospital no encontrado")
+    print("✅ Hospital verificado:", hospital.nombre)
+
 
     # 7. Crear la cita
     nueva_cita = Cita(
@@ -429,13 +446,37 @@ def agendar_cita(db: Session, cita: CitaCreate):
         hora=cita.hora,
         estado=EstadoCita.PROGRAMADA.value
     )
-
     # 8. Guardar en base de datos
     db.add(nueva_cita)
     db.commit()
     db.refresh(nueva_cita)
-
     print("✅ Cita creada correctamente con ID:", nueva_cita.id_cita)
+
+    # 9. Enviar correo a familiares con tipo_novedad "Toda informacion" o que contenga "citas"
+    familiares = db.query(Familiar).filter(
+        Familiar.id_paciente == cita.id_paciente
+    ).all()
+
+    for familiar in familiares:
+        descripcion = familiar.tipo_novedad.descripcion.lower()
+        if descripcion == "toda informacion" or "citas" in descripcion:
+            asunto = "Notificación de Nueva Cita Médica Programada"
+            cuerpo_html = f"""
+            <h2>Estimado(a) {familiar.nombre},</h2>
+            <p>Le informamos que el paciente <b>{paciente.nombre}</b>, asociado a usted, tiene una nueva cita médica programada de {especialidad}.</p>
+
+            <p><b>Detalles de la cita:</b></p>
+            <ul>
+                <li><b>Fecha:</b> {cita.fecha}</li>
+                <li><b>Hora:</b> {cita.hora}</li>
+                <li><b>Médico:</b> {medico.nombre} {medico.apellido}</li>
+                <li><b>Centro Médico:</b> {hospital.nombre}</li>
+            </ul>
+
+            <p>Atentamente,<br>
+            <b>Equipo de MediConnect</b></p>
+            """
+            enviar_email(db, familiar.correo, asunto, cuerpo_html)
+            print(f"📧 Correo enviado a familiar {familiar.nombre} ({familiar.correo})")
+
     return nueva_cita
-
-

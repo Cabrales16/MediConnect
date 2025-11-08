@@ -1,76 +1,204 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from "react";
+import { crearMedicacion, obtenerMedicamentos } from "../../../services/medicacion";
+import { asignarTerapia, obtenerTerapias } from "../../../services/terapia";
+import { crearIndicacion } from "../../../services/indicacion"; // ✅ nuevo import
 
-export default function ActionModal({ type, onClose, onSubmit }) {
-  const [nota, setNota] = useState('')
-  const [medicamento, setMedicamento] = useState('')
-  const [presentacion, setPresentacion] = useState('')
-  const [unidad, setUnidad] = useState('')
-  const [terapia, setTerapia] = useState('')
-  const [fechaInicio, setFechaInicio] = useState('')
-  const [fechaFin, setFechaFin] = useState('')
+export default function ActionModal({ type, onClose, onSubmit, id_paciente, id_cita }) {
+  const [nota, setNota] = useState("");
+  const [medicamentos, setMedicamentos] = useState([]);
+  const [terapias, setTerapias] = useState([]);
+  const [medicamentoSeleccionado, setMedicamentoSeleccionado] = useState("");
+  const [presentaciones, setPresentaciones] = useState([]);
+  const [presentacion, setPresentacion] = useState("");
+  const [dosis, setDosis] = useState("");
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
+  const [terapiaSeleccionada, setTerapiaSeleccionada] = useState("");
+  const [cargando, setCargando] = useState(false);
 
-  const handleSubmit = () => {
-    onSubmit({ nota, medicamento, presentacion, unidad, terapia, fechaInicio, fechaFin })
-    onClose()
-  }
+  const id_medico = localStorage.getItem("id_usuario");
+
+  // 🔹 Cargar medicamentos
+  useEffect(() => {
+    const cargarMedicamentos = async () => {
+      try {
+        const data = await obtenerMedicamentos();
+        setMedicamentos(data);
+      } catch (error) {
+        console.error("Error cargando medicamentos:", error);
+      }
+    };
+    if (type === "medicamento") cargarMedicamentos();
+  }, [type]);
+
+  // 🔹 Cargar terapias
+  useEffect(() => {
+    const cargarTerapias = async () => {
+      try {
+        const data = await obtenerTerapias();
+        setTerapias(data);
+      } catch (error) {
+        console.error("Error cargando terapias:", error);
+      }
+    };
+    if (type === "terapia") cargarTerapias();
+  }, [type]);
+
+  // 🔹 Filtrar presentaciones según medicamento
+  useEffect(() => {
+    if (medicamentoSeleccionado) {
+      const presentacionesFiltradas = medicamentos
+        .filter((m) => m.nombre === medicamentoSeleccionado)
+        .map((m) => m.presentacion);
+      setPresentaciones([...new Set(presentacionesFiltradas)]);
+    } else {
+      setPresentaciones([]);
+    }
+  }, [medicamentoSeleccionado, medicamentos]);
+
+  // 🔹 Enviar acción al backend
+  const handleSubmit = async () => {
+    if (!id_paciente) {
+      alert("⚠️ No se encontró el paciente. Selecciona una cita válida.");
+      return;
+    }
+
+    setCargando(true);
+    try {
+      let resultado = null;
+
+      // 🧩 MEDICAMENTO
+      if (type === "medicamento") {
+        const medicamentoObj = medicamentos.find(
+          (m) => m.nombre === medicamentoSeleccionado && m.presentacion === presentacion
+        );
+
+        if (!medicamentoObj) {
+          alert("Selecciona un medicamento y presentación válidos");
+          return;
+        }
+
+        const medicacionData = {
+          id_paciente: parseInt(id_paciente),
+          id_medico: parseInt(id_medico),
+          id_medicamento: medicamentoObj.id_medicamento,
+          dosis,
+          fecha_inicio: fechaInicio,
+          fecha_fin: fechaFin,
+        };
+
+        resultado = await crearMedicacion(medicacionData);
+        console.log("✅ Medicación creada:", resultado);
+      }
+
+      // 🧩 TERAPIA
+      if (type === "terapia") {
+        if (!terapiaSeleccionada || !fechaInicio || !fechaFin) {
+          alert("Completa todos los campos");
+          return;
+        }
+
+        const terapiaData = {
+          id_CrearTerapia: parseInt(terapiaSeleccionada),
+          id_medico: parseInt(id_medico),
+          id_paciente: parseInt(id_paciente),
+          inicio: fechaInicio,
+          fin: fechaFin,
+        };
+
+        resultado = await asignarTerapia(terapiaData);
+        console.log("✅ Terapia asignada:", resultado);
+      }
+
+      // 🧩 INDICACIÓN MÉDICA
+      if (type === "indicacion") {
+        if (!nota.trim()) {
+          alert("Por favor escribe una observación.");
+          return;
+        }
+
+        const indicacionData = {
+          id_medico: parseInt(id_medico),
+          id_paciente: parseInt(id_paciente),
+          id_cita: parseInt(id_cita),
+          observaciones: nota,
+        };
+
+        resultado = await crearIndicacion(indicacionData);
+        console.log("✅ Indicación creada:", resultado);
+      }
+
+      if (onSubmit) onSubmit(resultado);
+      onClose();
+    } catch (error) {
+      console.error("❌ Error en acción:", error);
+      alert("Ocurrió un error al procesar la acción.");
+    } finally {
+      setCargando(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-6 w-96">
         <h3 className="text-lg font-semibold mb-4">
-          {type === 'nota' && 'Añadir Emergencia'}
-          {type === 'medicamento' && 'Añadir Medicamento'}
-          {type === 'terapia' && 'Añadir Terapia'}
-          {type === 'finalizar' && 'Finalizar Cita'}
-           {type === 'indicacion' && 'Añadir Indicacion'}
+          {type === "medicamento" && "Añadir Medicamento"}
+          {type === "terapia" && "Asignar Terapia"}
+          {type === "indicacion" && "Registrar Indicación Médica"} {/* ✅ */}
         </h3>
 
-        {type === 'nota' && (
+        {/* 🔹 INDICACIÓN MÉDICA */}
+        {type === "indicacion" && (
           <textarea
             value={nota}
             onChange={(e) => setNota(e.target.value)}
-            className="w-full border rounded p-2"
-            placeholder="Escribe la emergencia"
+            placeholder="Escribe la observación o indicación médica"
+            className="w-full border rounded p-2 h-32 mb-3"
           />
         )}
 
-        {type === 'medicamento' && (
+        {/* 🔹 FORMULARIO DE MEDICAMENTO */}
+        {type === "medicamento" && (
           <>
             <select
-              value={medicamento}
-              onChange={(e) => setMedicamento(e.target.value)}
+              value={medicamentoSeleccionado}
+              onChange={(e) => setMedicamentoSeleccionado(e.target.value)}
               className="w-full mb-2 border rounded p-2"
             >
               <option value="">Selecciona medicamento</option>
-              <option value="Ibuprofeno">Ibuprofeno</option>
-              <option value="Paracetamol">Paracetamol</option>
+              {Array.from(new Set(medicamentos.map((m) => m.nombre))).map(
+                (nombre, idx) => (
+                  <option key={idx} value={nombre}>
+                    {nombre}
+                  </option>
+                )
+              )}
             </select>
 
             <select
               value={presentacion}
               onChange={(e) => setPresentacion(e.target.value)}
               className="w-full mb-2 border rounded p-2"
+              disabled={!medicamentoSeleccionado}
             >
               <option value="">Selecciona presentación</option>
-              <option value="Pastilla">Pastilla</option>
-              <option value="Jarabe">Jarabe</option>
+              {presentaciones.map((p, idx) => (
+                <option key={idx} value={p}>
+                  {p}
+                </option>
+              ))}
             </select>
 
-            <select
-              value={unidad}
-              onChange={(e) => setUnidad(e.target.value)}
+            <input
+              type="text"
+              value={dosis}
+              onChange={(e) => setDosis(e.target.value)}
+              placeholder="Ejemplo: 500 mg cada 8 horas"
               className="w-full mb-2 border rounded p-2"
-            >
-              <option value="">Selecciona unidad</option>
-              <option value="mg">mg</option>
-              <option value="ml">ml</option>
-            </select>
+            />
 
-            {/*  Campo para la fecha fin */}
             <div className="mb-2">
-              <label className="block text-sm font-medium mb-1">
-                Selecciona fecha inicio
-              </label>
+              <label className="block text-sm font-medium mb-1">Fecha inicio</label>
               <input
                 type="date"
                 value={fechaInicio}
@@ -79,11 +207,8 @@ export default function ActionModal({ type, onClose, onSubmit }) {
               />
             </div>
 
-            {/* Campo para la fecha fin */}
             <div className="mb-2">
-              <label className="block text-sm font-medium mb-1">
-                Selecciona fecha fin
-              </label>
+              <label className="block text-sm font-medium mb-1">Fecha fin</label>
               <input
                 type="date"
                 value={fechaFin}
@@ -94,23 +219,24 @@ export default function ActionModal({ type, onClose, onSubmit }) {
           </>
         )}
 
-        {type === 'terapia' && (
+        {/* 🔹 FORMULARIO DE TERAPIA */}
+        {type === "terapia" && (
           <>
             <select
-              value={terapia}
-              onChange={(e) => setTerapia(e.target.value)}
-              className="w-full mb-2 border rounded p-2"
+              value={terapiaSeleccionada}
+              onChange={(e) => setTerapiaSeleccionada(e.target.value)}
+              className="w-full mb-3 border rounded p-2"
             >
-              <option value="">Selecciona terapia</option>
-              <option value="Fisioterapia">Fisioterapia</option>
-              <option value="Terapia ocupacional">Terapia ocupacional</option>
+              <option value="">Selecciona una terapia</option>
+              {terapias.map((t) => (
+                <option key={t.id_terapia} value={t.id_terapia}>
+                  {t.nombre}
+                </option>
+              ))}
             </select>
 
-             {/*  Campo para la fecha fin */}
             <div className="mb-2">
-              <label className="block text-sm font-medium mb-1">
-                Selecciona fecha inicio
-              </label>
+              <label className="block text-sm font-medium mb-1">Fecha inicio</label>
               <input
                 type="date"
                 value={fechaInicio}
@@ -119,11 +245,8 @@ export default function ActionModal({ type, onClose, onSubmit }) {
               />
             </div>
 
-            {/* Campo para la fecha fin */}
             <div className="mb-2">
-              <label className="block text-sm font-medium mb-1">
-                Selecciona fecha fin
-              </label>
+              <label className="block text-sm font-medium mb-1">Fecha fin</label>
               <input
                 type="date"
                 value={fechaFin}
@@ -134,17 +257,7 @@ export default function ActionModal({ type, onClose, onSubmit }) {
           </>
         )}
 
-        {type === 'indicacion' && (
-          <textarea
-            value={nota}
-            onChange={(e) => setNota(e.target.value)}
-            className="w-full border rounded p-2"
-            placeholder="Escribe la indicacion para el paciente"
-          />
-        )}
-
-        {type === 'finalizar' && <p>¿Seguro que deseas finalizar la cita?</p>}
-
+        {/* 🔹 BOTONES */}
         <div className="mt-4 flex justify-end gap-2">
           <button
             onClick={onClose}
@@ -154,12 +267,14 @@ export default function ActionModal({ type, onClose, onSubmit }) {
           </button>
           <button
             onClick={handleSubmit}
+            disabled={cargando}
             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
           >
-            {type === 'finalizar' ? 'Confirmar' : 'Guardar'}
+            {cargando ? "Guardando..." : "Guardar"}
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
+

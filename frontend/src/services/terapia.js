@@ -42,3 +42,29 @@ export const updateTerapia = async (id_terapia, terapiaData) => {
   });
   return res.data;
 };
+
+// 🔹 Asignar terapia a paciente
+export const asignarTerapia = async (asignarData) => {
+  const token = localStorage.getItem("token");
+  const res = await api.post(`/terapia/asignar`, asignarData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+}
+
+
+export const obtenerTerapias = async () => {
+  const token = localStorage.getItem("token");
+  const res = await api.get(`/terapia/todas`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};
+
+export const obtenerTerapiasPaciente = async (id_usuario) => {
+  const token = localStorage.getItem("token");
+  const res = await api.get(`/terapia/paciente/${id_usuario}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+};

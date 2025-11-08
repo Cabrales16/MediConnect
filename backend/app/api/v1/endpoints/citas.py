@@ -2,8 +2,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.db.database import get_db
-from app.schemas.citas import CitaResponse, CitaResponse2, CitaResponseA, CitaCreate ,CitaUpdate
-from app.services.citas_medicas import obtener_citas, obtener_cita
+from app.schemas.citas import CitaResponse, CitaResponse2, CitaResponseA, CitaCreate ,CitaUpdate, CitasMedico
+from app.services.citas_medicas import obtener_citas, obtener_cita, obtener_citas_medico
 from app.services import citas_service
 from typing import List
 from app.services.historial_service import cancelar_cita
@@ -85,3 +85,8 @@ def slots_disponibles_rango(
 @router.post("/agendar", response_model=CitaCreate)
 def crear_cita(cita: CitaCreate, db: Session = Depends(get_db)):
     return citas_service.agendar_cita(db=db, cita=cita)
+
+
+@router.get("/medico/{id_usuario}/citas", response_model=List[CitasMedico])
+def citas_medico(id_usuario: int, db: Session = Depends(get_db)):
+    return obtener_citas_medico(db, id_usuario)

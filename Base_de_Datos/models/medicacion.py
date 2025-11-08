@@ -20,7 +20,6 @@ class Medicacion(Base, AuditMixin):
     estado = Column(SqlEnum(EstadoMedicacion), nullable=False, default=EstadoMedicacion.PENDIENTE)
     fecha_inicio = Column(Date, nullable=False)
     fecha_fin = Column(Date, nullable=True)
-    hora = Column(Time, nullable=False)
     dosis = Column(String(250), nullable=False)
     
     # Relaciones

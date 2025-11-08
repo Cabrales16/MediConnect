@@ -2,81 +2,7 @@ import React, { useEffect, useState } from "react";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import PlanillaTable from "../components/Planilla/PlanillaTable";
 import CitaDetails from "../components/Planilla/CitaDetails";
-
-const samplePorTomar = [
-  {
-    id_cita: 1,
-    nombre_paciente: "Andrés",
-    apellido_paciente: "Cabrales",
-    nombre_medico: "Gerson",
-    apellido_medico: "Sánchez",
-    especialidad_medico: "Consulta general",
-    fecha: "2025-08-20",
-    fechaReadable: "20 de agosto de 2025",
-    hora: "08:00 A.M.",
-    direccion: "Calle 123, Bogotá",
-    estado_cita: "PROGRAMADA",
-  },
-  {
-    id_cita: 2,
-    nombre_paciente: "María",
-    apellido_paciente: "Gómez",
-    nombre_medico: "Juliana",
-    apellido_medico: "García",
-    especialidad_medico: "Consulta de seguimiento",
-    fecha: "2025-08-23",
-    fechaReadable: "23 de agosto de 2025",
-    hora: "10:00 A.M.",
-    direccion: "Av. Siempre Viva 45",
-    estado_cita: "PROGRAMADA",
-  },
-  {
-    id_cita: 3,
-    nombre_paciente: "Carlos",
-    apellido_paciente: "Torres",
-    nombre_medico: "Carlos",
-    apellido_medico: "Pérez",
-    especialidad_medico: "Consulta de seguimiento",
-    fecha: "2025-08-30",
-    fechaReadable: "30 de agosto de 2025",
-    hora: "02:00 P.M.",
-    direccion: "Cll 50 #20-10",
-    estado_cita: "PROGRAMADA",
-  },
-];
-
-const sampleTomadas = [
-  {
-    id_cita: 11,
-    nombre_paciente: "Lucía",
-    apellido_paciente: "Martínez",
-    nombre_medico: "Luna",
-    apellido_medico: "",
-    especialidad_medico: "Consulta general",
-    fecha: "2025-07-15",
-    fechaReadable: "15 de julio de 2025",
-    hora: "09:00 A.M.",
-    estado_cita: "TOMADA",
-    notas:
-      "El paciente se queja de dolores de cabeza frecuentes y fatiga. Revisar historial médico.",
-    indicaciones:
-      "Tome Ibuprofeno 200 mg cada 6 horas con comida durante 3 días.",
-  },
-  {
-    id_cita: 12,
-    nombre_paciente: "Juan",
-    apellido_paciente: "Ríos",
-    nombre_medico: "Ramírez",
-    apellido_medico: "",
-    especialidad_medico: "Control postoperatorio",
-    fecha: "2025-07-22",
-    fechaReadable: "22 de julio de 2025",
-    hora: "11:00 A.M.",
-    estado_cita: "TOMADA",
-    notas: "Evolución favorable, retirar puntos en 7 días.",
-    indicaciones: "Aplicar pomada 2 veces al día durante 5 días.",
-  },
-];
+import { getCitasMedico } from "../../services/citasService"; // asegúrate de tener este servicio correcto
 
 export default function PlanillaCont() {
   const breadcrumbItems = [
@@ -86,12 +12,64 @@ export default function PlanillaCont() {
 
   const [tab, setTab] = useState("por"); // 'por' | 'tomadas'
   const [selectedCita, setSelectedCita] = useState(null);
+  const [citas, setCitas] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // 🔧 Funciones auxiliares
+  const formatFecha = (fechaISO) => {
+    try {
+      const fecha = new Date(fechaISO);
+      return fecha.toLocaleDateString("es-CO", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    } catch {
+      return fechaISO;
+    }
+  };
+
+  const formatHora = (hora) => {
+    if (!hora) return "";
+    const [h, m] = hora.split(":");
+    const horas = parseInt(h);
+    const ampm = horas >= 12 ? "P.M." : "A.M.";
+    const hora12 = horas % 12 || 12;
+    return `${hora12}:${m} ${ampm}`;
+  };
 
   useEffect(() => {
-    // Block scroll
+    const id_usuario = localStorage.getItem("id_usuario"); // o desde el contexto del usuario
+    if (!id_usuario) return;
+
+    setLoading(true);
+    getCitasMedico(id_usuario)
+      .then((data) => {
+        // 🔄 Adaptar datos del backend al formato del frontend
+        const adaptadas = data.map((c) => ({
+          id_cita: c.id_cita,
+          id_paciente: c.id_paciente,
+          fecha: c.fecha,
+          fechaReadable: formatFecha(c.fecha),
+          hora: formatHora(c.hora),
+          estado_cita: c.estado?.toUpperCase() || "",
+          especialidad_medico: c.tipo_cita || "General",
+          nombre_paciente: c.paciente_nombre || "",
+          apellido_paciente: c.paciente_apellido || "",
+        }));
+        setCitas(adaptadas);
+      })
+      .catch((err) => console.error("Error cargando citas:", err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const citasPorTomar = citas.filter((c) => c.estado_cita === "PROGRAMADA");
+  const citasTomadas = citas.filter((c) => c.estado_cita === "TOMADA");
+
+  // Bloquear scroll del body al abrir el panel
+  useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
-      // Unblock scroll on cleanup
       document.body.style.overflow = "";
     };
   }, []);
@@ -100,7 +78,7 @@ export default function PlanillaCont() {
     <>
       <Breadcrumb items={breadcrumbItems} />
       <div className="p-8 overflow-y-auto h-[calc(100vh-9rem)]">
-        <h2 className="text-2xl font-semibold mb-4">Citas por tomar</h2>
+        <h2 className="text-2xl font-semibold mb-4">Citas del médico</h2>
 
         {/* Tabs */}
         <div className="flex items-center gap-6 mb-6">
@@ -133,15 +111,19 @@ export default function PlanillaCont() {
         </div>
 
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Tabla (izquierda) */}
+          {/* Tabla izquierda */}
           <div className="flex-1">
             <div className="bg-white rounded-2xl shadow-md p-4">
-              <PlanillaTable
-                mode={tab}
-                porTomar={samplePorTomar}
-                tomadas={sampleTomadas}
-                onViewDetails={(cita) => setSelectedCita(cita)}
-              />
+              {loading ? (
+                <p className="text-gray-500">Cargando citas...</p>
+              ) : (
+                <PlanillaTable
+                  mode={tab}
+                  porTomar={citasPorTomar}
+                  tomadas={citasTomadas}
+                  onViewDetails={(cita) => setSelectedCita(cita)}
+                />
+              )}
             </div>
           </div>
 

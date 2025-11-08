@@ -1,9 +1,11 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, aliased
 from fastapi import HTTPException, status
 from app.models.cita import Cita
 from app.models.usuario import Usuario  
 from app.models.hospitales import Hospital  
 from app.models.medico import Medico
+from app.schemas.citas import CitasMedico
+
 
 def obtener_citas(db: Session, id_paciente: int):
     citas = (
@@ -45,3 +47,26 @@ def obtener_cita(db: Session, id_cita: int):
         )
 
     return cita
+
+def obtener_citas_medico(db: Session, id_medico: int):
+    # Alias para paciente
+    paciente = aliased(Usuario)
+
+    citas = (
+        db.query(
+            Cita.id_cita,
+            Cita.fecha,
+            Cita.hora,
+            Cita.estado,
+            Cita.id_paciente,
+            paciente.nombre.label("paciente_nombre"),
+            paciente.apellido.label("paciente_apellido"),
+            Medico.especialidad.label("tipo_cita"),
+        )
+        .join(paciente, Cita.id_paciente == paciente.id_usuario)
+        .join(Medico, Cita.id_medico == Medico.id_medico)
+        .filter(Cita.id_medico == id_medico)
+        .all()
+    )
+
+    return citas
