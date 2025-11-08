@@ -108,11 +108,13 @@ export default function CitaDetails({ cita, mode = "por", onClose }) {
           
         {actionType && (
           <ActionModal
-            type={actionType}
-            onClose={() => setActionType(null)}
-            onSubmit={handleSubmitAction}
-          />
-        )}
+              type={actionType}
+              onClose={() => setActionType(null)} // ✅ corregido
+              onSubmit={(data) => handleSubmitAction(data)} // ✅ usa la función existente
+              id_paciente={cita?.id_paciente} // ✅ protegido por si cita aún no está cargada
+              id_cita={cita?.id_cita}
+            />
+          )}
       </div>
     </div>
   );

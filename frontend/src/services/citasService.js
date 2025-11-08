@@ -65,3 +65,12 @@ export const filtrarMedicosRango = async (especialidad, fecha, hora_inicio, hora
   });
   return res.data;
 };
+
+// Obtener citas de un médico
+export const getCitasMedico = async (id_usuario) => {
+  const token = localStorage.getItem("token");
+  const res = await api.get(`/Citas/medico/${id_usuario}/citas`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+}
