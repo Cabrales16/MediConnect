@@ -48,8 +48,6 @@ export default function Register() {
     try {
       const data = await register(formData);
       console.log("✅ Registro exitoso:", data);
-
-      alert("Usuario registrado correctamente ✅");
       setIsOpen(true);
     } catch (error) {
       console.error("❌ Error en registro:", error);

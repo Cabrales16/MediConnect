@@ -458,25 +458,29 @@ def agendar_cita(db: Session, cita: CitaCreate):
     ).all()
 
     for familiar in familiares:
-        descripcion = familiar.tipo_novedad.descripcion.lower()
-        if descripcion == "toda informacion" or "citas" in descripcion:
-            asunto = "Notificación de Nueva Cita Médica Programada"
-            cuerpo_html = f"""
-            <h2>Estimado(a) {familiar.nombre},</h2>
-            <p>Le informamos que el paciente <b>{paciente.nombre}</b>, asociado a usted, tiene una nueva cita médica programada de {especialidad}.</p>
+        if familiar.tipo_novedad and familiar.tipo_novedad.descripcion:
+            descripcion = familiar.tipo_novedad.descripcion.lower()
+            if "toda informacion" in descripcion or "indicaciones" in descripcion or "medicación" in descripcion:    
+                asunto = "Notificación de Nueva Cita Médica Programada"
+                cuerpo_html = f"""
+                <h2>Estimado(a) {familiar.nombre},</h2>
+                <p>Le informamos que el paciente <b>{paciente.nombre}</b>, asociado a usted, tiene una nueva cita médica programada de {especialidad}.</p>
 
-            <p><b>Detalles de la cita:</b></p>
-            <ul>
-                <li><b>Fecha:</b> {cita.fecha}</li>
-                <li><b>Hora:</b> {cita.hora}</li>
-                <li><b>Médico:</b> {medico.nombre} {medico.apellido}</li>
-                <li><b>Centro Médico:</b> {hospital.nombre}</li>
-            </ul>
+                <p><b>Detalles de la cita:</b></p>
+                <ul>
+                    <li><b>Fecha:</b> {cita.fecha}</li>
+                    <li><b>Hora:</b> {cita.hora}</li>
+                    <li><b>Médico:</b> {medico.nombre} {medico.apellido}</li>
+                    <li><b>Centro Médico:</b> {hospital.nombre}</li>
+                </ul>
 
-            <p>Atentamente,<br>
-            <b>Equipo de MediConnect</b></p>
-            """
-            enviar_email(db, familiar.correo, asunto, cuerpo_html)
-            print(f"📧 Correo enviado a familiar {familiar.nombre} ({familiar.correo})")
-
+                <p>Atentamente,<br>
+                <b>Equipo de MediConnect</b></p>
+                """
+                enviar_email(db, familiar.correo, asunto, cuerpo_html)
+                print(f"📧 Correo enviado a familiar {familiar.nombre} ({familiar.correo})")
+            else:
+                print(f"⚪ Familiar {familiar.nombre} no cumple condición de notificación ({descripcion})")
+        else:
+            print(f"⚠️ Familiar {familiar.nombre} sin tipo de novedad asociado")
     return nueva_cita
