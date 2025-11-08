@@ -1,7 +1,7 @@
-from datetime import date, time
+from datetime import date, time, timedelta
 import logging
+import random
 from db.database import Session
-# db/models.py
 from models.usuario import Usuario, EstadoUsuario, Genero, EspecialidadMedica, TipoDocumento
 from models.horarios import Horario
 from models.hospitales import Hospital, EstadoHospital
@@ -13,9 +13,7 @@ from models.medicacion import Medicacion, EstadoMedicacion
 from models.medicamento import Medicamento
 from models.indicaciones import Indicaciones, EstadoIndicacion
 from models.tipo_Novedad import TipoNovedad
-from models.medico import Medico
-
-
+from models.medico import Medico, EspecialidadMedica
 
 # Configuración básica de logs
 logging.basicConfig(level=logging.INFO)
@@ -24,8 +22,58 @@ logger = logging.getLogger(__name__)
 # Crear sesión
 session = Session()
 
+# Listas de datos base
+nombres_masculinos = ["Juan", "Carlos", "Luis", "Pedro", "Miguel", "José", "Antonio", "Francisco", "Diego", "Andrés"]
+nombres_femeninos = ["Ana", "María", "Laura", "Sofía", "Lucía", "Elena", "Carolina", "Valentina", "Camila", "Isabella"]
+apellidos = ["Pérez", "Gómez", "López", "Martínez", "Rodríguez", "García", "Hernández", "Ortiz", "Morales", "Ramírez",
+             "Torres", "Vargas", "Rojas", "Castillo", "Díaz", "Cruz", "Reyes", "Mendoza", "Silva", "Castro"]
+
+especialidades = list(EspecialidadMedica)
+dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+estados_cita = [EstadoCita.PROGRAMADA, EstadoCita.CANCELADA, EstadoCita.COMPLETADA]
+estados_medicacion = [EstadoMedicacion.ACTIVA, EstadoMedicacion.COMPLETADA]
+estados_indicacion = [EstadoIndicacion.PROGRAMADA, EstadoIndicacion.COMPLETADA]
 
 
+def generar_documento():
+    return f"1{random.randint(0, 9)}{random.randint(0, 9)}{random.randint(0, 9)}{random.randint(0, 9)}{random.randint(0, 9)}{random.randint(0, 9)}{random.randint(0, 9)}{random.randint(0, 9)}"
+
+def generar_correo(nombre, apellido):
+    return f"{nombre.lower()}.{apellido.lower()}{random.randint(1, 999)}@example.com"
+
+def generar_telefono():
+    return f"3{random.choice(['0','1','2','5'])}{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}{random.randint(0,9)}"
+
+def fecha_aleatoria(start_year=1960, end_year=2005):
+    year = random.randint(start_year, end_year)
+    month = random.randint(1, 12)
+    day = random.randint(1, 28)
+    return date(year, month, day)
+
+def hora_aleatoria():
+    hora = random.randint(7, 18)
+    minuto = random.choice([0, 30])
+    return time(hora, minuto)
+
+
+# === 1. Hospitales (50) ===
+def agregar_hospitales():
+    hospitales = []
+    base_nombres = ["Clínica", "Hospital", "Centro Médico", "Fundación", "IPS"]
+    localidades = ["Suba", "Engativá", "Kennedy", "Fontibón", "Usaquén", "Chapinero", "Teusaquillo", "Barrios Unidos", "Santa Fe", "Puente Aranda"]
+    
+    for i in range(50):
+        nombre = f"{random.choice(base_nombres)} {random.choice(localidades)} {i+1 if i > 9 else ''}".strip()
+        direccion = f"Calle {random.randint(1,200)} # {random.randint(1,99)}-{random.randint(1,99)}, Bogotá"
+        estado = random.choice([EstadoHospital.ABIERTO, EstadoHospital.MANTENIMIENTO])
+        hospitales.append(Hospital(nombre=nombre, direccion=direccion, estado=estado))
+    
+    session.add_all(hospitales)
+    session.commit()
+    logger.info("50 Hospitales agregados exitosamente.")
+
+
+# === 2. Roles (3 fijos) ===
 def agregar_roles():
     roles = [
         Rol(nombre_rol="Paciente"),
@@ -41,6 +89,7 @@ def obtener_rol_id(nombre_rol):
     return rol.id_rol if rol else None
 
 
+# === 3. Tipos de Información (5 fijos) ===
 def agregar_tipo_informacion():
     tipos = [
         TipoNovedad(id_info=1, descripcion="Toda informacion"),
@@ -51,250 +100,289 @@ def agregar_tipo_informacion():
     ]
     session.add_all(tipos)
     session.commit()
-    logger.info("Tipos de información para familiares agregados exitosamente.")
+    logger.info("Tipos de información agregados exitosamente.")
 
 
+# === 4. Usuarios (50) ===
 def agregar_usuarios():
     rol_paciente = obtener_rol_id("Paciente")
     rol_medico = obtener_rol_id("Médico")
     rol_admin = obtener_rol_id("Administrador")
 
-    usuarios = [
-    Usuario(
-        nombre="Juan", apellido="Pérez", tipo_documento=TipoDocumento.CC, num_documento="1000000001",
-        correo="juan@example.com", telefono="3001234567", genero=Genero.MASCULINO, direccion="Calle 123",
-        contrasena="juan080", estado=EstadoUsuario.ACTIVO, fecha_nacimiento=date(1990, 1, 1), id_rol=rol_paciente
-    ),
-    Usuario(
-        nombre="Ana", apellido="Gómez", tipo_documento=TipoDocumento.CC, num_documento="1000000002",
-        correo="ana@example.com", telefono="3009876543", genero=Genero.FEMENINO, direccion="Calle 456",
-        contrasena="ana080", estado=EstadoUsuario.ACTIVO, fecha_nacimiento=date(1985, 5, 5), id_rol=rol_medico
-    ),
-    Usuario(
-        nombre="Carlos", apellido="López", tipo_documento=TipoDocumento.CC, num_documento="1564896523",
-        correo="carlos@example.com", telefono="3101234567", genero=Genero.MASCULINO, direccion="Calle 789",
-        contrasena="carlos080", estado=EstadoUsuario.ACTIVO, fecha_nacimiento=date(1980, 10, 10), id_rol=rol_medico
-    ),
-    Usuario(
-        nombre="María", apellido="Torres", tipo_documento=TipoDocumento.CC, num_documento="2000000004",
-        correo="maria@example.com", telefono="3123456789", genero=Genero.FEMENINO, direccion="Calle 101",
-        contrasena="maria080", estado=EstadoUsuario.ACTIVO, fecha_nacimiento=date(2000, 6, 15), id_rol=rol_paciente
-    ),
-    Usuario(
-        nombre="Luis", apellido="Martínez", tipo_documento=TipoDocumento.CC, num_documento="3000000005",
-        correo="luis@example.com", telefono="3141592653", genero=Genero.MASCULINO, direccion="Calle 202",
-        contrasena="luis080", estado=EstadoUsuario.ACTIVO, fecha_nacimiento=date(1995, 3, 22), id_rol=rol_paciente
-    ),
-    Usuario(
-        nombre="Elena", apellido="Rodríguez", tipo_documento=TipoDocumento.CC, num_documento="4000000006",
-        correo="elena@example.com", telefono="3001122334", genero=Genero.FEMENINO, direccion="Calle 303",
-        contrasena="elena080", estado=EstadoUsuario.ACTIVO, fecha_nacimiento=date(1988, 9, 8), id_rol=rol_paciente
-    ),
-    Usuario(
-        nombre="Pedro", apellido="García", tipo_documento=TipoDocumento.CC, num_documento="5000000007",
-        correo="pedro@example.com", telefono="3006677889", genero=Genero.MASCULINO, direccion="Calle 404",
-        contrasena="pedro080", estado=EstadoUsuario.ACTIVO, fecha_nacimiento=date(1982, 12, 25),
-         id_rol=rol_medico
-    ),
-    Usuario(
-        nombre="Sofía", apellido="Hernández", tipo_documento=TipoDocumento.CC, num_documento="6000000008",
-        correo="sofia@example.com", telefono="3007788996", genero=Genero.FEMENINO, direccion="Calle 505",
-        contrasena="sofia080", estado=EstadoUsuario.ACTIVO, fecha_nacimiento=date(1992, 7, 11), id_rol=rol_admin
-    ),
-    Usuario(
-        nombre="Miguel", apellido="Ortiz", tipo_documento=TipoDocumento.CC, num_documento="7000000009",
-        correo="miguel@example.com", telefono="3005566778", genero=Genero.MASCULINO, direccion="Calle 606",
-        contrasena="miguel080", estado=EstadoUsuario.ACTIVO, fecha_nacimiento=date(1998, 4, 14), id_rol=rol_paciente
-    ),
-    Usuario(
-        nombre="Lucía", apellido="Morales", tipo_documento=TipoDocumento.CC, num_documento="8000000010",
-        correo="lucia@example.com", telefono="3003344556", genero=Genero.FEMENINO, direccion="Calle 707",
-        contrasena="lucia080", estado=EstadoUsuario.ACTIVO, fecha_nacimiento=date(1987, 11, 30), id_rol=rol_paciente
-    )
-    ]
+    usuarios = []
+    medicos_count = 0
+    pacientes_count = 0
+    admins_count = 0
+
+    for i in range(50):
+        es_medico = i < 15  # 15 médicos
+        es_admin = i == 49  # 1 admin
+        es_paciente = not es_medico and not es_admin
+
+        genero = random.choice([Genero.MASCULINO, Genero.FEMENINO])
+        nombre = random.choice(nombres_masculinos if genero == Genero.MASCULINO else nombres_femeninos)
+        apellido = random.choice(apellidos)
+        documento = generar_documento()
+        correo = generar_correo(nombre, apellido)
+        telefono = generar_telefono()
+        direccion = f"Calle {random.randint(1,200)} # {random.randint(1,99)}-{random.randint(1,99)}"
+        contrasena = f"{nombre.lower()}080"
+        fecha_nac = fecha_aleatoria(1960 if es_medico else 1980, 2000 if es_paciente else 1990)
+
+        id_rol = rol_medico if es_medico else (rol_admin if es_admin else rol_paciente)
+
+        usuarios.append(Usuario(
+            nombre=nombre, apellido=apellido, tipo_documento=TipoDocumento.CC, num_documento=documento,
+            correo=correo, telefono=telefono, genero=genero, direccion=direccion,
+            contrasena=contrasena, estado=EstadoUsuario.ACTIVO, fecha_nacimiento=fecha_nac, id_rol=id_rol
+        ))
+
+        if es_medico: medicos_count += 1
+        if es_paciente: pacientes_count += 1
+        if es_admin: admins_count += 1
+
     session.add_all(usuarios)
     session.commit()
-    logger.info("Usuarios agregados exitosamente.")
+    logger.info(f"50 Usuarios agregados: {medicos_count} médicos, {pacientes_count} pacientes, {admins_count} admin.")
 
+
+# === 5. Médicos (15, asociados a usuarios médicos) ===
 def agregar_medicos():
-    medico_ana = session.query(Usuario).filter_by(nombre="Ana").first()
-    medico_carlos = session.query(Usuario).filter_by(nombre="Carlos").first()
-    medico_pedro = session.query(Usuario).filter_by(nombre="Pedro").first()
+    usuarios_medicos = session.query(Usuario).filter_by(id_rol=obtener_rol_id("Médico")).all()
+    hospitales = session.query(Hospital).all()
 
-    if medico_ana and medico_carlos and medico_pedro:
-        medicos = [
-            Medico(id_medico=medico_ana.id_usuario, especialidad=EspecialidadMedica.CARDIOLOGIA,
-                   estudios="Especialista en Cardiología - Universidad Nacional", calificacion=4.5, id_hospital=1),
-            Medico(id_medico=medico_carlos.id_usuario, especialidad=EspecialidadMedica.NEUROLOGIA,
-                   estudios="Especialista en Neurología - Universidad Javeriana", calificacion=4.7, id_hospital=2),
-            Medico(id_medico=medico_pedro.id_usuario, especialidad=EspecialidadMedica.PEDIATRIA,
-                   estudios="Especialista en Pediatría - Universidad de los Andes", calificacion=4.6, id_hospital=1),
-        ]
-        session.add_all(medicos)
-        session.commit()
-        logger.info("Médicos agregados exitosamente.")
-    else:
-        logger.error("No se encontraron usuarios médicos para agregar detalles.")
-
-def agregar_horarios():
-    medico = session.query(Usuario).filter_by(nombre="Ana").first()
-
-    if medico:
-        horarios = [
-            Horario(id_medico=medico.id_usuario, dia="Lunes", hora_inicio=time(8, 0), hora_fin=time(14, 0)),
-            Horario(id_medico=medico.id_usuario, dia="Miércoles", hora_inicio=time(9, 0), hora_fin=time(15, 0)),
-            Horario(id_medico=medico.id_usuario, dia="Viernes", hora_inicio=time(10, 0), hora_fin=time(16, 0)),
-        ]
-        session.add_all(horarios)
-        session.commit()
-        logger.info("Horarios agregados exitosamente.")
-    else:
-        logger.error("No se encontró al médico para asignar horarios.")
-
-
-def crear_cita():
-    paciente = session.query(Usuario).filter_by(nombre="Juan").first()
-    medico = session.query(Medico).join(Usuario).filter(Usuario.nombre == "Ana").first()
-
-    if paciente and medico:
-        citas = [
-            Cita(
-                id_paciente=paciente.id_usuario,
-                id_medico=medico.id,
-                fecha=date(2025, 6, 1),
-                hora=time(9, 0),
-                estado=EstadoCita.PROGRAMADA,
-                observaciones="Se observo que el paciente tiene dolor de cabeza",
-                id_info=1
-            ),
-            Cita(
-                id_paciente=paciente.id_usuario,
-                id_medico=medico.id_usuario,
-                fecha=date(2025, 6, 2),
-                id_hospital=1,
-                hora=time(10, 0),
-                estado=EstadoCita.CANCELADA,
-                observaciones="Se observo que el paciente tiene unas caries",
-                id_info=1
-            )
-        ]
-        session.add_all(citas)
-        session.commit()
-        logger.info("Citas agregadas exitosamente.")
-    else:
-        logger.error("Paciente o médico no encontrado para agendar las citas.")
-
-
-def agregar_familiares():
-    paciente_juan = session.query(Usuario).filter_by(nombre="Juan").first()
-    paciente_lucia = session.query(Usuario).filter_by(nombre="Lucía").first()
-
-    if paciente_juan and paciente_lucia:
-        familiares = [
-            Familiar(nombre="María Pérez", correo="maria.perez@example.com",
-                     id_info=1, id_paciente=paciente_juan.id_usuario),
-            Familiar(nombre="José Gómez", correo="jose.gomez@example.com",
-                     id_info=2, id_paciente=paciente_lucia.id_usuario),
-            Familiar(nombre="Marta López", correo="marta.lopez@example.com",
-                     id_info=3, id_paciente=paciente_juan.id_usuario),
-            Familiar(nombre="Luis Martínez", correo="luis.martinez@example.com",
-                     id_info=4, id_paciente=paciente_lucia.id_usuario),
-            Familiar(nombre="Sofía Ramírez", correo="sofia.ramirez@example.com",
-                     id_info=1, id_paciente=paciente_juan.id_usuario),
-        ]
-        session.add_all(familiares)
-        session.commit()
-        logger.info("Familiares agregados exitosamente.")
-    else:
-        logger.error("No se encontraron pacientes válidos para asociar familiares.")
-
-def agregar_medicamentos():
-    medicamentos = [
-        Medicamento(nombre="Paracetamol", presentacion="Tabletas", unidad_medida="500mg", id_admin=8),
-        Medicamento(nombre="Ibuprofeno", presentacion="Jarabe", unidad_medida="200mg/5ml", id_admin=8),
-        Medicamento(nombre="Amoxicilina", presentacion="Cápsulas", unidad_medida="250mg", id_admin=8),
+    medicos = []
+    estudios_base = [
+        "Especialista en {} - Universidad Nacional",
+        "Magíster en {} - Universidad Javeriana",
+        "Residente en {} - Universidad de los Andes",
+        "Diplomado en {} - Universidad El Bosque"
     ]
+
+    for i, usuario in enumerate(usuarios_medicos):
+        if i >= len(hospitales): break
+        especialidad = random.choice(especialidades)
+        estudio = random.choice(estudios_base).format(especialidad.name.capitalize())
+        calificacion = round(random.uniform(3.5, 5.0), 1)
+        hospital = random.choice(hospitales)
+
+        medicos.append(Medico(
+            id_medico=usuario.id_usuario,
+            especialidad=especialidad,
+            estudios=estudio,
+            calificacion=calificacion,
+            id_hospital=hospital.id_hospital
+        ))
+
+    session.add_all(medicos)
+    session.commit()
+    logger.info(f"{len(medicos)} Médicos detallados agregados.")
+
+
+# === 6. Horarios (50, ~3-4 por médico) ===
+def agregar_horarios():
+    medicos = session.query(Medico).all()
+    horarios = []
+
+    for medico in medicos:
+        num_horarios = random.randint(2, 4)
+        dias_usados = random.sample(dias_semana, num_horarios)
+        for dia in dias_usados:
+            hora_inicio = hora_aleatoria()
+            hora_fin = time((hora_inicio.hour + random.randint(4, 8)) % 24, random.choice([0, 30]))
+            horarios.append(Horario(
+                id_medico=medico.id_medico,
+                dia=dia,
+                hora_inicio=hora_inicio,
+                hora_fin=hora_fin
+            ))
+
+        if len(horarios) >= 50:
+            horarios = horarios[:50]
+            break
+
+    session.add_all(horarios)
+    session.commit()
+    logger.info(f"{len(horarios)} Horarios agregados.")
+
+
+# === 7. Citas (50) ===
+def crear_citas():
+    pacientes = session.query(Usuario).filter_by(id_rol=obtener_rol_id("Paciente")).all()
+    medicos = session.query(Medico).all()
+
+    citas = []
+    fecha_base = date(2025, 6, 1)
+    observaciones_base = [
+        "Dolor de cabeza persistente", "Control de presión arterial", "Revisión de resultados de laboratorio",
+        "Dolor abdominal", "Fiebre recurrente", "Cita de seguimiento", "Dolor lumbar", "Chequeo anual"
+    ]
+
+    for i in range(50):
+        paciente = random.choice(pacientes)
+        medico = random.choice(medicos)
+        fecha_cita = fecha_base + timedelta(days=random.randint(0, 60))
+        hora = hora_aleatoria()
+        estado = random.choice(estados_cita)
+        observacion = random.choice(observaciones_base)
+        id_info = random.randint(1, 5)
+        id_hospital = medico.id_hospital if random.random() > 0.3 else random.choice([h.id_hospital for h in session.query(Hospital).all()])
+
+        citas.append(Cita(
+            id_paciente=paciente.id_usuario,
+            id_medico=medico.id_medico,
+            fecha=fecha_cita,
+            hora=hora,
+            estado=estado,
+            observaciones=observacion,
+            id_info=id_info,
+            id_hospital=id_hospital
+        ))
+
+    session.add_all(citas)
+    session.commit()
+    logger.info("50 Citas agregadas exitosamente.")
+
+
+# === 8. Familiares (50) ===
+def agregar_familiares():
+    pacientes = session.query(Usuario).filter_by(id_rol=obtener_rol_id("Paciente")).all()
+    familiares = []
+
+    for i in range(50):
+        paciente = random.choice(pacientes)
+        nombre_familiar = f"{random.choice(nombres_masculinos + nombres_femeninos)} {random.choice(apellidos)}"
+        correo = generar_correo(nombre_familiar.split()[0], nombre_familiar.split()[1])
+        id_info = random.randint(1, 5)
+
+        familiares.append(Familiar(
+            nombre=nombre_familiar,
+            correo=correo,
+            id_info=id_info,
+            id_paciente=paciente.id_usuario
+        ))
+
+    session.add_all(familiares)
+    session.commit()
+    logger.info("50 Familiares agregados exitosamente.")
+
+
+# === 9. Medicamentos (50) ===
+def agregar_medicamentos():
+    admin = session.query(Usuario).filter_by(id_rol=obtener_rol_id("Administrador")).first()
+    if not admin:
+        logger.error("No se encontró administrador para medicamentos.")
+        return
+
+    medicamentos_nombres = [
+        "Paracetamol", "Ibuprofeno", "Amoxicilina", "Omeprazol", "Losartán", "Metformina", "Atorvastatina",
+        "Salbutamol", "Diclofenaco", "Captopril", "Ranitidina", "Cetirizina", "Tramadol", "Aspirina",
+        "Loratadina", "Simvastatina", "Amlodipino", "Enalapril", "Clonazepam", "Sertralina"
+    ] * 3  # Repetir para llegar a 50+
+
+    presentaciones = ["Tabletas", "Cápsulas", "Jarabe", "Inyectable", "Crema", "Gotas", "Supositorio"]
+    unidades = ["500mg", "200mg/5ml", "250mg", "20mg", "100mg", "10mg/g", "5mg/ml"]
+
+    medicamentos = []
+    for i in range(50):
+        nombre = random.choice(medicamentos_nombres[:50])
+        presentacion = random.choice(presentaciones)
+        unidad = random.choice(unidades)
+        medicamentos.append(Medicamento(
+            nombre=nombre,
+            presentacion=presentacion,
+            unidad_medida=unidad,
+            id_admin=admin.id_usuario
+        ))
+
     session.add_all(medicamentos)
     session.commit()
-    logger.info("Medicamentos agregados exitosamente.")
+    logger.info("50 Medicamentos agregados exitosamente.")
 
+
+# === 10. Medicaciones (50) ===
 def agregar_medicaciones():
-    paciente = session.query(Usuario).filter_by(nombre="Juan").first()
-    medico = session.query(Usuario).filter_by(nombre="Ana").first()
-    paracetamol = session.query(Medicamento).filter_by(nombre="Paracetamol").first()
-    ibuprofeno = session.query(Medicamento).filter_by(nombre="Ibuprofeno").first()
+    pacientes = session.query(Usuario).filter_by(id_rol=obtener_rol_id("Paciente")).limit(20).all()
+    medicos = session.query(Usuario).filter_by(id_rol=obtener_rol_id("Médico")).all()
+    medicamentos = session.query(Medicamento).all()
 
-    if paciente and medico and paracetamol and ibuprofeno:
-        medicaciones = [
-                Medicacion(
-                    id_paciente=paciente.id_usuario,
-                    id_medico=medico.id_usuario,
-                    id_medicamento=paracetamol.id_medicamento,
-                    estado=EstadoMedicacion.ACTIVA,
-                    fecha_inicio=date(2025, 6, 1),
-                    fecha_fin=date(2025, 6, 7),
-                    hora=time(10, 0),
-                    dosis="1 tableta cada 8 horas"
-                ),
-                Medicacion(
-                    id_paciente=paciente.id_usuario,
-                    id_medico=medico.id_usuario,
-                    id_medicamento=ibuprofeno.id_medicamento,
-                    estado=EstadoMedicacion.ACTIVA,
-                    fecha_inicio=date(2025, 6, 2),
-                    fecha_fin=date(2025, 6, 5),
-                    hora=time(14, 0),
-                    dosis="5 ml cada 6 horas"
-                ),
-            ]
-        session.add_all(medicaciones)
-        session.commit()
-        logger.info("Medicaciones agregadas exitosamente.")
-    else:
-        logger.error("Error al agregar medicaciones. Faltan datos válidos.")
+    medicaciones = []
+    fecha_base = date(2025, 6, 1)
 
-def agregar_indicaciones():
-    paciente = session.query(Usuario).filter_by(nombre="Juan").first()
-    medico = session.query(Usuario).filter_by(nombre="Ana").first()
+    for i in range(50):
+        paciente = random.choice(pacientes)
+        medico = random.choice(medicos)
+        medicamento = random.choice(medicamentos)
+        inicio = fecha_base + timedelta(days=random.randint(0, 30))
+        fin = inicio + timedelta(days=random.randint(3, 30))
+        dosis = random.choice([
+            "1 tableta cada 8 horas", "5 ml cada 6 horas", "1 cápsula cada 12 horas",
+            "2 gotas en cada ojo 3 veces al día", "Aplicar crema 2 veces al día"
+        ])
+        estado = random.choice(estados_medicacion)
 
-    if paciente and medico:
-        indicaciones = [
-            Indicaciones(id_paciente=paciente.id_usuario, id_medico=medico.id_usuario,
-                         fecha=date(2025, 6, 1), hora=time(11, 0), estado=EstadoIndicacion.PROGRAMADA,
-                         observaciones="Reposo absoluto durante 48 horas. Mantener hidratación adecuada."),
-            Indicaciones(id_paciente=paciente.id_usuario, id_medico=medico.id_usuario,
-                         fecha=date(2025, 6, 2), hora=time(15, 0), estado=EstadoIndicacion.PROGRAMADA,
-                         observaciones="Controlar la fiebre con compresas frías si supera los 38°C.")
-        ]
-        session.add_all(indicaciones)
-        session.commit()
-        logger.info("Indicaciones médicas agregadas exitosamente.")
-    else:
-        logger.error("No se encontraron pacientes o médicos válidos para asociar indicaciones.")
+        medicaciones.append(Medicacion(
+            id_paciente=paciente.id_usuario,
+            id_medico=medico.id_usuario,
+            id_medicamento=medicamento.id_medicamento,
+            estado=estado,
+            fecha_inicio=inicio,
+            fecha_fin=fin,
+            dosis=dosis
+        ))
 
-
-
-def agregar_hospitales():
-    hospitales = [
-        Hospital(nombre='Hospital de Suba', direccion='Carrera 90 #147 60, Bogotá', estado=EstadoHospital.ABIERTO),
-        Hospital(nombre='Hospital de Engativa', direccion='Tv. 100a #80a-50, Bogotá', estado=EstadoHospital.ABIERTO),
-        Hospital(nombre='Hospital Universitario San Ignacio', direccion='Kra 7° #40-62, Bogotá', estado=EstadoHospital.MANTENIMIENTO),
-    ]
-    session.add_all(hospitales)
+    session.add_all(medicaciones)
     session.commit()
-    logger.info("Hospitales agregados exitosamente.")
+    logger.info("50 Medicaciones agregadas exitosamente.")
 
 
-# Ejecutar todo el script
+# === 11. Indicaciones (50) ===
+def agregar_indicaciones():
+    pacientes = session.query(Usuario).filter_by(id_rol=obtener_rol_id("Paciente")).limit(20).all()
+    medicos = session.query(Usuario).filter_by(id_rol=obtener_rol_id("Médico")).all()
+
+    indicaciones = []
+    fecha_base = date(2025, 6, 1)
+    textos = [
+        "Reposo absoluto durante 48 horas.", "Beber al menos 2 litros de agua al día.",
+        "Evitar alimentos grasos por 5 días.", "Controlar glucosa 3 veces al día.",
+        "Usar compresas frías si hay inflamación.", "Tomar medicamentos con comida."
+    ]
+
+    for i in range(50):
+        paciente = random.choice(pacientes)
+        medico = random.choice(medicos)
+        fecha = fecha_base + timedelta(days=random.randint(0, 45))
+        hora = hora_aleatoria()
+        estado = random.choice(estados_indicacion)
+        observacion = " ".join(random.sample(textos, random.randint(1, 3)))
+
+        indicaciones.append(Indicaciones(
+            id_paciente=paciente.id_usuario,
+            id_medico=medico.id_usuario,
+            fecha=fecha,
+            hora=hora,
+            estado=estado,
+            observaciones=observacion
+        ))
+
+    session.add_all(indicaciones)
+    session.commit()
+    logger.info("50 Indicaciones médicas agregadas exitosamente.")
+
+
+# === EJECUCIÓN ===
 if __name__ == "__main__":
     agregar_hospitales()
     agregar_roles()
     agregar_tipo_informacion()
     agregar_usuarios()
-    crear_cita()
+    agregar_medicos()
+    agregar_horarios()
+    crear_citas()
     agregar_familiares()
     agregar_medicamentos()
     agregar_medicaciones()
     agregar_indicaciones()
-    agregar_horarios()
-    
+
+    logger.info("¡Todos los 50 registros por entidad han sido insertados exitosamente!")
