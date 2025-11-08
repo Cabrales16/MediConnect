@@ -68,7 +68,6 @@ export default function NotificationsButton() {
 
       {open && (
         <>
-          {/* Desktop: dropdown a la derecha */}
           <div className="hidden md:block absolute right-0 mt-2 w-80 z-50">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               {/* Header */}

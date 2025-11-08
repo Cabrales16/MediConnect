@@ -1,7 +1,6 @@
 import React from "react";
 
 export default function ConfirmModal({ title, description, onCancel, onConfirm }) {
-  // Bloquea scroll mientras el modal esté montado
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">

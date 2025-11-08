@@ -12,7 +12,6 @@ export default function Navbar({ onToggleSidebar }) {
       <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            {/* Mobile hamburger */}
             <button
               onClick={onToggleSidebar}
               className="md:hidden p-2 rounded-md hover:bg-gray-100"
@@ -33,11 +32,9 @@ export default function Navbar({ onToggleSidebar }) {
               </svg>
             </button>
 
-            {/* En móvil solo mostramos el logo, sin texto */}
             <Logo showText={false} />
           </div>
 
-          {/* Desktop */}
           <div className="hidden md:flex items-center gap-3">
             <CitaRapidaButton />
             <div className="w-px h-6 bg-gray-100 mx-2" />
@@ -47,7 +44,6 @@ export default function Navbar({ onToggleSidebar }) {
             <ProfileButton />
           </div>
 
-          {/* Móvil: todos los iconos (solo íconos, sin texto) */}
           <div className="md:hidden flex items-center gap-3">
             <CitaRapidaButton />
             <FaqButton />

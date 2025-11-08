@@ -10,7 +10,7 @@ export default function PlanillaCont() {
     { label: "Planilla" },
   ];
 
-  const [tab, setTab] = useState("por"); // 'por' | 'tomadas'
+  const [tab, setTab] = useState("por");
   const [selectedCita, setSelectedCita] = useState(null);
   const [citas, setCitas] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,7 +80,6 @@ export default function PlanillaCont() {
       <div className="p-8 overflow-y-auto h-[calc(100vh-9rem)]">
         <h2 className="text-2xl font-semibold mb-4">Citas del médico</h2>
 
-        {/* Tabs */}
         <div className="flex items-center gap-6 mb-6">
           <button
             onClick={() => {
@@ -111,7 +110,6 @@ export default function PlanillaCont() {
         </div>
 
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Tabla izquierda */}
           <div className="flex-1">
             <div className="bg-white rounded-2xl shadow-md p-4">
               {loading ? (

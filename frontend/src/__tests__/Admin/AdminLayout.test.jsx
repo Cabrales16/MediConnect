@@ -2,7 +2,6 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import AdminLayout from "../../Admin/AdminLayout";
 
-// Mock de react-router-dom para poder usar Routes sin error
 jest.mock("react-router-dom", () => {
   const original = jest.requireActual("react-router-dom");
   return {
@@ -13,7 +12,6 @@ jest.mock("react-router-dom", () => {
   };
 });
 
-// Mocks de componentes hijos
 jest.mock("../../Admin/components/Navbar/Navbar.jsx", () => ({ onToggleSidebar }) => (
   <button data-testid="navbar-toggle" onClick={onToggleSidebar}>
     Navbar

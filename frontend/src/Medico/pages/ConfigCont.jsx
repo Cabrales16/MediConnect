@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // 👈 importa useNavigate
+import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import ThemeToggle from "../components/UI/ThemeToggle";
 import PrivacyToggle from "../components/UI/PrivacyToggle";
 
 export default function ConfiguracionCont() {
-  const navigate = useNavigate(); // 👈 inicializa el hook
+  const navigate = useNavigate();
 
   const breadcrumbItems = [
     { label: "Inicio", href: "/medico/inicio" },
@@ -17,14 +17,12 @@ export default function ConfiguracionCont() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("rol");
-    navigate("/home"); // o a la pantalla de login
+    navigate("/home");
   };
 
   useEffect(() => {
-    // Block scroll
     document.body.style.overflow = "hidden";
     return () => {
-      // Unblock scroll on cleanup
       document.body.style.overflow = "";
     };
   }, []);
@@ -61,7 +59,6 @@ export default function ConfiguracionCont() {
           ))}
         </div>
 
-        {/* Contenido según pestaña */}
         {activeTab === "perfil" && (
           <div>
             <h3 className="text-lg font-semibold mb-3">
@@ -75,7 +72,7 @@ export default function ConfiguracionCont() {
               <div className="flex justify-between items-center p-4">
                 <span className="text-gray-800 font-medium">Ver/editar perfil</span>
                 <button
-                  onClick={() => navigate("/medico/perfil")} // 👈 redirige al perfil
+                  onClick={() => navigate("/medico/perfil")}
                   className="px-4 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition"
                 >
                   Seleccionar

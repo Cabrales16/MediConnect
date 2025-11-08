@@ -3,7 +3,6 @@ import React, { useState } from "react";
 export default function EditFamilia({ initial, onCancel, onSave }) {
   const [nombre, setNombre] = useState(initial.nombre);
   const [correo, setCorreo] = useState(initial.correo);
-  // Guardamos el id_info (1, 2, 3) en vez de la descripción
   const [idInfo, setIdInfo] = useState(initial.id_info || "");
 
   const submit = (e) => {

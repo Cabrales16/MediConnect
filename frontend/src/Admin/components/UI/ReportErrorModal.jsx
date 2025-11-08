@@ -12,7 +12,6 @@ export default function ReportErrorModal({ isOpen, onClose }) {
     e.preventDefault();
     console.log("Reporte enviado:", { errorType, description });
     toast.success("Gracias por reportar el error. ¡Trabajaremos para solucionarlo!");
-    // Aquí se puede enviar al backend cuando se tenga
     onClose();
   };
 

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 export default function HoraDetalle({ hora, setHora, tipoCita }) {
   const [opcionesHora, setOpcionesHora] = useState([]);
 
-  // 🕒 Generar lista de horas según tipo de cita
   useEffect(() => {
     const generarHoras = () => {
       let intervalo = 30; // ESTE ES EL VALOR POR DEFECTO SI UNA OPCION NO ESTA ESPECIFICADA
@@ -33,7 +32,6 @@ export default function HoraDetalle({ hora, setHora, tipoCita }) {
     generarHoras();
   }, [tipoCita]);
 
-  // Converter de horas
   const toMinutes = (horaStr) => {
     if (!horaStr) return null;
     const [time, ampm] = horaStr.split(" ");
@@ -46,7 +44,6 @@ export default function HoraDetalle({ hora, setHora, tipoCita }) {
   const inputClass =
     "p-3 border rounded-lg bg-white shadow-sm focus:outline-none transition-all border-black hover:border-green-400 focus:border-green-500 focus:ring-2 focus:ring-green-500";
 
-  // 🧮 Filtrar horas de fin
   const horaInicioMin = toMinutes(hora.inicio);
   const opcionesFin = horaInicioMin
     ? opcionesHora.filter((h) => toMinutes(h) > horaInicioMin)
@@ -54,7 +51,6 @@ export default function HoraDetalle({ hora, setHora, tipoCita }) {
 
   return (
     <div className="pt-2 flex flex-wrap gap-4">
-      {/* Hora específica */}
       {hora.tipo === "especifica" && (
         <select
           value={hora.inicio || ""}
@@ -72,7 +68,6 @@ export default function HoraDetalle({ hora, setHora, tipoCita }) {
         </select>
       )}
 
-      {/* Rango */}
       {hora.tipo === "rango" && (
         <div className="flex flex-col md:flex-row items-center gap-4">
 

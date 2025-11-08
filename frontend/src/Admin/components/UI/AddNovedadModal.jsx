@@ -9,17 +9,14 @@ export default function AddNovedadModal({ onClose, onSuccess }) {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Obtiene el ID del administrador desde localStorage
   const idAdmin = localStorage.getItem("id_usuario");
 
-  // 📸 Vista previa de la imagen
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImagen(file);
     setPreview(file ? URL.createObjectURL(file) : null);
   };
 
-  // 🧾 Envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -36,14 +33,12 @@ export default function AddNovedadModal({ onClose, onSuccess }) {
     setLoading(true);
 
     try {
-      // 👇 Se arma el FormData como lo espera FastAPI
       const formData = new FormData();
       formData.append("id_admin", idAdmin);
       formData.append("titulo", titulo);
       formData.append("descripcion", descripcion);
       if (imagen) formData.append("imagen", imagen);
 
-      // ✅ Llamada al servicio centralizado
       await crearNovedad(formData);
       onSuccess?.();
       onClose();
