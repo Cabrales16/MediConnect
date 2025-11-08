@@ -1,11 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import perfilIcon from "../Navbar/NavbarIcons/perfilIcon.png";
+import { getPerfil } from "../../../services/perfilService";
 
 export default function ProfileButtonPaciente() {
   const [open, setOpen] = useState(false);
+  const [perfil, setPerfil] = useState(null);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+  const id_usuario = localStorage.getItem("id_usuario");
+
+  useEffect(() => {
+    const fetchPerfil = async () => {
+      try {
+        const data = await getPerfil(id_usuario);
+        setPerfil(data);
+      } catch (error) {
+        console.error("❌ Error cargando perfil:", error);
+      }
+    };
+    if (id_usuario) fetchPerfil();
+  }, [id_usuario]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -19,7 +33,6 @@ export default function ProfileButtonPaciente() {
         setOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -28,14 +41,19 @@ export default function ProfileButtonPaciente() {
 
   return (
     <div ref={dropdownRef} className="relative">
-      {/* Avatar */}
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="w-10 h-10 rounded-full flex items-center justify-center focus:outline-none"
+        className="w-10 h-10 rounded-full bg-green-600 text-white font-bold flex items-center justify-center shadow hover:bg-green-700 transition"
+        title="Perfil"
       >
-        <img src={perfilIcon} alt="perfil" className="w-10 h-10 rounded-full" />
+        {perfil
+          ? `${perfil.nombre?.charAt(0).toUpperCase() || ""}${
+              perfil.apellido?.charAt(0).toUpperCase() || ""
+            }`
+          : "U"}
       </button>
 
+      {/* 🔽 Menú desplegable */}
       {open && (
         <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-lg p-2 border border-gray-200 z-50">
           <Link

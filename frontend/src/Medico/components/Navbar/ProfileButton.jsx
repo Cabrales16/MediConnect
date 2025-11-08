@@ -1,11 +1,32 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import perfilIcon from "../Navbar/NavbarIcons/perfilIcon.png";
+import { getPerfil } from "../../../services/perfilService";
 
-export default function ProfileButtonPaciente() {
+export default function ProfileButton() {
   const [open, setOpen] = useState(false);
+  const [perfil, setPerfil] = useState(null);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+  const id_usuario = localStorage.getItem("id_usuario");
+
+  useEffect(() => {
+    const fetchPerfil = async () => {
+      try {
+        const data = await getPerfil(id_usuario);
+        setPerfil(data);
+      } catch (error) {
+        console.error("❌ Error cargando perfil:", error);
+      }
+    };
+    if (id_usuario) fetchPerfil();
+  }, [id_usuario]);
+
+  const getInitials = (nombre, apellido) => {
+    if (!nombre && !apellido) return "U";
+    return `${nombre?.charAt(0).toUpperCase() || ""}${apellido
+      ?.charAt(0)
+      .toUpperCase() || ""}`;
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -19,11 +40,8 @@ export default function ProfileButtonPaciente() {
         setOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -31,9 +49,10 @@ export default function ProfileButtonPaciente() {
       {/* Avatar */}
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="w-10 h-10 rounded-full flex items-center justify-center focus:outline-none"
+        className="w-10 h-10 rounded-full bg-green-500 text-white font-bold flex items-center justify-center shadow hover:bg-green-600 transition"
+        title="Perfil"
       >
-        <img src={perfilIcon} alt="perfil" className="w-10 h-10 rounded-full" />
+        {perfil ? getInitials(perfil.nombre, perfil.apellido) : "U"}
       </button>
 
       {open && (

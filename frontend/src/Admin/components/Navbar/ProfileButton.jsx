@@ -1,44 +1,64 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import perfilIcon from "../Navbar/NavbarIcons/perfilIcon.png";
+import { getPerfil } from "../../../services/perfilService";
 
-export default function ProfileButtonPaciente() {
+export default function ProfileButton() {
   const [open, setOpen] = useState(false);
+  const [perfil, setPerfil] = useState(null);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("rol");
-    navigate("/home");
-  };
+  const id_usuario = localStorage.getItem("id_usuario");
 
+  // 🔹 Obtener datos del perfil
+  useEffect(() => {
+    const fetchPerfil = async () => {
+      try {
+        const data = await getPerfil(id_usuario);
+        setPerfil(data);
+      } catch (error) {
+        console.error("❌ Error al obtener el perfil del admin:", error);
+      }
+    };
+    if (id_usuario) fetchPerfil();
+  }, [id_usuario]);
+
+  // 🔹 Cerrar dropdown si se hace clic fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // 🔹 Cerrar sesión
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("rol");
+    localStorage.removeItem("id_usuario");
+    navigate("/home");
+  };
 
   return (
     <div ref={dropdownRef} className="relative">
-      {/* Avatar */}
+      {/* 🔹 Avatar con iniciales */}
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="w-10 h-10 rounded-full flex items-center justify-center focus:outline-none"
+        className="w-10 h-10 rounded-full bg-green-500 text-white font-bold flex items-center justify-center hover:bg-green-600 transition-colors"
+        title="Perfil"
       >
-        <img src={perfilIcon} alt="perfil" className="w-10 h-10 rounded-full" />
+        {perfil
+          ? perfil.nombre?.charAt(0).toUpperCase() +
+            (perfil.apellido?.charAt(0).toUpperCase() || "")
+          : "A"}
       </button>
 
-      {/* Dropdown */}
+      {/* 🔹 Dropdown */}
       {open && (
-        <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-lg p-2 border border-gray-200 z-50">
+        <div className="absolute right-0 mt-2 w-48 bg-white shadow-md rounded-lg p-2 border border-gray-200 z-50 animate-fade-in">
           <Link
             to="/admin/perfil"
             onClick={() => setOpen(false)}
