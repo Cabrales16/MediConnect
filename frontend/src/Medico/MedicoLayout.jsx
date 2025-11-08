@@ -17,7 +17,6 @@ export default function MedicoLayout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      {/* Navbar con botón hamburguesa */}
       <header className="w-full">
         <Navbar onToggleSidebar={() => setSidebarOpen((prev) => !prev)} />
       </header>
@@ -26,7 +25,6 @@ export default function MedicoLayout() {
         {/* Sidebar */}
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-        {/* Fondo oscuro cuando el sidebar está abierto en móvil */}
         {sidebarOpen && (
           <div
             className="fixed inset-0 bg-black bg-opacity-40 z-30 md:hidden"
@@ -34,7 +32,6 @@ export default function MedicoLayout() {
           ></div>
         )}
 
-        {/* Contenido principal */}
         <main
           className={`flex-1 p-4 md:p-6 overflow-auto transition-all duration-200 ${
             sidebarOpen ? "pointer-events-none md:pointer-events-auto" : ""
@@ -56,7 +53,6 @@ export default function MedicoLayout() {
         </main>
       </div>
 
-      {/* Notificaciones */}
       <ToastContainer position="bottom-left" autoClose={3000} />
     </div>
   );

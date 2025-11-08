@@ -21,7 +21,6 @@ export default function EditarPerfilCont() {
     correo: "",
   });
 
-  // Cargar datos del perfil al montar
   useEffect(() => {
     const fetchPerfil = async () => {
       try {

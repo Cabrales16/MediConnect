@@ -3,14 +3,12 @@ import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import NovedadDetalle from "../../Admin/components/GestNovedades/NovedadDetalle";
 import { toast } from "react-toastify";
 
-// Mock de react-router-dom
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
   useParams: () => ({ id: "123" }),
   useNavigate: () => mockNavigate,
 }));
 
-// Mock de servicios
 const mockNovedad = {
   titulo: "Nueva Novedad",
   descripcion: "Esta es la descripción de la novedad.",
@@ -20,7 +18,6 @@ jest.mock("../../services/novedades.js", () => ({
   getInfoNovedad: jest.fn(),
 }));
 
-// Mock de toast
 jest.mock("react-toastify", () => ({
   toast: {
     error: jest.fn(),
@@ -44,7 +41,6 @@ describe("NovedadDetalle", () => {
     getInfoNovedad.mockResolvedValue(mockNovedad);
     render(<NovedadDetalle />);
 
-    // Heading <h2>
     await waitFor(() => {
       const heading = screen.getByRole("heading", { name: mockNovedad.titulo });
       expect(heading).toBeInTheDocument();

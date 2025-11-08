@@ -5,6 +5,7 @@ import { getMedicacionPaciente } from "../../services/medicacion";
 import { obtenerTerapiasPaciente } from "../../services/terapia"; // ✅ nuevo import
 import { obtenerIndicacionesPaciente } from "../../services/indicacion";
 
+
 export default function IndMedicasCont() {
   const breadcrumbItems = [
     { label: "Inicio", href: "/paciente/inicio" },

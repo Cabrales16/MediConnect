@@ -19,7 +19,6 @@ export default function CitaDetails({ cita, mode = "por", onClose }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-400 shadow-md overflow-hidden h-full">
       <div className="p-6 flex flex-col h-full">
-        {/* HEADER */}
         <div className="flex items-start justify-between mb-4">
           <div>
             <h3 className="text-lg font-semibold">{cita.especialidad_medico || "Cita médica"}</h3>
@@ -28,7 +27,6 @@ export default function CitaDetails({ cita, mode = "por", onClose }) {
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">✕</button>
         </div>
 
-        {/* CONTENT */}
         <div className="flex flex-col md:flex-row gap-6 flex-1">
           {/* Panel izquierdo */}
           <div className="w-full md:w-1/2 pr-0 md:pr-4">

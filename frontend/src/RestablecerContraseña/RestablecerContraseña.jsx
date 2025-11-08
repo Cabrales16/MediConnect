@@ -6,7 +6,6 @@ import Volver from "./RestablecerContraseñaImages/flechaIconIzq.png";
 import { restablecerContrasena } from "../services/authService"; 
 
 export default function RestablecerContrasena() {
-  const { token } = useParams(); // 👈 obtenemos el token de la URL
   const navigate = useNavigate();
 
   const [password, setPassword] = useState("");
@@ -25,7 +24,7 @@ export default function RestablecerContrasena() {
       const resp = await restablecerContrasena(token, password);
       console.log("Respuesta:", resp);
       setMensaje("✅ Tu contraseña ha sido restablecida con éxito.");
-      setTimeout(() => navigate("/login"), 2000); // Redirige al login
+      setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
       console.error(err);
       setError("Hubo un error al restablecer la contraseña.");
@@ -53,13 +52,11 @@ export default function RestablecerContrasena() {
         </g>
       </svg>
 
-      {/* Caja principal */}
       <div className="relative flex max-w-3xl w-full shadow-md rounded-2xl overflow-hidden z-10 bg-white">
         <a href="/login" className="w-2 h-2 absolute flex ml-4 mt-5 items-center">
           <img src={Volver} alt="regresar" /> <p className="pl-3">Volver</p>
         </a>
 
-        {/* Caja izquierda */}
         <div className="w-1/2 bg-white flex items-center justify-center p-6">
           <img
             src={calendario}
@@ -68,7 +65,6 @@ export default function RestablecerContrasena() {
           />
         </div>
 
-        {/* Caja derecha */}
         <div className="w-1/2 bg-green-500 flex items-center justify-center p-6">
           <div className="bg-white rounded-2xl shadow-lg p-8 w-full">
             <h2 className="text-xl font-bold text-center mb-6">

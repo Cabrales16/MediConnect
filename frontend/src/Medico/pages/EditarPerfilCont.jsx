@@ -21,7 +21,6 @@ export default function EditarPerfilCont() {
     correo: "",
   });
 
-  // Cargar datos del perfil al montar
   useEffect(() => {
     const fetchPerfil = async () => {
       try {
@@ -66,7 +65,7 @@ export default function EditarPerfilCont() {
   };
 
   useEffect(() => {
-    // Block scroll
+    // Block scrol
     document.body.style.overflow = "hidden";
     return () => {
       // Unblock scroll on cleanup
@@ -85,7 +84,6 @@ export default function EditarPerfilCont() {
         </p>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-300 p-6 max-w-2xl">
-          {/* Tipo de documento */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">Tipo de documento</label>
             <select
