@@ -2,7 +2,7 @@ import React from "react";
 import Logo from "./Logo";
 import CitaRapidaButton from "./CitaRapida";
 import FaqButton from "./FaqButton";
-import NotificationsButton from "./NotificationsButton";
+// import NotificationsButton from "./NotificationsButton";
 import SettingsButton from "./SettingsButton";
 import ProfileButton from "./ProfileButton";
 
@@ -36,18 +36,18 @@ export default function Navbar({ onToggleSidebar }) {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
-            <CitaRapidaButton />
-            <div className="w-px h-6 bg-gray-100 mx-2" />
+            {/* <CitaRapidaButton /> */}
+            {/* <div className="w-px h-6 bg-gray-100 mx-2" /> */}
             <FaqButton />
-            <NotificationsButton />
+            {/* <NotificationsButton /> */}
             <SettingsButton />
             <ProfileButton />
           </div>
 
           <div className="md:hidden flex items-center gap-3">
-            <CitaRapidaButton />
+            {/* <CitaRapidaButton /> */}
             <FaqButton />
-            <NotificationsButton />
+            {/* <NotificationsButton /> */}
             <SettingsButton />
             <ProfileButton />
           </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import Logo from "./Logo";
 import FaqButton from "./FaqButton";
-import NotificationsButton from "./NotificationsButton";
+// import NotificationsButton from "./NotificationsButton";
 import SettingsButton from "./SettingsButton";
 import ProfileButton from "./ProfileButton";
 
@@ -37,14 +37,14 @@ export default function Navbar({ onToggleSidebar }) {
 
           <div className="hidden md:flex items-center gap-3">
             <FaqButton />
-            <NotificationsButton />
+            {/* <NotificationsButton /> */}
             <SettingsButton />
             <ProfileButton />
           </div>
 
           <div className="md:hidden flex items-center gap-3">
             <FaqButton />
-            <NotificationsButton />
+            {/* <NotificationsButton /> */}
             <SettingsButton />
             <ProfileButton />
           </div>

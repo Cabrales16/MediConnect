@@ -241,7 +241,7 @@ export default function Register() {
                   />
                 </div>
 
-                {/* Términos */}
+                {/* Términos
                 <div className="sm:col-span-2 flex items-start text-[11px] md:text-xs text-gray-600 mt-1">
                   <input type="checkbox" id="terms" className="mt-0.5 mr-2" />
                   <label htmlFor="terms">
@@ -251,7 +251,7 @@ export default function Register() {
                     </a>
                     .
                   </label>
-                </div>
+                </div> */}
 
                 {/* Botón */}
                 <motion.button

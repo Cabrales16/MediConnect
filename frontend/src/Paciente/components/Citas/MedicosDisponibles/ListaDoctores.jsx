@@ -22,6 +22,7 @@ export default function ListaDoctores() {
   const [error, setError] = useState(null);
   const [citaData, setCitaData] = useState(null);
   const [initialSlotsProcessed, setInitialSlotsProcessed] = useState(false);
+            const [imgOk, setImgOk] = useState(true);
 
   const { slots, fecha, tipoCita, ubicacion, hora } = location.state || {};
   const memoSlots = useMemo(() => slots, [slots]);
@@ -48,7 +49,7 @@ export default function ListaDoctores() {
             id: medicoId,
             name: slot.nombre || "Médico",
             specialty: slot.especialidad || "Especialidad",
-            image: slot.foto_medico || "/default-doctor.jpg",
+            image: slot.foto_medico || "",
             hospital: slot.hospital || "Hospital",
             estudios: slot.estudios || "Estudios",
             calificacion: slot.calificacion || 3.5,
@@ -65,7 +66,7 @@ export default function ListaDoctores() {
             .slots_disponibles.push(...slot.slots_disponibles.map(formatearHora));
         }
       });
-    
+
       return Array.from(medicosMap.values());
     };
   }, []);
@@ -109,6 +110,24 @@ export default function ListaDoctores() {
     });
   };
 
+  const getInitials = (nombreCompleto = "") => {
+    const partes = nombreCompleto.trim().split(" ");
+    if (partes.length === 1) return partes[0].charAt(0).toUpperCase();
+    return (
+      (partes[0]?.charAt(0).toUpperCase() || "") +
+      (partes[1]?.charAt(0).toUpperCase() || "")
+    );
+  };
+
+  const hasValidAvatar = (image) =>
+    !!(
+      image &&
+      typeof image === "string" &&
+      image.trim() !== "" &&
+      !image.includes("placeholder") &&
+      /^(https?:\/\/|data:image)/i.test(image.trim())
+    );
+
   const renderContent = () => {
     if (error) {
       return (
@@ -126,66 +145,78 @@ export default function ListaDoctores() {
 
     return (
       <div className="divide-y divide-gray-200">
-        {doctoresDisponibles.map((doctor) => (
-          <div
-            key={doctor.id}
-            className="flex flex-col sm:grid sm:grid-cols-[auto_1fr_auto] sm:items-center gap-4 py-4"
-          >
-            <div className="flex justify-center sm:justify-start">
-              <img
-                src={doctor.image}
-                alt={doctor.name}
-                className="w-16 h-16 rounded-full object-cover border border-gray-300"
-                onError={(e) => (e.target.src = "/default-doctor.jpg")}
-              />
-            </div>
-            <div className="text-center sm:text-left">
-              <p className="font-semibold text-lg">{doctor.name}</p>
-              <p className="text-green-600 text-sm">{doctor.specialty}</p>
-              {doctor.hospital && (
-                <p className="text-gray-500 text-xs">{doctor.hospital}</p>
-              )}
-              <div className="flex justify-center sm:justify-start items-center mt-1">
-                {[...Array(5)].map((_, i) => (
-                  <span
-                    key={i}
-                    className={`text-sm ${
-                      i < Math.round(doctor.calificacion)
-                        ? "text-yellow-400"
-                        : "text-gray-300"
-                    }`}
-                  >
-                    ★
-                  </span>
-                ))}
-                <span className="text-xs text-gray-500 ml-1">
-                  {doctor.calificacion.toFixed(1)}
-                </span>
+        {doctoresDisponibles.map((doctor) => {
+
+
+          return (
+            <div
+              key={doctor.id}
+              className="flex flex-col sm:grid sm:grid-cols-[auto_1fr_auto] sm:items-center gap-4 py-4"
+            >
+              <div className="flex justify-center sm:justify-start">
+                {/* ✅ Avatar con fallback a iniciales */}
+                {hasValidAvatar(doctor.image) && imgOk ? (
+                  <img
+                    src={doctor.image}
+                    alt={doctor.name}
+                    className="w-16 h-16 rounded-full object-cover shadow-md ring-2 ring-white border border-gray-300"
+                    onError={() => setImgOk(false)}
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-lg shadow-md ring-2 ring-white">
+                    {getInitials(doctor.name)}
+                  </div>
+                )}
               </div>
 
-              {doctor.slots_disponibles?.length > 0 ? (
-                <p className="text-blue-600 text-xs mt-1">
-                  Horarios disponibles: {doctor.slots_disponibles.join(", ")}
-                </p>
-              ) : (
-                <p className="text-gray-400 text-xs mt-1">
-                  No hay horarios disponibles
-                </p>
-              )}
+              <div className="text-center sm:text-left">
+                <p className="font-semibold text-lg">{doctor.name}</p>
+                <p className="text-green-600 text-sm">{doctor.specialty}</p>
+                {doctor.hospital && (
+                  <p className="text-gray-500 text-xs">{doctor.hospital}</p>
+                )}
+                <div className="flex justify-center sm:justify-start items-center mt-1">
+                  {[...Array(5)].map((_, i) => (
+                    <span
+                      key={i}
+                      className={`text-sm ${
+                        i < Math.round(doctor.calificacion)
+                          ? "text-yellow-400"
+                          : "text-gray-300"
+                      }`}
+                    >
+                      ★
+                    </span>
+                  ))}
+                  <span className="text-xs text-gray-500 ml-1">
+                    {doctor.calificacion.toFixed(1)}
+                  </span>
+                </div>
+
+                {doctor.slots_disponibles?.length > 0 ? (
+                  <p className="text-blue-600 text-xs mt-1">
+                    Horarios disponibles: {doctor.slots_disponibles.join(", ")}
+                  </p>
+                ) : (
+                  <p className="text-gray-400 text-xs mt-1">
+                    No hay horarios disponibles
+                  </p>
+                )}
+              </div>
+
+              <div className="flex justify-center sm:justify-end">
+                <button
+                  onClick={() => handleSelectDoctor(doctor)}
+                  className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium transition w-full sm:w-auto"
+                >
+                  Seleccionar
+                </button>
+              </div>
             </div>
-            <div className="flex justify-center sm:justify-end">
-              <button
-                onClick={() => handleSelectDoctor(doctor)}
-                className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium transition w-full sm:w-auto"
-              >
-                Seleccionar
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     );
-
   };
 
   if (loading) {
