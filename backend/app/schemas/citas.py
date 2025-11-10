@@ -87,3 +87,7 @@ class CitasMedico(BaseModel):
 
     class Config:
         orm_mode = True
+
+class FinalizarCita(BaseModel):
+    id_cita: int
+

@@ -5,7 +5,7 @@ from app.models.cita import Cita
 from app.models.horarios import Horario
 from app.models.medico import Medico, EspecialidadMedica
 from app.models.usuario import Usuario
-from app.schemas.citas import CitaCreate, CitaUpdate, EstadoCita
+from app.schemas.citas import CitaCreate, CitaUpdate, EstadoCita, FinalizarCita
 from app.models.hospitales import Hospital
 from app.models.medicamento import Medicamento
 from app.models.tipo_Novedad import TipoNovedad
@@ -484,3 +484,15 @@ def agendar_cita(db: Session, cita: CitaCreate):
         else:
             print(f"⚠️ Familiar {familiar.nombre} sin tipo de novedad asociado")
     return nueva_cita
+
+def finalizar_cita(db: Session, datos: FinalizarCita):
+    db_cita = db.query(Cita).filter(Cita.id_cita == datos.id_cita).first()
+    if not db_cita:
+        raise HTTPException(status_code=404, detail="Cita no encontrada")
+
+    # Actualizar estado a COMPLETADA
+    db_cita.estado = EstadoCita.COMPLETADA.value
+
+    db.commit()
+    db.refresh(db_cita)
+    return db_cita

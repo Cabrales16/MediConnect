@@ -74,3 +74,13 @@ export const getCitasMedico = async (id_usuario) => {
   });
   return res.data;
 }
+
+
+// Finalizar una cita
+export const finalizarCita = async (id_cita) => {
+  const token = localStorage.getItem("token");
+  const res = await api.put(`/Citas/finalizar-cita`, { id_cita }, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+}

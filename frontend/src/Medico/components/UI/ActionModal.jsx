@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { crearMedicacion, obtenerMedicamentos } from "../../../services/medicacion";
 import { asignarTerapia, obtenerTerapias } from "../../../services/terapia";
-import { crearIndicacion } from "../../../services/indicacion"; // ✅ nuevo import
+import { crearIndicacion } from "../../../services/indicacion";
+import { finalizarCita } from "../../../services/citasService";
+import { toast } from "react-toastify";
 
 export default function ActionModal({ type, onClose, onSubmit, id_paciente, id_cita }) {
   const [nota, setNota] = useState("");
@@ -58,7 +60,7 @@ export default function ActionModal({ type, onClose, onSubmit, id_paciente, id_c
 
   // 🔹 Enviar acción al backend
   const handleSubmit = async () => {
-    if (!id_paciente) {
+    if (!id_paciente && type !== "finalizar") {
       alert("⚠️ No se encontró el paciente. Selecciona una cita válida.");
       return;
     }
@@ -88,7 +90,7 @@ export default function ActionModal({ type, onClose, onSubmit, id_paciente, id_c
         };
 
         resultado = await crearMedicacion(medicacionData);
-        console.log("✅ Medicación creada:", resultado);
+        toast.success("✅ Medicación creada correctamente");
       }
 
       // 🧩 TERAPIA
@@ -107,7 +109,7 @@ export default function ActionModal({ type, onClose, onSubmit, id_paciente, id_c
         };
 
         resultado = await asignarTerapia(terapiaData);
-        console.log("✅ Terapia asignada:", resultado);
+        toast.success("✅ Terapia asignada correctamente");
       }
 
       // 🧩 INDICACIÓN MÉDICA
@@ -125,14 +127,25 @@ export default function ActionModal({ type, onClose, onSubmit, id_paciente, id_c
         };
 
         resultado = await crearIndicacion(indicacionData);
-        console.log("✅ Indicación creada:", resultado);
+        toast.success("✅ Indicación registrada correctamente");
+      }
+
+      // 🧩 FINALIZAR CITA
+      if (type === "finalizar") {
+        if (!id_cita) {
+          alert("⚠️ No se encontró el ID de la cita.");
+          return;
+        }
+
+        resultado = await finalizarCita(parseInt(id_cita));
+        toast.success("✅ Cita finalizada correctamente");
       }
 
       if (onSubmit) onSubmit(resultado);
       onClose();
     } catch (error) {
       console.error("❌ Error en acción:", error);
-      alert("Ocurrió un error al procesar la acción.");
+      toast.error("Ocurrió un error al procesar la acción.");
     } finally {
       setCargando(false);
     }
@@ -141,10 +154,11 @@ export default function ActionModal({ type, onClose, onSubmit, id_paciente, id_c
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-6 w-96">
-        <h3 className="text-lg font-semibold mb-4">
+        <h3 className="text-lg font-semibold mb-4 text-center">
           {type === "medicamento" && "Añadir Medicamento"}
           {type === "terapia" && "Asignar Terapia"}
-          {type === "indicacion" && "Registrar Indicación Médica"} {/* ✅ */}
+          {type === "indicacion" && "Registrar Indicación Médica"}
+          {type === "finalizar" && "Finalizar Cita"}
         </h3>
 
         {/* 🔹 INDICACIÓN MÉDICA */}
@@ -257,6 +271,13 @@ export default function ActionModal({ type, onClose, onSubmit, id_paciente, id_c
           </>
         )}
 
+        {/* 🔹 CONFIRMACIÓN FINALIZAR CITA */}
+        {type === "finalizar" && (
+          <p className="text-center text-gray-700 mb-4">
+            ¿Seguro que deseas marcar esta cita como <b>finalizada</b>?
+          </p>
+        )}
+
         {/* 🔹 BOTONES */}
         <div className="mt-4 flex justify-end gap-2">
           <button
@@ -268,13 +289,20 @@ export default function ActionModal({ type, onClose, onSubmit, id_paciente, id_c
           <button
             onClick={handleSubmit}
             disabled={cargando}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            className={`px-4 py-2 rounded text-white ${
+              type === "finalizar"
+                ? "bg-green-600 hover:bg-green-700"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
-            {cargando ? "Guardando..." : "Guardar"}
+            {cargando
+              ? "Procesando..."
+              : type === "finalizar"
+              ? "Finalizar"
+              : "Guardar"}
           </button>
         </div>
       </div>
     </div>
   );
 }
-

@@ -7,7 +7,6 @@ import certifi
 import os
 # Asegurar que SendGrid use el certificado correcto
 os.environ['SSL_CERT_FILE'] = certifi.where()
-
 import base64
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileName, FileType, Disposition
