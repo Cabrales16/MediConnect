@@ -6,11 +6,11 @@ export default function ModificarDatosModal({ onClose, onConfirm }) {
   const [especialidad, setEspecialidad] = useState("");
   const [estudios, setEstudios] = useState("");
   const [hospital, setHospital] = useState("");
-  const [horaInicio, setHoraInicio] = useState("");
-  const [horaFin, setHoraFin] = useState("");
-  const [diaInicio, setDiaInicio] = useState("");
-  const [diaFin, setDiaFin] = useState("");
-  const [error, setError] = useState("");
+  // const [horaInicio, setHoraInicio] = useState("");
+  // const [horaFin, setHoraFin] = useState("");
+  // const [diaInicio, setDiaInicio] = useState("");
+  // const [diaFin, setDiaFin] = useState("");
+  const [error] = useState("");
 
   const idAdmin = localStorage.getItem("id_usuario");
 
@@ -22,48 +22,48 @@ export default function ModificarDatosModal({ onClose, onConfirm }) {
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const horarios = [
-    "07:00 AM", "07:30 AM", "08:00 AM", "08:30 AM", "09:00 AM",
-    "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
-    "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM",
-    "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM",
-    "05:00 PM", "05:30 PM", "06:00 PM", "06:30 PM", "07:00 PM",
-  ];
+  // const horarios = [
+  //   "07:00 AM", "07:30 AM", "08:00 AM", "08:30 AM", "09:00 AM",
+  //   "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
+  //   "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM",
+  //   "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM",
+  //   "05:00 PM", "05:30 PM", "06:00 PM", "06:30 PM", "07:00 PM",
+  // ];
 
-  const diasSemana = [
-    "Lunes",
-    "Martes",
-    "Miércoles",
-    "Jueves",
-    "Viernes",
-    "Sábado",
-    "Domingo",
-  ];
+  // const diasSemana = [
+  //   "Lunes",
+  //   "Martes",
+  //   "Miércoles",
+  //   "Jueves",
+  //   "Viernes",
+  //   "Sábado",
+  //   "Domingo",
+  // ];
 
-  const calcularDiferenciaHoras = (inicio, fin) => {
-    const parseHora = (h) => {
-      const [time, meridiem] = h.split(" ");
-      let [hour, minute] = time.split(":").map(Number);
-      if (meridiem === "PM" && hour !== 12) hour += 12;
-      if (meridiem === "AM" && hour === 12) hour = 0;
-      return hour + minute / 60;
-    };
-    return parseHora(fin) - parseHora(inicio);
-  };
+  // const calcularDiferenciaHoras = (inicio, fin) => {
+  //   const parseHora = (h) => {
+  //     const [time, meridiem] = h.split(" ");
+  //     let [hour, minute] = time.split(":").map(Number);
+  //     if (meridiem === "PM" && hour !== 12) hour += 12;
+  //     if (meridiem === "AM" && hour === 12) hour = 0;
+  //     return hour + minute / 60;
+  //   };
+  //   return parseHora(fin) - parseHora(inicio);
+  // };
 
-  const handleHorariosChange = (name, value) => {
-    if (name === "horaInicio") setHoraInicio(value);
-    else setHoraFin(value);
+  // const handleHorariosChange = (name, value) => {
+  //   if (name === "horaInicio") setHoraInicio(value);
+  //   else setHoraFin(value);
 
-    const inicio = name === "horaInicio" ? value : horaInicio;
-    const fin = name === "horaFin" ? value : horaFin;
+  //   const inicio = name === "horaInicio" ? value : horaInicio;
+  //   const fin = name === "horaFin" ? value : horaFin;
 
-    if (inicio && fin) {
-      const diff = calcularDiferenciaHoras(inicio, fin);
-      if (diff < 5) setError("El rango mínimo debe ser de 5 horas.");
-      else setError("");
-    }
-  };
+  //   if (inicio && fin) {
+  //     const diff = calcularDiferenciaHoras(inicio, fin);
+  //     if (diff < 5) setError("El rango mínimo debe ser de 5 horas.");
+  //     else setError("");
+  //   }
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,11 +71,11 @@ export default function ModificarDatosModal({ onClose, onConfirm }) {
     if (
       !especialidad ||
       !estudios ||
-      !hospital ||
-      !horaInicio ||
-      !horaFin ||
-      !diaInicio ||
-      !diaFin
+      !hospital
+      // !horaInicio ||
+      // !horaFin ||
+      // !diaInicio ||
+      // !diaFin
     ) {
       toast.error("Por favor, completa todos los campos antes de confirmar.");
       return;
@@ -90,10 +90,10 @@ export default function ModificarDatosModal({ onClose, onConfirm }) {
       especialidad,
       estudios,
       id_hospital: Number(hospital),
-      hora_inicio: horaInicio,
-      hora_fin: horaFin,
-      dia_inicio: diaInicio,
-      dia_fin: diaFin,
+      // hora_inicio: horaInicio,
+      // hora_fin: horaFin,
+      // dia_inicio: diaInicio,
+      // dia_fin: diaFin,
     };
 
     try {
@@ -171,7 +171,7 @@ export default function ModificarDatosModal({ onClose, onConfirm }) {
             <option value="5">Clínica del Country</option>
           </select>
 
-          {/* Horario */}
+          {/* Horario
           <label className="block mb-2 font-medium">Horario de atención</label>
 
           <div className="flex gap-3 mb-4">
@@ -228,7 +228,7 @@ export default function ModificarDatosModal({ onClose, onConfirm }) {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 

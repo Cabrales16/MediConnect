@@ -21,6 +21,13 @@ export default function NovedadDetalle() {
     fetchNovedad();
   }, [id]);
 
+    useEffect(() => {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }, []);
+
   if (!novedad) {
     return (
       <div className="p-8">

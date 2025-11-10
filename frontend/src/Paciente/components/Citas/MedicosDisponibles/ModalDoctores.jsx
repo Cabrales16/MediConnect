@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, citaBase }) {
   const [selectedSlot, setSelectedSlot] = useState("");
+  const [imgOk, setImgOk] = useState(true);
 
   useEffect(() => {
     if (doctor?.slots_disponibles?.length > 0) {
@@ -10,6 +11,15 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
   }, [doctor]);
 
   if (!isOpen || !doctor) return null;
+
+  const getInitials = (nombreCompleto = "") => {
+    const partes = nombreCompleto.trim().split(" ");
+    if (partes.length === 1) return partes[0].charAt(0).toUpperCase();
+    return (
+      (partes[0]?.charAt(0).toUpperCase() || "") +
+      (partes[1]?.charAt(0).toUpperCase() || "")
+    );
+  };
 
   const convertirHora24 = (hora12) => {
     if (!hora12) return null;
@@ -38,13 +48,13 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
     };
 
     console.log("📤 Enviando cita:", citaPayload);
-
     onConfirm(citaPayload);
   };
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl w-full max-w-md p-6 relative shadow-lg">
+        {/* Botón cerrar */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-xl"
@@ -54,12 +64,19 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
         </button>
 
         <div className="flex items-center gap-4">
-          <img
-            src={doctor.image || "/default-doctor.jpg"}
-            alt={doctor.name}
-            className="w-20 h-20 rounded-full object-cover border"
-            onError={(e) => (e.target.src = "/default-doctor.jpg")}
-          />
+          {doctor.image && imgOk ? (
+            <img
+              src={doctor.image}
+              alt={doctor.name}
+              className="w-20 h-20 rounded-full object-cover border shadow-md ring-2 ring-white"
+              onError={() => setImgOk(false)} // Si falla, muestra iniciales
+            />
+          ) : (
+            <div className="w-20 h-20 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-xl shadow-md ring-2 ring-white">
+              {getInitials(doctor.name)}
+            </div>
+          )}
+
           <div>
             <h3 className="text-lg font-bold text-gray-800">{doctor.name}</h3>
             <p className="text-green-600 font-medium">{doctor.specialty}</p>
@@ -69,7 +86,10 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
           </div>
         </div>
 
-        {doctor.estudios && <p className="mt-3 italic text-gray-600">{doctor.estudios}</p>}
+        {/* Estudios */}
+        {doctor.estudios && (
+          <p className="mt-3 italic text-gray-600">{doctor.estudios}</p>
+        )}
 
         {/* Calificación */}
         {doctor.calificacion && (
@@ -108,6 +128,7 @@ export default function ModalDoctores({ doctor, isOpen, onClose, onConfirm, cita
           </div>
         )}
 
+        {/* Botón confirmar */}
         <button
           onClick={handleConfirm}
           className="mt-6 w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition"

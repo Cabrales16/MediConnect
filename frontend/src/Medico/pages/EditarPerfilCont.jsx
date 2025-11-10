@@ -20,10 +20,10 @@ export default function EditarPerfilCont() {
     telefono: "",
     direccion: "",
     correo: "",
-    horaInicio: "",
-    horaFin: "",
-    diaInicio: "",
-    diaFin: "",
+    // horaInicio: "",
+    // horaFin: "",
+    // diaInicio: "",
+    // diaFin: "",
   });
 
   const [error, setError] = useState("");
@@ -38,10 +38,10 @@ export default function EditarPerfilCont() {
           telefono: data.telefono || "",
           direccion: data.direccion || "",
           correo: data.correo || "",
-          horaInicio: data.hora_inicio || "",
-          horaFin: data.hora_fin || "",
-          diaInicio: data.dia_inicio || "",
-          diaFin: data.dia_fin || "",
+          // horaInicio: data.hora_inicio || "",
+          // horaFin: data.hora_fin || "",
+          // diaInicio: data.dia_inicio || "",
+          // diaFin: data.dia_fin || "",
         });
       } catch (error) {
         console.error("❌ Error cargando perfil:", error);
@@ -51,23 +51,23 @@ export default function EditarPerfilCont() {
     fetchPerfil();
   }, [id_usuario]);
 
-  const horarios = [
-    "07:00 AM", "07:30 AM", "08:00 AM", "08:30 AM", "09:00 AM",
-    "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
-    "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM",
-    "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM",
-    "05:00 PM", "05:30 PM", "06:00 PM", "06:30 PM", "07:00 PM",
-  ];
+  // const horarios = [
+  //   "07:00 AM", "07:30 AM", "08:00 AM", "08:30 AM", "09:00 AM",
+  //   "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
+  //   "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM",
+  //   "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM",
+  //   "05:00 PM", "05:30 PM", "06:00 PM", "06:30 PM", "07:00 PM",
+  // ];
 
-  const diasSemana = [
-    "Lunes",
-    "Martes",
-    "Miércoles",
-    "Jueves",
-    "Viernes",
-    "Sábado",
-    "Domingo",
-  ];
+  // const diasSemana = [
+  //   "Lunes",
+  //   "Martes",
+  //   "Miércoles",
+  //   "Jueves",
+  //   "Viernes",
+  //   "Sábado",
+  //   "Domingo",
+  // ];
 
   const calcularDiferenciaHoras = (inicio, fin) => {
     const parseHora = (h) => {
@@ -105,10 +105,10 @@ export default function EditarPerfilCont() {
         telefono: formData.telefono,
         direccion: formData.direccion,
         correo: formData.correo,
-        hora_inicio: formData.horaInicio,
-        hora_fin: formData.horaFin,
-        dia_inicio: formData.diaInicio,
-        dia_fin: formData.diaFin,
+        // hora_inicio: formData.horaInicio,
+        // hora_fin: formData.horaFin,
+        // dia_inicio: formData.diaInicio,
+        // dia_fin: formData.diaFin,
       });
       toast.success("Perfil actualizado correctamente");
       navigate("/medico/perfil");
@@ -211,7 +211,7 @@ export default function EditarPerfilCont() {
             />
           </div>
 
-          {/* Horario y días */}
+          {/* Horario y días
           <div className="mb-6">
             <label className="block text-sm font-medium mb-2">
               Horario de atención
@@ -278,7 +278,7 @@ export default function EditarPerfilCont() {
             </div>
 
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-          </div>
+          </div> */}
 
           {/* Botones */}
           <div className="flex justify-end gap-3">
