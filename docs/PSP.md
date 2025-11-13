@@ -157,16 +157,3 @@ Gracias a la integración PSP + JIRA + Excel, se lograron:
 
 El uso del **Personal Software Process**, junto con herramientas como **JIRA** y **Excel**, convirtió a MediConnect en un proyecto no solo funcional, sino también **medido**, **controlado**, y **documentado con rigurosidad**.  
 El proceso permitió mejorar la calidad del código, optimizar tiempos y obtener métricas reales del desempeño, logrando un flujo de desarrollo profesional y eficiente.
-
----
-
-## 7. Anexos Sugeridos
-
-Puedes incluir dentro del directorio `docs/`:
-
-- Capturas del tablero JIRA  
-- Registro PSP en Excel  
-- Gráficos PSP (tiempo, defectos, productividad)  
-- Evidencia del flujo digital del proyecto  
-- Tabla Postmortem PSP  
-
