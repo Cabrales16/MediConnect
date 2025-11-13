@@ -1,4 +1,4 @@
-# 🩺📊 Aplicación del PSP y Herramientas Digitales en MediConnect
+# 🩺📊 PSP - MediConnect
 
 ## 1. Introducción
 
