@@ -460,7 +460,7 @@ def agendar_cita(db: Session, cita: CitaCreate):
     for familiar in familiares:
         if familiar.tipo_novedad and familiar.tipo_novedad.descripcion:
             descripcion = familiar.tipo_novedad.descripcion.lower()
-            if "toda informacion" in descripcion or "indicaciones" in descripcion or "medicación" in descripcion:    
+            if "toda informacion" in descripcion or "citas" in descripcion:    
                 asunto = "Notificación de Nueva Cita Médica Programada"
                 cuerpo_html = f"""
                 <h2>Estimado(a) {familiar.nombre},</h2>
