@@ -17,7 +17,8 @@ from app.api.v1.endpoints import (
     medicamentos,
     terapia,
     medicacion,
-    indicacion
+    indicacion,
+    hospital
 )
 
 app = FastAPI()
@@ -52,3 +53,4 @@ app.include_router(medicamentos.router)
 app.include_router(terapia.router)
 app.include_router(medicacion.router)
 app.include_router(indicacion.router)
+app.include_router(hospital.router)

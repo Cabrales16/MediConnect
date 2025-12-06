@@ -2,13 +2,14 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.db.database import get_db
-from app.schemas.citas import CitaResponse, CitaResponse2, CitaResponseA, CitaCreate ,CitaUpdate, CitasMedico
+from app.schemas.citas import CitaResponse, CitaResponse2, CitaResponseA, CitaCreate ,CitaUpdate, CitasMedico, FinalizarCita   
 from app.services.citas_medicas import obtener_citas, obtener_cita, obtener_citas_medico
 from app.services import citas_service
 from typing import List
 from app.services.historial_service import cancelar_cita
 from datetime import date, time
 from app.models.medico import EspecialidadMedica
+
 
 
 router = APIRouter(prefix="/Citas", tags=["Citas"])
@@ -90,3 +91,12 @@ def crear_cita(cita: CitaCreate, db: Session = Depends(get_db)):
 @router.get("/medico/{id_usuario}/citas", response_model=List[CitasMedico])
 def citas_medico(id_usuario: int, db: Session = Depends(get_db)):
     return obtener_citas_medico(db, id_usuario)
+
+@router.put("/finalizar-cita")
+def finalizar_cita(cita: FinalizarCita, db: Session = Depends(get_db)):
+    """
+    Finaliza una cita médica:
+    - Cambia su estado a 'FINALIZADA'
+    - Realiza las operaciones necesarias para completar la cita.
+    """
+    return citas_service.finalizar_cita(db, cita)
