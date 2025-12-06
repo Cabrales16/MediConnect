@@ -64,7 +64,7 @@ export default function PlanillaCont() {
   }, []);
 
   const citasPorTomar = citas.filter((c) => c.estado_cita === "PROGRAMADA");
-  const citasTomadas = citas.filter((c) => c.estado_cita === "TOMADA");
+  const citasTomadas = citas.filter((c) => c.estado_cita === "COMPLETADA");
 
   // Bloquear scroll del body al abrir el panel
   useEffect(() => {
