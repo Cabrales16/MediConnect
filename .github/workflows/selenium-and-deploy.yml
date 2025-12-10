@@ -2,7 +2,7 @@ name: Pruebas Selenium y Deploy a Railway
 
 on:
   push:
-    branches: [ "develop" ]        # Ajusta aquí si quieres usar otra rama para producción
+    branches: [ "*" ]        # Ajusta aquí si quieres usar otra rama para producción
   pull_request:
     branches: [ "develop" ]
 
