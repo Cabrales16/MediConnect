@@ -87,7 +87,7 @@ export default function PerfilCont() {
                   onError={() => setImgOk(false)} // si la imagen falla, cambia a iniciales
                 />
               ) : (
-                <div className="w-16 h-16 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-lg shadow-md ring-2 ring-white">
+                <div className="w-16 h-16 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-lg shadow-md ring-2 ring-white">
                   {getInitials(user.nombre, user.apellido)}
                 </div>
               )}
@@ -103,7 +103,7 @@ export default function PerfilCont() {
 
             <button
               onClick={() => navigate("/medico/perfil/editar")}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition flex items-center justify-center"
+              className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition flex items-center justify-center"
             >
               <img src={editarIcon} alt="Editar" className="w-5" />
             </button>

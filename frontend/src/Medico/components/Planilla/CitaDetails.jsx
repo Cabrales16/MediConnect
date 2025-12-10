@@ -49,12 +49,12 @@ export default function CitaDetails({ cita, mode = "por", onClose }) {
             {/* ACCIONES */}
             {mode === "por" && (
               <div className="flex flex-wrap gap-2 mt-4">
-                <button
+                {/* <button
                   onClick={() => handleAction("nota")}
                   className="px-3 py-3 bg-green-500 text-white hover:bg-green-600 rounded flex items-center justify-center"
                 >
                   <FaExclamationTriangle />
-                </button>
+                </button> */}
                 <button
                   onClick={() => handleAction("medicamento")}
                   className="px-3 py-3 bg-green-500 text-white hover:bg-green-600 rounded flex items-center justify-center"
@@ -75,9 +75,9 @@ export default function CitaDetails({ cita, mode = "por", onClose }) {
                 </button>
                 <button
                   onClick={() => handleAction("finalizar")}
-                  className="px-14 py-3 bg-green-500 text-white hover:bg-green-600 rounded flex items-center justify-center"
+                  className="px-3 py-3 bg-green-500 text-white hover:bg-green-600 rounded flex items-center justify-center"
                 >
-                  <FaCalendarCheck />Finalizar
+                  <FaCalendarCheck /> Finalizar
                 </button>
               </div>
             )}

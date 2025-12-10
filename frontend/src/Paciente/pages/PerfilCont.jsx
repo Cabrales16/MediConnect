@@ -8,7 +8,7 @@ export default function PerfilCont() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [imgOk, setImgOk] = useState(true); // ✅ Controla si la imagen carga bien
+  const [imgOk, setImgOk] = useState(true);
 
   useEffect(() => {
     const fetchPerfil = async () => {
@@ -39,14 +39,13 @@ export default function PerfilCont() {
   }, []);
 
   const breadcrumbItems = [
-    { label: "Inicio", href: "/medico/inicio" },
+    { label: "Inicio", href: "/paciente/inicio" },
     { label: "Perfil" },
   ];
 
   if (loading) return <p className="p-8">Cargando perfil...</p>;
   if (!user) return <p className="p-8">No se pudo cargar el perfil.</p>;
 
-  // ✅ Obtener iniciales del nombre y apellido
   const getInitials = (nombre, apellido) => {
     const n = (nombre || "").trim();
     const a = (apellido || "").trim();
@@ -54,7 +53,6 @@ export default function PerfilCont() {
     return `${n.charAt(0).toUpperCase() || ""}${a.charAt(0).toUpperCase() || ""}`;
   };
 
-  // ✅ Validar si el avatar es una URL válida o está vacía/placeholder
   const hasValidAvatar = !!(
     user?.avatar &&
     typeof user.avatar === "string" &&
@@ -86,7 +84,7 @@ export default function PerfilCont() {
                   onError={() => setImgOk(false)}
                 />
               ) : (
-                <div className="w-16 h-16 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-lg shadow-md ring-2 ring-white">
+                <div className="w-16 h-16 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-lg shadow-md ring-2 ring-white">
                   {getInitials(user.nombre, user.apellido)}
                 </div>
               )}
@@ -101,8 +99,8 @@ export default function PerfilCont() {
             </div>
 
             <button
-              onClick={() => navigate("/medico/perfil/editar")}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition flex items-center justify-center"
+              onClick={() => navigate("/paciente/perfil/editar")}
+              className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition flex items-center justify-center"
             >
               <img src={editarIcon} alt="Editar" className="w-5" />
             </button>

@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import cancelarIcon from "../Planilla/PlanillaIcons/cancelarIcon.png";
-import editarIcon from "../Planilla/PlanillaIcons/editarIcon.png";
+// import editarIcon from "../Planilla/PlanillaIcons/editarIcon.png";
 import { useNavigate } from "react-router-dom";
-import { Star } from "lucide-react";
-import { FaStar } from "react-icons/fa";
+// import { Star } from "lucide-react";
+// import { FaStar } from "react-icons/fa";
 
 export default function CitaDetails({
   cita,
   mode = "por",
   onClose,
-  onModificar,
+  // onModificar,
   onCancelar,
 }) {
   const mapsQuery = encodeURIComponent(cita.direccion || "Bogotá");
@@ -17,28 +17,28 @@ export default function CitaDetails({
   const navigate = useNavigate();
 
   // --- Estado para modal y calificación ---
-  const [showModal, setShowModal] = useState(false);
-  const [rating, setRating] = useState(0);
-  const [hover, setHover] = useState(0);
-  const [comentario, setComentario] = useState("");
-  const [enviado, setEnviado] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
+  // const [rating, setRating] = useState(0);
+  // const [hover, setHover] = useState(0);
+  // const [comentario, setComentario] = useState("");
+  // const [enviado, setEnviado] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (rating === 0) return alert("Por favor selecciona una calificación.");
-    console.log({
-      medico: `${cita.nombre_medico} ${cita.apellido_medico}`,
-      calificacion: rating,
-      comentario,
-    });
-    setEnviado(true);
-    setTimeout(() => {
-      setShowModal(false);
-      setEnviado(false);
-      setRating(0);
-      setComentario("");
-    }, 1500);
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (rating === 0) return alert("Por favor selecciona una calificación.");
+  //   console.log({
+  //     medico: `${cita.nombre_medico} ${cita.apellido_medico}`,
+  //     calificacion: rating,
+  //     comentario,
+  //   });
+  //   setEnviado(true);
+  //   setTimeout(() => {
+  //     setShowModal(false);
+  //     setEnviado(false);
+  //     setRating(0);
+  //     setComentario("");
+  //   }, 1500);
+  // };
 
   return (
     <div className="bg-white rounded-2xl border border-gray-400 shadow-md overflow-hidden h-full relative">
@@ -87,7 +87,7 @@ export default function CitaDetails({
               </span>
             </div>
 
-            {/* ✅ BOTÓN VERDE DE CALIFICAR MÉDICO */}
+            {/* ✅ BOTÓN VERDE DE CALIFICAR MÉDICO
             {cita.estado_cita === "COMPLETADA" && (
               <button
                 onClick={() => setShowModal(true)}
@@ -97,7 +97,7 @@ export default function CitaDetails({
                 <FaStar className="text-white text-lg" />
                 Calificar médico
               </button>
-            )}
+            )} */}
           </div>
 
           <div className="w-1/2 pl-4">
@@ -130,12 +130,12 @@ export default function CitaDetails({
         {/* FOOTER */}
         {mode === "por" && (
           <div className="mt-6 flex gap-3 justify-end">
-            <button
+            {/* <button
               onClick={() => onModificar?.(cita)}
               className="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 shadow"
             >
               <img src={editarIcon} alt="editar" className="w-6" />
-            </button>
+            </button> */}
             <button
               onClick={() => onCancelar?.(cita)}
               className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 shadow"
@@ -146,7 +146,7 @@ export default function CitaDetails({
         )}
       </div>
 
-      {/* MODAL DE CALIFICACIÓN */}
+      {/* MODAL DE CALIFICACIÓN
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl shadow-xl w-96 p-6 relative animate-fade-in">
@@ -208,7 +208,7 @@ export default function CitaDetails({
             )}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
