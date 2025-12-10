@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import FiltroIndicaciones from "../components/IndMedicas/FiltroIndicaciones";
 import { getMedicacionPaciente } from "../../services/medicacion";
-import { obtenerTerapiasPaciente } from "../../services/terapia"; // ✅ nuevo import
+import { obtenerTerapiasPaciente } from "../../services/terapia";
 import { obtenerIndicacionesPaciente } from "../../services/indicacion";
+import { API_BASE_URL } from "../../config";
 
 
 export default function IndMedicasCont() {
@@ -175,14 +176,15 @@ export default function IndMedicasCont() {
                           <td className="px-6 py-4 text-green-700">{t.fecha_fin}</td>
                           <td className="px-6 py-4">
                             {t.pdf ? (
-                              <a
-                                href={`http://localhost:8000/static/terapias/${t.pdf.split("/").pop()}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline"
-                              >
-                                Ver PDF
-                              </a>
+                            <a
+                              href={`${API_BASE_URL}/static/terapias/${t.pdf.split("/").pop()}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline"
+                            >
+                              Ver PDF
+                            </a>
+
                             ) : (
                               <span className="text-gray-500">Sin archivo</span>
                             )}

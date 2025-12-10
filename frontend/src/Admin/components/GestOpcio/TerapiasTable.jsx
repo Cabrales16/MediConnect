@@ -3,6 +3,7 @@ import PaginacionOpcio from "./PaginacionOpcio";
 import agregarIcon from "./GestOpcioIcons/agregarIcon.png";
 import editarIcon from "./GestOpcioIcons/editarIcon.png";
 import eliminarIcon from "./GestOpcioIcons/eliminarIcon.png";
+import { API_BASE_URL } from "../../../config";
 
 export default function TerapiasTable({ data, onAdd, onEdit, onDelete }) {
   const [paginaActual, setPaginaActual] = useState(1);
@@ -45,14 +46,15 @@ export default function TerapiasTable({ data, onAdd, onEdit, onDelete }) {
                     <td className="px-6 py-4 text-green-700">{t.estado}</td>
                     <td className="px-6 py-4">
                       {t.archivo ? (
-                        <a
-                          href={`http://localhost:8000/static/terapias/${t.archivo.split("/").pop()}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline"
-                        >
-                          Ver archivo
-                        </a>
+                      <a
+                        href={`${API_BASE_URL}/static/terapias/${t.archivo.split("/").pop()}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        Ver archivo
+                      </a>
+
                       ) : (
                         <span className="text-gray-500">Sin archivo</span>
                       )}
