@@ -17,6 +17,7 @@ export default function ConfiguracionCont() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("rol");
+    navigate("/home");
   };
 
   useEffect(() => {
@@ -39,8 +40,8 @@ export default function ConfiguracionCont() {
           <div className="border-b border-gray-300 flex space-x-6 mb-6">
             {[
               { key: "perfil", label: "Perfil" },
-              { key: "tema", label: "Tema" },
-              { key: "privacidad", label: "Privacidad" },
+              // { key: "tema", label: "Tema" },
+              // { key: "privacidad", label: "Privacidad" },
               { key: "soporte", label: "Soporte y ayuda" },
             ].map((tab) => (
               <button

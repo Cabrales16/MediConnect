@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Breadcrumb from "../components/UI/Breadcrumb";
 import ReportErrorModal from "../components/UI/ReportErrorModal";
 
@@ -8,7 +8,7 @@ export default function FaqCont() {
     { label: "Centro de ayuda" },
   ];
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     // Block scroll
@@ -63,7 +63,7 @@ export default function FaqCont() {
             </button>
           </div>
 
-          {/* Reportar un error */}
+          {/* Reportar un error
           <div>
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-semibold">Reportar un error</h3>
@@ -80,7 +80,7 @@ export default function FaqCont() {
           </button>
         </div>
 
-        <ReportErrorModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        <ReportErrorModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} /> */}
         </div>
       </div>
     </>

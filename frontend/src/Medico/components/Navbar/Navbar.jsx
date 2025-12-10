@@ -2,7 +2,6 @@ import React from "react";
 import Logo from "./Logo";
 import ModificarDatos from "./ModificarDatos";
 import FaqButton from "./FaqButton";
-import NotificationsButton from "./NotificationsButton";
 import SettingsButton from "./SettingsButton";
 import ProfileButton from "./ProfileButton";
 
@@ -39,7 +38,6 @@ export default function Navbar({ onToggleSidebar }) {
             <ModificarDatos />
             <div className="w-px h-6 bg-gray-100 mx-2" />
             <FaqButton />
-            <NotificationsButton />
             <SettingsButton />
             <ProfileButton />
           </div>
@@ -47,7 +45,6 @@ export default function Navbar({ onToggleSidebar }) {
           <div className="md:hidden flex items-center gap-3">
             <ModificarDatos />
             <FaqButton />
-            <NotificationsButton />
             <SettingsButton />
             <ProfileButton />
           </div>

@@ -123,7 +123,7 @@ export default function GestNovedCont() {
       <Breadcrumb items={breadcrumbItems} />
 
       {/* 🔹 Contenedor con scroll interno que afecta encabezado */}
-      <div className="overflow-y-auto h-[calc(100vh-6rem)]">
+      <div className="overflow-y-auto h-[calc(100vh-7rem)]">
         {/* 🔹 Encabezado */}
         <div className="bg-green-500 text-white p-5 flex justify-between items-center shadow-md rounded-md mx-8 mt-4">
           <div>

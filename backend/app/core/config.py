@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     # SendGrid
     SENDGRID_API_KEY: str
-    FROM_EMAIL: str = "andrescabrales322@gmail.com"  # Campo que faltaba
+    FROM_EMAIL: str = "ssegur403@gmail.com"  # Campo que faltaba
     FROM_NAME: str = "Euipomed Support"             # Campo que faltaba
     
     # Frontend

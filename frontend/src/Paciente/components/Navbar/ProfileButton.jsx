@@ -43,7 +43,7 @@ export default function ProfileButtonPaciente() {
     <div ref={dropdownRef} className="relative">
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="w-10 h-10 rounded-full bg-green-600 text-white font-bold flex items-center justify-center shadow hover:bg-green-700 transition"
+        className="w-10 h-10 rounded-full bg-green-500 text-white font-bold flex items-center justify-center shadow hover:bg-green-600 transition"
         title="Perfil"
       >
         {perfil

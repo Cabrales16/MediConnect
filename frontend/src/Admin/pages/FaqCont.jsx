@@ -62,7 +62,7 @@ export default function FaqCont() {
           </button>
         </div>
 
-        {/* Reportar un error */}
+        {/* Reportar un error
         <div>
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-lg font-semibold">Reportar un error</h3>
@@ -79,7 +79,7 @@ export default function FaqCont() {
         </button>
       </div>
 
-      <ReportErrorModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <ReportErrorModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} /> */}
       </div>
     </div>
   );
