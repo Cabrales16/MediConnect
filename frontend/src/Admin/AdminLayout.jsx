@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
-import Sidebar from "./components/Menu/SideBar";
+import Sidebar from "./components/Menu/Sidebar";
 import InicioCont from "./pages/GestNovedCont";
 import GestUsua from "./pages/GestUsua";
 import GestOpcio from "./pages/GestOpcio";
