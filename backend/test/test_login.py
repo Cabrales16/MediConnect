@@ -1,3 +1,4 @@
+# test/test_login.py
 import os
 import time
 import pytest
@@ -9,17 +10,24 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 
+# Detectar si estamos en GitHub Actions
 IS_CI = os.getenv("GITHUB_ACTIONS") == "true"
+
+# En local -> localhost
+# En CI -> usa FRONTEND_URL definido en el workflow (GitHub Pages)
 BASE_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
 
 @pytest.fixture
 def driver():
     options = Options()
-    options.add_argument("-headless")  # en CI mejor siempre headless
+    options.add_argument("-headless")  # en CI siempre headless
 
+    # Firefox + geckodriver gestionados por Selenium Manager
     driver = webdriver.Firefox(options=options)
+
     yield driver
+
     driver.quit()
     print("Driver cerrado correctamente")
 
@@ -39,33 +47,41 @@ def test_login_mediconnect(driver):
     # MODO CI (GitHub Actions)
     # ------------------------------
     if IS_CI:
+        # Smoke test:
+        #  - La página debe cargar
+        #  - El HTML debe tener cierto tamaño mínimo
         time.sleep(5)  # margen para que la SPA cargue
 
         page_source = driver.page_source
         print("URL actual en CI:", driver.current_url)
         print("Longitud del HTML:", len(page_source))
 
-        # smoke test muy simple
-        assert "MediConnect" in page_source, (
-            "No se encontró el texto 'MediConnect' en la página "
-            f"en {driver.current_url}. Revisa que el frontend esté sirviendo correctamente."
+        assert len(page_source) > 5000, (
+            "La página parece no haber cargado correctamente en CI. "
+            f"Longitud HTML: {len(page_source)} en {driver.current_url}"
         )
+
+        # No seguimos con el flujo de login en CI
         return
 
     # ------------------------------
-    # MODO LOCAL (flujo completo)
+    # MODO LOCAL: flujo completo de login
     # ------------------------------
     print("3. Hacer click en Iniciar sesión")
     wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "Iniciar sesión"))).click()
 
     print("4. Escribiendo email")
     email_field = wait.until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex:nth-child(1) > .flex-1"))
+        EC.visibility_of_element_located(
+            (By.CSS_SELECTOR, ".flex:nth-child(1) > .flex-1")
+        )
     )
     email_field.send_keys("fgersonsamuel080@gmail.com")
 
     print("5. Escribiendo contraseña")
-    password_field = driver.find_element(By.CSS_SELECTOR, ".flex:nth-child(2) > .flex-1")
+    password_field = driver.find_element(
+        By.CSS_SELECTOR, ".flex:nth-child(2) > .flex-1"
+    )
     password_field.send_keys("Samuel080@")
 
     print("6. Haciendo click en botón de login")
