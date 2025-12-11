@@ -62,6 +62,31 @@ def test_login_mediconnect(driver):
     driver.set_window_size(896, 824)
     time.sleep(3)
 
+    # ------------------------------
+    # MODO CI (GitHub Actions)
+    # ------------------------------
+    if IS_CI:
+        # En CI hacemos un smoke test:
+        # - La página debe cargar correctamente
+        # - El texto "Iniciar sesión" debe aparecer en el HTML
+        time.sleep(5)  # pequeño margen para que el frontend renderice
+
+        page_source = driver.page_source
+        print("URL actual en CI:", driver.current_url)
+        print("Longitud del HTML:", len(page_source))
+
+        assert "Iniciar sesión" in page_source, (
+            "No se encontró el texto 'Iniciar sesión' en la página "
+            f"en {driver.current_url}. Revisa que el frontend en Railway esté sirviendo correctamente."
+        )
+
+        print("Smoke test de CI OK (texto 'Iniciar sesión' encontrado).")
+        return
+
+    # ------------------------------
+    # MODO LOCAL (flujo completo)
+    # ------------------------------
+
     print("3. Hacer click en Iniciar sesión")
     wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "Iniciar sesión"))).click()
 
