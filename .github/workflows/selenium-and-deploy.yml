@@ -10,6 +10,11 @@ jobs:
   selenium-tests:
     runs-on: ubuntu-latest
 
+    # Opcional pero cómodo: todo lo que sea "run" se ejecuta dentro de /backend
+    defaults:
+      run:
+        working-directory: backend
+
     steps:
       - name: Checkout del código
         uses: actions/checkout@v4
@@ -17,7 +22,7 @@ jobs:
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'   # Cambia si usas otra versión
+          python-version: '3.11'
 
       - name: Instalar dependencias de backend (producción)
         run: |
@@ -39,12 +44,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: reporte-selenium
-          path: reportes/*.html
+          # Como el working-directory es backend, el path es relativo a backend
+          path: backend/reportes/*.html
 
   deploy:
-    needs: selenium-tests             # SOLO corre si selenium-tests fue SUCCESS
+    needs: selenium-tests
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'   # Asegura que solo despliegue si es push directo a develop
+    if: github.ref == 'refs/heads/develop'
 
     container: ghcr.io/railwayapp/cli:latest
     env:
