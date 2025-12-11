@@ -11,7 +11,8 @@
     "start": "serve -s dist -l 4173",
     "test": "jest --no-cache",
     "test:watch": "jest --watch --no-cache",
-    "test:coverage": "jest --coverage --no-cache"
+    "test:coverage": "jest --coverage --no-cache",
+    "deploy": "vite build && gh-pages -d dist"
   },
   "dependencies": {
     "axios": "^1.11.0",
