@@ -2,13 +2,20 @@ name: Pruebas Selenium y Deploy a Railway
 
 on:
   push:
-    branches: [ "*" ]        # Ajusta aquí si quieres usar otra rama para producción
+    branches: [ "*" ]        # Se ejecuta en cualquier push
   pull_request:
     branches: [ "develop" ]
 
 jobs:
   selenium-tests:
     runs-on: ubuntu-latest
+
+    env:
+      APP_BASE_URL: https://cabrales16.github.io/MediConnect/
+
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
       - name: Checkout del código
@@ -17,7 +24,7 @@ jobs:
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'   # Cambia si usas otra versión
+          python-version: '3.11'
 
       - name: Instalar dependencias de backend (producción)
         run: |
@@ -39,14 +46,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: reporte-selenium
-          path: reportes/*.html
+          path: backend/reportes/*.html
 
   deploy:
-    needs: selenium-tests             # SOLO corre si selenium-tests fue SUCCESS
+    needs: selenium-tests             
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'   # Asegura que solo despliegue si es push directo a develop
+    if: github.ref == 'refs/heads/develop'
 
     container: ghcr.io/railwayapp/cli:latest
+
     env:
       RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
       RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}

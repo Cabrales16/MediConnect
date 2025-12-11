@@ -1,4 +1,5 @@
 # test/test_login.py
+import os
 import time
 import pytest
 from selenium import webdriver
@@ -9,21 +10,40 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 
-# Ruta LOCAL al geckodriver que descargaste manualmente
-GECKO_DRIVER_PATH = r"C:\Drivers\geckodriver.exe"  # <-- AJUSTA ESTA RUTA SI ES NECESARIO
+# ------------------------------
+# Configuración de entorno
+# ------------------------------
 
-# Ruta al ejecutable de Firefox (ajusta si lo tienes en otra ubicación)
-FIREFOX_BINARY_PATH = r"C:\Program Files\Mozilla Firefox\firefox.exe"
+# Rutas LOCALES (Windows) para tu máquina
+GECKO_DRIVER_PATH_LOCAL = r"C:\Drivers\geckodriver.exe"
+FIREFOX_BINARY_PATH_LOCAL = r"C:\Program Files\Mozilla Firefox\firefox.exe"
+
+# ¿Estamos corriendo en GitHub Actions?
+IS_CI = os.getenv("GITHUB_ACTIONS") == "true"
+
+# URL base de la app (se puede sobreescribir con APP_BASE_URL)
+BASE_URL = os.getenv("APP_BASE_URL", "http://localhost:5173")
 
 
 @pytest.fixture
 def driver():
     options = Options()
-    options.binary_location = FIREFOX_BINARY_PATH
-    # options.add_argument("-headless")  # si quieres que corra sin abrir ventana
 
-    service = Service(executable_path=GECKO_DRIVER_PATH)
+    if IS_CI:
+        # En CI (GitHub Actions, Linux):
+        # - Usamos Firefox del sistema (instalado con apt-get)
+        # - Usamos geckodriver del PATH (Service() sin ruta)
+        # - Ejecutamos en headless
+        options.add_argument("-headless")
+        service = Service()
+    else:
+        # En tu PC local (Windows):
+        # - Usamos tus rutas concretas a Firefox y geckodriver
+        options.binary_location = FIREFOX_BINARY_PATH_LOCAL
+        service = Service(executable_path=GECKO_DRIVER_PATH_LOCAL)
+
     driver = webdriver.Firefox(service=service, options=options)
+    driver.implicitly_wait(10)
 
     yield driver
 
@@ -36,11 +56,36 @@ def test_login_mediconnect(driver):
     actions = ActionChains(driver)
 
     print("1. Abriendo la página")
-    driver.get("http://localhost:5173")
+    driver.get(BASE_URL)
 
     print("2. Redimensionando ventana")
     driver.set_window_size(896, 824)
     time.sleep(3)
+
+    # ------------------------------
+    # MODO CI (GitHub Actions)
+    # ------------------------------
+    if IS_CI:
+        # En CI hacemos un smoke test:
+        # - La página debe cargar correctamente
+        # - El texto "Iniciar sesión" debe aparecer en el HTML
+        time.sleep(5)  # pequeño margen para que el frontend renderice
+
+        page_source = driver.page_source
+        print("URL actual en CI:", driver.current_url)
+        print("Longitud del HTML:", len(page_source))
+
+        assert "Iniciar sesión" in page_source, (
+            "No se encontró el texto 'Iniciar sesión' en la página "
+            f"en {driver.current_url}. Revisa que el frontend en Railway esté sirviendo correctamente."
+        )
+
+        print("Smoke test de CI OK (texto 'Iniciar sesión' encontrado).")
+        return
+
+    # ------------------------------
+    # MODO LOCAL (flujo completo)
+    # ------------------------------
 
     print("3. Hacer click en Iniciar sesión")
     wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "Iniciar sesión"))).click()
