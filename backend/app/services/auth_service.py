@@ -84,28 +84,35 @@ def login_user(credentials, db: Session):
             detail="Usuario no encontrado"
         )
 
-    # Validar confirmación
+    # 1) Confirmación de cuenta
     if not user.confirmado:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Debes confirmar tu cuenta antes de iniciar sesión."
         )
 
-    # Validar estado
-    if user.confirmado != 1:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Tu cuenta no está activa."
-        )
-    
-    # 🚫 Nueva validación: usuario suspendido
-    if hasattr(user, "estado") and user.estado.value.lower() == "suspendido":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Tu cuenta está suspendida. Comunícate con el administrador."
-        )
+    # 2) Estado ACTIVO / INACTIVO (sin mezclar bool/int)
+    estado_usuario = getattr(user, "estado", None)
+    # si es Enum, usar .value; si es str, usar directamente
+    if estado_usuario is not None:
+        if hasattr(estado_usuario, "value"):
+            valor_estado = estado_usuario.value.lower()
+        else:
+            valor_estado = str(estado_usuario).lower()
 
-    # Validar bloqueo temporal
+        if valor_estado != "activo" and valor_estado != "pendiente":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Tu cuenta no está activa."
+            )
+
+        if valor_estado == "suspendido":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Tu cuenta está suspendida. Comunícate con el administrador."
+            )
+
+    # 3) Bloqueo temporal por intentos fallidos
     if user.bloqueado_hasta and datetime.utcnow() < user.bloqueado_hasta:
         tiempo_restante = (user.bloqueado_hasta - datetime.utcnow()).seconds // 60
         raise HTTPException(
@@ -113,9 +120,10 @@ def login_user(credentials, db: Session):
             detail=f"Cuenta bloqueada. Intenta de nuevo en {tiempo_restante} minutos"
         )
 
-    # Validar contraseña
+    # 4) Validar contraseña
     if not verify_password(credentials.contrasena, user.contrasena):
-        user.intentos_fallidos += 1
+        user.intentos_fallidos = (user.intentos_fallidos or 0) + 1
+
         if user.intentos_fallidos >= MAX_INTENTOS:
             user.bloqueado_hasta = datetime.utcnow() + timedelta(minutes=TIEMPO_BLOQUEO_MINUTOS)
             user.intentos_fallidos = 0
@@ -124,19 +132,23 @@ def login_user(credentials, db: Session):
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Cuenta bloqueada por {TIEMPO_BLOQUEO_MINUTOS} minutos"
             )
+
         db.commit()
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Credenciales incorrectas"
         )
 
-    # Login exitoso
+    # 5) Login exitoso
     user.intentos_fallidos = 0
     user.bloqueado_hasta = None
     db.commit()
 
-    nombre_rol = user.rol.nombre_rol.lower()
-    access_token = create_access_token({"sub": user.id_usuario, "rol": nombre_rol})
+    # Rol defensivo (si no hay rol, asumimos paciente)
+    rol = getattr(user, "rol", None)
+    nombre_rol = getattr(rol, "nombre_rol", "Paciente")
+
+    access_token = create_access_token({"sub": user.id_usuario, "rol": nombre_rol.lower()})
 
     return user, access_token
 
