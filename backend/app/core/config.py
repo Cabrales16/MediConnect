@@ -1,57 +1,55 @@
 # app/core/config.py
+import os
 from pydantic_settings import BaseSettings
-from typing import List
-from functools import lru_cache
+
 
 class Settings(BaseSettings):
-    # ====== SENDGRID ======
+    # SendGrid
     SENDGRID_API_KEY: str
     FROM_EMAIL: str = "ssegur403@gmail.com"
     FROM_NAME: str = "Euipomed Support"
 
-    # ====== FRONTEND ======
-    # URL principal del frontend (DEV)
+    # Frontend
     FRONTEND_URL: str = "http://localhost:5173"
 
-    # Orígenes adicionales (Railway puede inyectar varios)
-    FRONTEND_ORIGINS: str = ""  # CSV: "https://a.com,https://b.com"
+    # Backend base URL (para construir URLs públicas de archivos)
+    BACKEND_BASE_URL: str = "http://127.0.0.1:8000"
 
-    # ====== BACKEND ======
-    BACKEND_BASE_URL: str = "http://127.0.0.1:8000"  # para imágenes/URLs públicas
-
-    # ====== SECURITY ======
+    # Security
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
 
-    # ====== CONFIG ======
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
-        extra = "allow"  # permite que Railway envíe más variables
+        extra = "allow"  # Permitir campos extra
 
-    # ====== FUNCIONES UTILES ======
-    def cors_origins(self) -> List[str]:
-        """Genera lista de orígenes válidos para CORS."""
-        defaults = [
-            self.FRONTEND_URL,
+    # Helper para construir la lista de orígenes CORS
+    def cors_origins(self) -> list[str]:
+        default_origins = [
+            "http://localhost:5173",
             "http://127.0.0.1:5173",
             "https://cabrales16.github.io",
             "https://cabrales16.github.io/MediConnect",
         ]
 
-        extras = [
+        extra_origins_env = os.getenv("FRONTEND_ORIGINS", "")
+        extra_origins = [
             origin.strip()
-            for origin in self.FRONTEND_ORIGINS.split(",")
+            for origin in extra_origins_env.split(",")
             if origin.strip()
         ]
 
-        # Evitar duplicados con set()
-        return list(set(defaults + extras))
+        return list(set(default_origins + extra_origins))
 
 
-@lru_cache()
-def get_settings():
-    return Settings()
+# Instancia global de Settings
+settings = Settings()
 
-# Instancia global
-settings = get_settings()
+# Alias de módulo para compatibilidad con imports antiguos
+BACKEND_BASE_URL = settings.BACKEND_BASE_URL
+
+
+# (Opcional) si en algún punto usaste `from app.core.config import get_cors_origins`
+def get_cors_origins() -> list[str]:
+    return settings.cors_origins()
