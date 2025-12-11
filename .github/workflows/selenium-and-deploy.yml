@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      APP_BASE_URL: https://athletic-courtesy-production.up.railway.app
+      APP_BASE_URL: https://cabrales16.github.io/MediConnect/
 
     defaults:
       run:
