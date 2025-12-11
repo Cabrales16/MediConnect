@@ -1,7 +1,9 @@
+# backend/main.py
 import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from app.core.config import settings
 
 from app.api.v1.endpoints import (
     auth,
@@ -33,25 +35,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 # ✅ Configuración de CORS
 # =========================
 
-# Puedes definir ORÍGENES extra desde variables de entorno en Railway, por ejemplo:
-# FRONTEND_ORIGINS="https://cabrales16.github.io,https://cabrales16.github.io/MediConnect"
-extra_origins_env = os.getenv("FRONTEND_ORIGINS", "")
-
-extra_origins = [
-    origin.strip()
-    for origin in extra_origins_env.split(",")
-    if origin.strip()
-]
-
-# Orígenes por defecto (DEV + GitHub Pages)
-default_origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://cabrales16.github.io",
-    "https://cabrales16.github.io/MediConnect",
-]
-
-origins = list(set(default_origins + extra_origins))
+origins = settings.cors_origins()
 
 app.add_middleware(
     CORSMiddleware,
