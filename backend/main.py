@@ -3,7 +3,6 @@ import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from app.core.config import settings
 
 from app.api.v1.endpoints import (
     auth,
@@ -32,10 +31,14 @@ os.makedirs("app/static/terapias", exist_ok=True)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # =========================
-# ✅ Configuración de CORS
+# ✅ CORS (simple y explícito)
 # =========================
-
-origins = settings.cors_origins()
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://cabrales16.github.io",
+    "https://cabrales16.github.io/MediConnect",
+]
 
 app.add_middleware(
     CORSMiddleware,
