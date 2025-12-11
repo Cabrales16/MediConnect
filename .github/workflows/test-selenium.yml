@@ -10,6 +10,10 @@ jobs:
   selenium-tests:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: backend
+
     steps:
       - name: Checkout del código
         uses: actions/checkout@v4
@@ -17,16 +21,7 @@ jobs:
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'  # o la versión que uses
-
-      # Si tus tests usan webdriver_manager y modo headless,
-      # puedes omitir esta parte. Si no, instalar navegador/driver:
-      # - name: Instalar Chromium y Chromedriver
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y chromium-browser chromium-chromedriver
-      #     echo "CHROME_BIN=/usr/bin/chromium-browser" >> $GITHUB_ENV
-      #     echo "CHROMEDRIVER_PATH=/usr/bin/chromedriver" >> $GITHUB_ENV
+          python-version: '3.11'
 
       - name: Instalar dependencias de Python
         run: |
@@ -44,4 +39,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: reporte-selenium
-          path: reportes/*.html
+          path: backend/reportes/*.html
