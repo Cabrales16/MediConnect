@@ -24,24 +24,17 @@ from app.api.v1.endpoints import (
 
 app = FastAPI()
 
-# Crear el directorio si no existe
 os.makedirs("app/static/terapias", exist_ok=True)
-
-# Archivos estáticos
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-# =========================
-# ✅ CORS ABIERTO (para producción simple)
-# =========================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],      # permite cualquier origen
-    allow_credentials=False,  # obligatorio si usamos "*"
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Registrar rutas
 app.include_router(auth.router)
 app.include_router(horarios.router)
 app.include_router(historial.router)
