@@ -3,7 +3,6 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
 
-// En local: "/"  |  En GitHub Pages: "/MediConnect/"
 const basename = import.meta.env.PROD ? "/MediConnect/" : "/";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
