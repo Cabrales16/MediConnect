@@ -23,10 +23,17 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Instalar dependencias de Python
+      # 🔹 NUEVO: instalar la dependencia nativa de MariaDB
+      - name: Instalar dependencias del sistema (MariaDB Connector/C)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libmariadb-dev
+
+      - name: Instalar dependencias de Python (backend + tests)
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install -r requirements-tests.txt
 
       - name: Ejecutar pruebas Selenium
         run: |

@@ -10,10 +10,9 @@ jobs:
   selenium-tests:
     runs-on: ubuntu-latest
 
-    # Opcional pero cómodo: todo lo que sea "run" se ejecuta dentro de /backend
     defaults:
       run:
-        working-directory: backend
+        working-directory: backend   # seguimos usando el backend como raíz
 
     steps:
       - name: Checkout del código
@@ -23,6 +22,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
+      # 🔹 NUEVO: instalar MariaDB Connector/C para que el paquete mariadb se pueda compilar
+      - name: Instalar dependencias del sistema (MariaDB Connector/C)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libmariadb-dev
 
       - name: Instalar dependencias de backend (producción)
         run: |
@@ -44,23 +49,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: reporte-selenium
-          # Como el working-directory es backend, el path es relativo a backend
           path: backend/reportes/*.html
-
-  deploy:
-    needs: selenium-tests
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'
-
-    container: ghcr.io/railwayapp/cli:latest
-    env:
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-      RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
-
-    steps:
-      - name: Checkout del código
-        uses: actions/checkout@v4
-
-      - name: Desplegar a Railway
-        run: |
-          railway up --service=$RAILWAY_SERVICE_ID

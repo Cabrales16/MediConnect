@@ -10,7 +10,6 @@ export default function TerapiasTable({ data, onAdd, onEdit, onDelete }) {
   const itemsPorPagina = 6;
 
   const totalItems = data.length;
-  const totalPaginas = Math.ceil(totalItems / itemsPorPagina);
   const indexInicio = (paginaActual - 1) * itemsPorPagina;
   const datosPaginados = data.slice(indexInicio, indexInicio + itemsPorPagina);
 
