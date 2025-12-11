@@ -24,31 +24,24 @@ from app.api.v1.endpoints import (
 
 app = FastAPI()
 
-# ✅ Crear el directorio si no existe
+# Crear el directorio si no existe
 os.makedirs("app/static/terapias", exist_ok=True)
 
-# ✅ Montar los archivos estáticos
+# Archivos estáticos
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # =========================
-# ✅ CORS (simple y explícito)
+# ✅ CORS MUY ABIERTO (para demo)
 # =========================
-origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://cabrales16.github.io",
-    "https://cabrales16.github.io/MediConnect",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins=["*"],        # aceptar cualquier origen
+    allow_credentials=False,    # importante: False si usamos "*"
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ✅ Registrar las rutas
+# Rutas
 app.include_router(auth.router)
 app.include_router(horarios.router)
 app.include_router(historial.router)
