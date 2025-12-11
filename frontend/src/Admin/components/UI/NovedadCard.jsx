@@ -2,12 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import editarIcon from "../GestNovedades/GestNovedadesImages/editarIcon.png";
 import eliminarIcon from "../GestNovedades/GestNovedadesImages/eliminarIcon.png";
-import { STATIC_BASE_URL } from "../../../config";
 
 export default function NovedadCard({ item, onEdit, onDelete }) {
-  const imagenSrc = item.src?.startsWith("http")
-    ? item.src
-    : `${STATIC_BASE_URL}/novedades/${item.src || "placeholder.jpg"}`;
+  const imagenSrc =
+    item.src?.startsWith("http")
+      ? item.src
+      : `http://127.0.0.1:8000/static/uploads/novedades/${item.src || "placeholder.jpg"}`;
 
   return (
     <div
