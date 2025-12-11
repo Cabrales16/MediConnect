@@ -31,17 +31,17 @@ os.makedirs("app/static/terapias", exist_ok=True)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # =========================
-# ✅ CORS MUY ABIERTO (para demo)
+# ✅ CORS totalmente abierto (para demo)
 # =========================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],        # aceptar cualquier origen
-    allow_credentials=False,    # importante: False si usamos "*"
+    allow_origins=["*"],        # permite cualquier origen
+    allow_credentials=False,    # obligatorio poner False si usamos "*"
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Rutas
+# Registrar rutas
 app.include_router(auth.router)
 app.include_router(horarios.router)
 app.include_router(historial.router)
