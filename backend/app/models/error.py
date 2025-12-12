@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 from .AuditMixin import AuditMixin
 
 class ErrorTecnico(Base, AuditMixin):
-    __tablename__ = "Error_Tecnico"
+    __tablename__ = "error_Tecnico"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_usuario = Column(Integer, ForeignKey("Usuario.id_usuario"), nullable=False)

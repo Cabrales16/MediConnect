@@ -13,7 +13,7 @@ class EstadoCita(PyEnum):
     PENDIENTE = "Pendiente"
 
 class Cita(Base, AuditMixin):
-    __tablename__ = "Cita"
+    __tablename__ = "cita"
 
     id_cita = Column(Integer, primary_key=True, autoincrement=True)
     id_paciente = Column(Integer, ForeignKey("Usuario.id_usuario"), nullable=False)

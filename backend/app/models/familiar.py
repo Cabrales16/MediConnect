@@ -5,7 +5,7 @@ from .AuditMixin import AuditMixin
 
 
 class Familiar(Base, AuditMixin):
-    __tablename__ = "Familiar"
+    __tablename__ = "familiar"
     id_familiar = Column(Integer, primary_key=True, autoincrement=True)
     id_info = Column(Integer, ForeignKey("Tipo_Novedad.id_info"))
     id_paciente = Column(Integer, ForeignKey("Usuario.id_usuario"))

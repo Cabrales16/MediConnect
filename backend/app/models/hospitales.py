@@ -10,7 +10,7 @@ class EstadoHospital(PyEnum):
     ABIERTO = "Abierto"
 
 class Hospital(Base, AuditMixin):
-    __tablename__ = "Hospital"
+    __tablename__ = "hospital"
     id_hospital = Column(Integer, primary_key=True, autoincrement=True)
     nombre = Column(String(60), nullable=False)
     direccion = Column(String(60), nullable=False)

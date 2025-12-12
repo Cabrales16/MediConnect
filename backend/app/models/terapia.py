@@ -10,7 +10,7 @@ class EstadoTerapia(PyEnum):
     CANCELADA = "Cancelada"
 
 class Terapia(Base, AuditMixin):
-    __tablename__ = "Terapia"
+    __tablename__ = "terapia"
     id_terapia = Column(Integer, primary_key=True, autoincrement=True)
     id_CrearTerapia = Column(Integer, ForeignKey("CrearTerapia.id_terapia"), nullable=False)
     id_medico = Column(Integer, ForeignKey("Usuario.id_usuario"), nullable=False)

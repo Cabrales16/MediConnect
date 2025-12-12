@@ -5,7 +5,7 @@ from .AuditMixin import AuditMixin
 
 
 class Info_Novedad(Base, AuditMixin):
-    __tablename__ = "Info_Novedad"
+    __tablename__ = "info_Novedad"
     id_info = Column(Integer, primary_key=True, autoincrement=True)
     id_admin = Column(Integer, ForeignKey("Usuario.id_usuario"))
     id_novedad = Column(Integer, ForeignKey("Novedad.id_novedad"))

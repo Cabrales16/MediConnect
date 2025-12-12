@@ -31,7 +31,7 @@ class EspecialidadMedica(PyEnum):
 
 # Modelo Usuario
 class Usuario(Base):
-    __tablename__ = "Usuario"
+    __tablename__ = "usuario"
 
     # Campos
     id_usuario = Column(Integer, primary_key=True, autoincrement=True)

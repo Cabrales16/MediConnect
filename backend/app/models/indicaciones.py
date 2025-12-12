@@ -12,7 +12,7 @@ class EstadoIndicacion(PyEnum):
 
 
 class Indicaciones(Base, AuditMixin):
-    __tablename__ = "Indicaciones"
+    __tablename__ = "indicaciones"
     id_indicacion = Column(Integer, primary_key=True, autoincrement=True)
     id_paciente = Column(Integer, ForeignKey("Usuario.id_usuario"), nullable=False)
     id_medico = Column(Integer, ForeignKey("Usuario.id_usuario"), nullable=False)
