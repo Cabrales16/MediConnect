@@ -7,9 +7,8 @@ from sqlalchemy.orm import sessionmaker
 #  Configuración de la BD
 # ============================
 
-# 1) En producción (Railway), usaremos MYSQL_URL o DATABASE_URL
-#    - MYSQL_URL vendrá referenciado desde el servicio MySQL
-#    - DATABASE_URL queda como respaldo si la defines a mano
+# 1) En producción (Railway), usar MYSQL_URL si existe.
+#    Como respaldo, usar DATABASE_URL (si la defines a mano).
 raw_db_url = os.getenv("MYSQL_URL") or os.getenv("DATABASE_URL")
 
 # 2) Si no existe ninguna (entorno local), usar tu BD local
