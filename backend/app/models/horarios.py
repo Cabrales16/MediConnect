@@ -5,7 +5,7 @@ from .AuditMixin import AuditMixin
 
 
 class Horario(Base, AuditMixin):
-    __tablename__ = "Horario"
+    __tablename__ = "horario"
     id_horario = Column(Integer, primary_key=True, autoincrement=True)
     id_medico = Column(Integer, ForeignKey("Usuario.id_usuario"), nullable=False)
     dia = Column(String(20), nullable=False)  # Días como "Lunes", "Martes"

@@ -13,7 +13,7 @@ class EspecialidadMedica(PyEnum):
 
 
 class Medico(Base, AuditMixin):
-    __tablename__ = "Medico"
+    __tablename__ = "medico"
 
     # Usamos el mismo id que el usuario
     id_medico = Column(Integer, ForeignKey("Usuario.id_usuario"), primary_key=True)

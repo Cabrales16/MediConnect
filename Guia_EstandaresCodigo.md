@@ -87,7 +87,7 @@ from db import Base
 from sqlalchemy.orm import relationship
 
 class Medicamento(Base):
-    __tablename__ = 'Medicamento'
+    __tablename__ = 'medicamento'
     id_medicamento = Column(Integer, primary_key=True, autoincrement=True)
             nombre = Column(String(100), nullable=False)
     medicaciones = relationship("Medicacion", back_populates="medicamento")
