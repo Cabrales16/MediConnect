@@ -1,69 +1,58 @@
-name: Pruebas Selenium y Deploy a Railway
+name: Deploy frontend to GitHub Pages
 
 on:
   push:
-    branches: [ "*" ]
-  pull_request:
-    branches: [ "develop" ]
+    branches: [ "develop" ]   # o la rama que uses para producción
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  selenium-tests:
+  build:
     runs-on: ubuntu-latest
 
-    env:
-      FRONTEND_URL: https://cabrales16.github.io/MediConnect/
-
-    defaults:
-      run:
-        working-directory: backend
-
     steps:
-      - name: Checkout del código
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configurar Python
-        uses: actions/setup-python@v5
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          python-version: '3.11'
+          node-version: "20"
+          # ❌ quitamos el cache porque está fallando por el lockfile
+          # cache: "npm"
+          # cache-dependency-path: frontend/package-lock.json
 
-      - name: Instalar dependencias de backend (producción)
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm install         # o `npm ci` si ya tienes package-lock.json
 
-      - name: Instalar dependencias de pruebas (Selenium)
-        run: |
-          pip install -r requirements-tests.txt
+      - name: Build
+        working-directory: frontend
+        env:
+          # 👇 AQUÍ va tu backend en Railway
+          VITE_API_BASE_URL: https://mediconnect-production-8b76.up.railway.app
+        run: npm run build
 
-      - name: Ejecutar pruebas Selenium
-        run: |
-          mkdir -p reportes
-          pytest test/test_login.py \
-            --html=reportes/reporte_$(date +%Y-%m-%d_%H-%M-%S).html \
-            --self-contained-html
-
-      - name: Subir reporte HTML como artefacto
-        uses: actions/upload-artifact@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: reporte-selenium
-          # como el working-directory ya es backend, solo "reportes"
-          path: reportes/*.html
+          path: frontend/dist
 
   deploy:
-    needs: selenium-tests
+    needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'
-
-    container: ghcr.io/railwayapp/cli:latest
-
-    env:
-      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-      RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout del código
-        uses: actions/checkout@v4
-
-      - name: Desplegar a Railway
-        run: |
-          railway up --service=$RAILWAY_SERVICE_ID
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
