@@ -2,7 +2,7 @@ name: Pruebas Selenium y Deploy a Railway
 
 on:
   push:
-    branches: ["*"]          # Se ejecuta en cualquier push
+    branches: ["develop"]     # Solo en develop
   pull_request:
     branches: ["develop"]
 
@@ -10,11 +10,10 @@ jobs:
   selenium-tests:
     runs-on: ubuntu-latest
 
-    # Variables de entorno para TODO el job
     env:
+      # URL pública del frontend en GitHub Pages
       FRONTEND_URL: https://cabrales16.github.io/MediConnect/
 
-    # Todos los comandos se ejecutan dentro de backend/
     defaults:
       run:
         working-directory: backend
@@ -45,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: reporte-selenium
-          path: reportes/*.html   # ← ya no lleva "backend/"
+          path: reportes/*.html   # working-directory ya es backend
 
   deploy:
     needs: selenium-tests
