@@ -37,7 +37,7 @@ jobs:
         working-directory: frontend
         env:
           # 👇 AQUÍ va tu backend en Railway
-          VITE_API_BASE_URL: https://mediconnect-production-8b76.up.railway.app
+          VITE_API_BASE_URL: https://mediconnect-production-722d.up.railway.app
         run: npm run build
 
       - name: Upload artifact
