@@ -1,12 +1,10 @@
+// src/services/api.js
 import axios from "axios";
+import { API_BASE_URL } from "../config";
 
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000", //backend corre aquí
-  headers: {
-    "Content-Type": "application/json",
-  
-  },
+  baseURL: API_BASE_URL,
+  withCredentials: false, // ponlo en true solo si usas cookies
 });
 
 export default api;
-

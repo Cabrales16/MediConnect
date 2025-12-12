@@ -33,22 +33,18 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 # ✅ Configuración de CORS
 # =========================
 
-# Puedes definir ORÍGENES extra desde variables de entorno en Railway, por ejemplo:
-# FRONTEND_ORIGINS="https://cabrales16.github.io,https://cabrales16.github.io/MediConnect"
-extra_origins_env = os.getenv("FRONTEND_ORIGINS", "")
+default_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://cabrales16.github.io",          # Origin real de GitHub Pages
+    "https://cabrales16.github.io/MediConnect",
+]
 
+extra_origins_env = os.getenv("FRONTEND_ORIGINS", "")
 extra_origins = [
     origin.strip()
     for origin in extra_origins_env.split(",")
     if origin.strip()
-]
-
-# Orígenes por defecto (DEV + GitHub Pages)
-default_origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://cabrales16.github.io",
-    "https://cabrales16.github.io/MediConnect",
 ]
 
 origins = list(set(default_origins + extra_origins))
@@ -60,6 +56,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Endpoint sencillo de healthcheck (opcional pero muy útil)
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 # ✅ Registrar las rutas
 app.include_router(auth.router)
