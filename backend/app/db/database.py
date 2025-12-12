@@ -7,14 +7,16 @@ from sqlalchemy.orm import sessionmaker
 #  Configuración de la BD
 # ============================
 
-# 1) Intentar leer de la variable de entorno DATABASE_URL (Producción)
-raw_db_url = os.getenv("DATABASE_URL")
+# 1) En producción (Railway), usaremos MYSQL_URL o DATABASE_URL
+#    - MYSQL_URL vendrá referenciado desde el servicio MySQL
+#    - DATABASE_URL queda como respaldo si la defines a mano
+raw_db_url = os.getenv("MYSQL_URL") or os.getenv("DATABASE_URL")
 
-# 2) Si no existe (entorno local), usar tu BD local
+# 2) Si no existe ninguna (entorno local), usar tu BD local
 if not raw_db_url:
     raw_db_url = "mysql+pymysql://root:admin@localhost:3315/agendamiento_de_citas"
 
-# 3) Si por algún motivo Railway entrega "mysql://", lo convertimos a "mysql+pymysql://"
+# 3) Si viene en formato "mysql://", lo convertimos a "mysql+pymysql://"
 if raw_db_url.startswith("mysql://"):
     raw_db_url = raw_db_url.replace("mysql://", "mysql+pymysql://", 1)
 
