@@ -33,8 +33,27 @@ function useUploadedPdfLinks() {
   }, []);
 }
 
+// Varios enlaces del proyecto son <a href="/login"> planos, que en GitHub Pages
+// apuntan a la raíz del dominio (sin /MediConnect/). Se navegan con el router.
+function useRouterLinks(navigate) {
+  useEffect(() => {
+    const onClick = (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      const a = e.target.closest?.("a[href^='/']");
+      if (!a || a.target === "_blank" || a.getAttribute("href").startsWith("//")) return;
+      const href = a.getAttribute("href");
+      if (href.startsWith(import.meta.env.BASE_URL) || href.startsWith("/static/")) return;
+      e.preventDefault();
+      navigate(href);
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, [navigate]);
+}
+
 export default function DemoBanner() {
   const navigate = useNavigate();
+  useRouterLinks(navigate);
   const { pathname } = useLocation();
   const [open, setOpen] = useState(pathname === "/login");
   const [busy, setBusy] = useState(false);
