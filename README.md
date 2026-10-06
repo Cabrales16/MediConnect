@@ -141,3 +141,14 @@ npm run dev
 SENA – Centro de Gestión de Mercados, Logística y Tecnologías de la Información
 
 Bogotá, Colombia
+
+## Demo en GitHub Pages
+
+La demo (https://cabrales16.github.io/MediConnect/) corre **sin backend**: con `VITE_DEMO_MODE=true`
+las peticiones de axios las responde una API simulada en el navegador (`frontend/src/mock/`), con datos de
+ejemplo que replican las tablas y respuestas del FastAPI. Los cambios se guardan en `localStorage`.
+
+- Probar en local: `cd frontend && npm install && npm run build:demo && npm run preview:demo`
+  (abrir http://localhost:4173/MediConnect/).
+- Cuentas de prueba (contraseña `Demo123@`): `paciente@demo.com`, `medico@demo.com`, `admin@demo.com`.
+- El botón verde "Demo · cuentas" permite entrar con un clic y restablecer los datos.

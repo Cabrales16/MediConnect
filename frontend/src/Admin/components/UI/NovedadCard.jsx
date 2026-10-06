@@ -5,7 +5,7 @@ import eliminarIcon from "../GestNovedades/GestNovedadesImages/eliminarIcon.png"
 import { STATIC_BASE_URL } from "../../../config";
 
 export default function NovedadCard({ item, onEdit, onDelete }) {
-  const imagenSrc = item.src?.startsWith("http")
+  const imagenSrc = /^(https?:|data:|blob:|\/)/.test(item.src || "")
     ? item.src
     : `${STATIC_BASE_URL}/novedades/${item.src || "placeholder.jpg"}`;
 
