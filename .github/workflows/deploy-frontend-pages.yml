@@ -2,7 +2,8 @@ name: Deploy frontend to GitHub Pages
 
 on:
   push:
-    branches: [ "develop" ]   # o la rama que uses para producción
+    branches: [ "develop", "demo-pages" ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -33,12 +34,12 @@ jobs:
         working-directory: frontend
         run: npm install         # o `npm ci` si ya tienes package-lock.json
 
-      - name: Build
+      - name: Build (demo con API simulada, sin backend)
         working-directory: frontend
-        env:
-          # 👇 AQUÍ va tu backend en Railway
-          VITE_API_BASE_URL: https://mediconnect-production-722d.up.railway.app
-        run: npm run build
+        run: |
+          npm run build:demo
+          # GitHub Pages no soporta rutas de SPA: el 404 sirve la misma app
+          cp dist/index.html dist/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
