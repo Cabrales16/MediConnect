@@ -11,9 +11,14 @@ import RecuperarContrasena from "./RecuperarContraseña/RecuperarContraseña";
 import RestablecerContrasena from "./RestablecerContraseña/RestablecerContraseña";
 import PrivateRoute from "./InicioSesion/PrivateRoute";
 import BienvenidaCorreo from "./BienvenidaCorreo/Bienvenida";
+import DemoBanner from "./mock/DemoBanner";
+
+const IS_DEMO = import.meta.env.VITE_DEMO_MODE === "true";
 
 export default function App() {
   return (
+    <>
+    {IS_DEMO && <DemoBanner />}
     <Routes>
       {/* Landing */}
       <Route path="/home" element={<Home />} />
@@ -52,5 +57,6 @@ export default function App() {
         }
       />
     </Routes>
+    </>
   );
 }
