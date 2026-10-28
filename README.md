@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/banner.png" alt="MediConnect: paneles de paciente, médico y administrador para gestionar citas médicas" width="100%">
+
 <img src="frontend/public/logoNav.png" alt="MediConnect" width="110" />
 
 # MediConnect
